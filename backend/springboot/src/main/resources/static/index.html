@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/highcharts/highstock.js" type="text/javascript"></script>
+    <script src="/js/highcharts/exporting.js" type="text/javascript"></script>
+    <script src="/js/highcharts/accessibility.js" type="text/javascript"></script>
+    <script src="/js/highcharts/data.js" type="text/javascript"></script>
+
+    <!-- highcharts stock api ref https://api.highcharts.com/highstock/colors -->
+<style>
+
+#container {
+  height: 600px;
+  width: 800px;
+}
+
+#newsSearchBtn {
+
+}
+
+</style>
+</head>
+<body>
+
+<div id="container"></div>
+<div id="newsBtnDiv">
+    <button id="newsSearchBtn">뉴스 조회</button>
+</div>
+
+<script >
+
+    // 임시로 만들어둠
+    function start(){
+        let stockCode = prompt("종목 코드를 입력하세요","005930");
+        console.log(stockCode);
+        let stockName = '';
+
+        axios.get("/api/stock/stocks/"+stockCode)
+        .then(res => {
+            stockName = res.data.name;
+            console.log(res.data[0].name);
+
+            drawStockChart(stockCode,stockName,stockEventHandler);
+        })
+        .catch(err => {
+            console.log("axios error :"+err);
+        });
+    }
+
+    // code : 종목 코드 , name : 종목 이름
+    function drawStockChart(code,name,callback){
+
+    let stockCode = code;
+    let stockName = name;
+
+    // get chart data
+    Highcharts.getJSON('/api/stock/stock-price/'+stockCode , function (data) {
+
+        // split the data set into ohlc and volume
+        var ohlc = [],
+        volume = [],
+        dataLength = data.length,
+        // set the allowed units for data grouping
+        groupingUnits = [[
+            'week',             // unit name
+            [1]               // allowed multiples
+        ], [
+            'month',
+            [1, 2, 3, 4, 6]
+        ]],
+
+        i = 0;
+
+        for (i; i < dataLength; i += 1) {
+            ohlc.push([
+                data[i][0], // the date
+                data[i][1], // open
+                data[i][2], // high
+                data[i][3], // low
+                data[i][4] // close
+            ]);
+
+            volume.push([
+                data[i][0], // the date
+                data[i][5] // the volume
+            ]);
+        }
+
+
+        // create the chart
+        Highcharts.stockChart('container', {
+
+            plotOptions: {
+                candlestick: {
+                    color: 'red',
+                    upColor: 'blue'
+                }
+            },
+
+            rangeSelector: {
+                selected: 1
+            },
+
+            title: {
+                text: stockName
+            },
+
+            yAxis: [{
+                labels: {
+                    align: 'right',
+                    x: -3
+                },
+                title: {
+                    text: 'OHLC'
+                },
+                height: '60%',
+                lineWidth: 2,
+                resize: {
+                    enabled: true
+                }
+              }, {
+                labels: {
+                    align: 'right',
+                    x: -3
+                },
+                title: {
+                    text: 'Volume'
+                },
+                top: '65%',
+                height: '35%',
+                offset: 0,
+                lineWidth: 2
+            }],
+
+            tooltip: {
+                split: true
+            },
+
+            series: [{
+                type: 'candlestick',
+                name: stockName,
+                data: ohlc,
+                dataGrouping: {
+                    units: groupingUnits
+                }
+              }, {
+                type: 'column',
+                name: 'Volume',
+                data: volume,
+                yAxis: 1,
+                dataGrouping: {
+                    units: groupingUnits
+                }
+            }]
+        });
+
+        callback();
+
+    });// char end
+    } // drawStockChart end
+
+    function stockEventHandler(){
+
+        let newsSearchBtn = document.querySelector("#newsSearchBtn");
+
+        // 뉴스 조회 버튼 onclick
+        newsSearchBtn.addEventListener('click',(event)=>{
+            let dateEls = document.querySelectorAll(".highcharts-range-input text");
+            let fromDate = dateEls[0].innerHTML;
+            let toDate = dateEls[1].innerHTML;
+
+            console.log("fromDate : " + dateFormatter(fromDate) );
+            console.log("toDate : " + dateFormatter(toDate) );
+
+        });
+
+        //let navigator = document.querySelector(".highcharts-navigator-mask-inside");
+        //navigator.addEventListener('mouseup',(event)=>{});
+    }
+
+    /*
+        custom date formatter
+        Aug 22, 2022 -> 2022-08-22
+        Jan  1, 2022 -> 2022-01-01 (공백 두 개 주의)
+    */
+    function dateFormatter(date){
+
+        let dateSplit = date.split(",");
+        let month = dateSplit[0].substring(0,3);
+        let day = dateSplit[0].substring(3).trim();
+        let year = dateSplit[1].trim();
+
+        if(month == "Jan") month = 1;
+        else if(month == "Feb") month = 2;
+        else if(month == "Mar") month = 3;
+        else if(month == "Apr") month = 4;
+        else if(month == "May") month = 5;
+        else if(month == "Jun") month = 6;
+        else if(month == "Jul") month = 7;
+        else if(month == "Aug") month = 8;
+        else if(month == "Sep") month = 9;
+        else if(month == "Oct") month = 10;
+        else if(month == "Nov") month = 11;
+        else month = 12;
+
+        month = month >= 10 ? month : '0' + month;
+        day = parseInt(day) >= 10 ? day : '0' + day;
+
+        return [year,month,day].join('-');
+    }
+
+    start();
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+import { defineStore } from "pinia";
+import { ref } from "vue";
+
+export const useStockStore = defineStore("stock", () => {
+  let stockCode = ref(null); //종목요약 api 배열
+  let stockNameMarket = ref(null); //종목 이름 마켓 api 배열
+  let stockName = ref(null); //종목 이름
+  let stockMarket = ref(null); //종목 마켓
+  let listCode = ref("005930"); //쿼리스트링 종목코드
+  let contentStockPrice = ref(null); //컨텐츠 종목 일일 가격 배열
+  let stockPrice = ref(null); // 종목 종가 가격
+  let stockVolume = ref(null); // 종목 종가 거래량
+  let listStockMarketCap = ref(null); //종목요약 마켓금액
+  let listStockMarketRanking = ref(null); // 종목요약 기업순위
+  let listStockNumberOfStocks = ref(null); // 종목요약 주식수
+  let listStockForeignerRatio = ref(null); // 종목요약 외국인 비중
+  let listStockIndustry = ref(null); //종목요약 산업군
+  let listStockIndustryDetail = ref(null); //종목요약 세부산업군
+  let listLowYear = ref(null); // 종목요약 52주 최저
+  let listHighYear = ref(null); // 종목요약 52주 최고
+  let listSummaryInfo = ref(null); // 종목요약 기업개요
+  let stockInformationData = ref(null); //재무정보 연간 데이터[0]
+  let stockInformationDataTwo = ref(null); //재무정보 연간 데이터[1]
+  let stockInformationDataThree = ref(null); //재무정보 연간 데이터[2]
+  let stockInformationDataFour = ref(null); // 재무정보 연간 데이터[3]
+  let stockInformationDataQyarter = ref(null); //재무정보 분기 데이터[0]
+  let stockInformationDataQyarterTwo = ref(null); //재무정보 분기 데이터[1]
+  let stockInformationDataQyarterThree = ref(null); //재무정보 분기 데이터[2]
+  let stockInformationDataQyarterFour = ref(null); //재무정보 분기 데이터[3]
+
+  return {
+    stockCode,
+    stockName,
+    stockMarket,
+    listCode,
+    listStockMarketCap,
+    stockNameMarket,
+    contentStockPrice,
+    stockPrice,
+    stockVolume,
+    listStockMarketRanking,
+    listStockNumberOfStocks,
+    listStockForeignerRatio,
+    listStockIndustry,
+    listStockIndustryDetail,
+    listLowYear,
+    listHighYear,
+    listSummaryInfo,
+    stockInformationData,
+    stockInformationDataTwo,
+    stockInformationDataThree,
+    stockInformationDataFour,
+    stockInformationDataQyarter,
+    stockInformationDataQyarterTwo,
+    stockInformationDataQyarterThree,
+    stockInformationDataQyarterFour,
+  };
+});
