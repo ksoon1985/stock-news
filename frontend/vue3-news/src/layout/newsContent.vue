@@ -12,7 +12,18 @@
         <p class="stock-code">{{ listCode }}</p>
         <p class="stock-market">{{ stockMarket }}</p>
         <span class="middle-point">·</span>
-        <h2 class="price-close">{{ stockPrice }}</h2>
+        <div class="stockPriceWrap" :class="[stockChange ? 'doneTwo' : '']">
+          <h2 class="price-close">{{ stockPrice }}</h2>
+          <p class="price-percent">
+            <span v-if="!stockChange" class="plus-percent">+</span
+            >{{ stockPercentTwo }}%
+          </p>
+          <p class="price-minus">
+            <span v-if="!stockChange" class="plus-percent">+</span
+            >{{ stockMinus }}
+          </p>
+        </div>
+
         <span class="middle-point">·</span>
         <p class="stockVolume">거래량</p>
         <p class="stock-volume">{{ stockVolume }}</p>
@@ -34,13 +45,16 @@
 </template>
 
 <script>
-//import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import axios from "axios";
 
 export default {
   setup() {
+    let stockChange = ref(false);
+    let stockPercent = ref(0);
+    let stockPercentTwo = ref(0);
     const store = useStockStore();
     let {
       stockCode,
@@ -49,9 +63,24 @@ export default {
       stockMarket,
       stockNameMarket,
       stockPrice,
+      stockPriceTwo,
+      stockMinus,
       stockVolume,
       contentStockPrice,
     } = storeToRefs(store);
+
+    watch(stockMinus, () => {
+      if (stockMinus.value < 0) {
+        stockChange.value = true;
+      } else {
+        stockChange.value = false;
+      }
+    });
+    watch(stockPrice, () => {
+      stockPercent.value =
+        ((stockPrice.value - stockPriceTwo.value) / stockPriceTwo.value) * 100;
+      stockPercentTwo.value = Math.round(stockPercent.value * 100) / 100;
+    });
 
     return {
       stockCode,
@@ -60,8 +89,13 @@ export default {
       stockMarket,
       stockNameMarket,
       stockPrice,
+      stockPriceTwo,
       stockVolume,
       contentStockPrice,
+      stockMinus,
+      stockChange,
+      stockPercent,
+      stockPercentTwo,
     };
   },
 
@@ -200,7 +234,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text"
+              ".highcharts-range-input text",
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
@@ -298,7 +332,6 @@ export default {
 .price-close {
   margin-top: 18px;
   margin-left: 10px;
-  color: #ed2926;
 }
 
 /* 종목표시 두번째 바  */
@@ -322,5 +355,25 @@ export default {
   width: 100%;
   height: 50rem;
   margin-top: 0.1rem;
+}
+
+.stockPriceWrap {
+  display: flex;
+  color: #ed2926;
+}
+
+.doneTwo {
+  display: flex;
+  color: #2679ed;
+}
+
+.price-minus {
+  margin-top: 25px;
+  margin-left: 8px;
+}
+
+.price-percent {
+  margin-top: 25px;
+  margin-left: 8px;
 }
 </style>

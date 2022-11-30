@@ -83,34 +83,47 @@
   <teleport to="#teleport-area"
     ><div class="modal" v-if="modalData">
       <div class="modalForm" v-if="modalFormData">
-        <div class="modalLogo">
-          stockNews
-          <button type="button" class="btn-close" @click="modalChanges">
-            <div class="close-icon">
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style="display: block"
-                class="btn-icon"
-              >
-                <image
-                  href="@/assets/svg/x-svgrepo-com.svg"
+        <div class="modalLogoClose">
+          <div class="modalLogo">
+            stockNews
+            <button type="button" class="btn-close" @click="modalChanges">
+              <div class="close-icon">
+                <svg
                   width="24"
                   height="24"
-                />
-              </svg>
-            </div>
-          </button>
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style="display: block"
+                  class="btn-icon"
+                >
+                  <image
+                    href="@/assets/svg/x-svgrepo-com.svg"
+                    width="24"
+                    height="24"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
         </div>
         <div class="modalWrap">
-          <button @click="modalLoginChange">로그인</button
-          ><button @click="modalJoinChange">회원가입</button>
+          <button
+            @click="modalLoginChange"
+            :class="[modalFormData ? 'done' : '']"
+            class="modalBtn"
+          >
+            로그인</button
+          ><button
+            @click="modalJoinChange"
+            :class="[modalJoinData ? 'done' : '']"
+            class="modalBtn"
+          >
+            회원가입
+          </button>
         </div>
         <div class="signin">
           <form @submit.prevent="modalLoginSubmit">
-            <div class="id">
+            <div class="input-box">
               <input
                 type="email"
                 name="email"
@@ -120,17 +133,24 @@
               />
               <label class="label">이메일</label>
             </div>
-            <div class="password">
+            <div class="input-box">
               <input
                 type="password"
                 name="password"
                 id="password"
                 class="modalPassword"
                 v-model="modalLoginPassword"
+                maxlength="16"
               />
               <label class="label">비밀번호</label>
             </div>
-            <button type="submit" class="modalLogin">로그인</button>
+            <button
+              type="submit"
+              class="modalLogin"
+              :disabled="!modalLoginEmail || !modalLoginPassword"
+            >
+              로그인
+            </button>
           </form>
         </div>
       </div>
@@ -159,8 +179,19 @@
           </div>
         </div>
         <div class="modalWrap">
-          <button @click="modalLoginChange" class="modalBtn">로그인</button
-          ><button @click="modalJoinChange" class="modalBtn">회원가입</button>
+          <button
+            @click="modalLoginChange"
+            :class="[modalFormData ? 'done' : '']"
+            class="modalBtn"
+          >
+            로그인</button
+          ><button
+            @click="modalJoinChange"
+            :class="[modalJoinData ? 'done' : '']"
+            class="modalBtn"
+          >
+            회원가입
+          </button>
         </div>
         <div class="join">
           <form @submit.prevent="modalJoinSubmit">
@@ -191,6 +222,7 @@
                 id="password"
                 class="modalJoinPassword"
                 v-model="modalJoinPassword"
+                maxlength="16"
               />
               <label class="label">비밀번호</label>
             </div>
@@ -199,6 +231,7 @@
                 type="password"
                 name="password"
                 class="modalJoinPassword"
+                maxlength="16"
               />
               <label class="label">비밀번호 확인</label>
             </div>
@@ -220,14 +253,7 @@
                 />
               </div>
               <div class="birthday">
-                <input
-                  type="date"
-                  id="birthDay"
-                  v-model="modalJoinbirthDay"
-                  data-placeholder="생년 월 일"
-                  required
-                  aria-required="true"
-                />
+                <input type="date" id="birthDay" v-model="modalJoinbirthDay" />
               </div>
             </div>
             <button type="submit" class="modalJoinBtn">회원가입</button>
@@ -275,6 +301,8 @@ export default {
       stockNameMarket,
       contentStockPrice,
       stockPrice,
+      stockPriceTwo,
+      stockMinus,
       stockVolume,
       listStockMarketCap,
       listStockMarketRanking,
@@ -304,7 +332,6 @@ export default {
 
     const modalChanges = () => {
       modalData.value = false;
-      console.log("실행");
     };
 
     const modalLoginChange = () => {
@@ -345,7 +372,7 @@ export default {
 
     const modalLoginSubmit = () => {
       console.log(modalLoginEmail.value, modalLoginPassword.value);
-      const loginUrl = "http://192.168.0.36:8089/api/member/login";
+      const loginUrl = "/api/member/login";
       let loginData = {
         username: modalLoginEmail.value,
         password: modalLoginPassword.value,
@@ -420,10 +447,12 @@ export default {
           contentStockPrice.value = itemDataPrice.data;
           stockPrice.value =
             contentStockPrice.value[contentStockPrice.value.length - 1][4];
+          stockPriceTwo.value =
+            contentStockPrice.value[contentStockPrice.value.length - 2][4];
           stockVolume.value =
             contentStockPrice.value[contentStockPrice.value.length - 1][5];
-          console.log(contentStockPrice);
-          console.log(stockPrice);
+          stockMinus.value = stockPrice.value - stockPriceTwo.value;
+          console.log(stockMinus);
         });
     };
 
@@ -446,6 +475,8 @@ export default {
       stockNameMarket,
       contentStockPrice,
       stockPrice,
+      stockPriceTwo,
+      stockMinus,
       stockVolume,
       contentStockPriceGet,
       listStockMarketRanking,
@@ -620,7 +651,7 @@ export default {
 /* 모달 로그인 */
 .modalForm {
   position: absolute;
-  width: 408px;
+  width: 420px;
   height: 30rem;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
@@ -653,7 +684,22 @@ export default {
   font-weight: 500;
   color: #999999;
   border: none;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 2px solid #e5e5e5;
+  background: #ffffff;
+}
+
+.modalBtn:hover {
+  color: #d01411;
+}
+
+.done {
+  width: 13rem;
+  line-height: 2.4rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #d01411;
+  border: none;
+  border-bottom: 2px solid #d01411;
   background: #ffffff;
 }
 
@@ -681,6 +727,28 @@ export default {
   border: 1px solid #ffffff;
   color: #ffffff;
   margin-left: 1.6rem;
+}
+
+.modalLogin {
+  background: #d01411;
+  width: 23rem;
+  height: 3rem;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  margin-left: 1.6rem;
+  cursor: pointer;
+}
+
+.modalLogin:disabled {
+  background: #f4b7b7;
+  width: 23rem;
+  height: 3rem;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  margin-left: 1.6rem;
+  cursor: auto;
 }
 
 .input-box {
@@ -724,7 +792,7 @@ label {
 
 input:focus,
 input:not(:placeholder-shown) {
-  border-bottom: solid 1px #8aa1a1;
+  /* border-bottom: solid 1px #8aa1a1; */
   outline: none;
 }
 </style>
