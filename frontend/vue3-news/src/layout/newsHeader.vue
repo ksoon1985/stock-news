@@ -84,7 +84,7 @@
     ><div class="modal" v-if="modalData">
       <div class="modalForm" v-if="modalFormData">
         <div class="modalLogo">
-          logo
+          stockNews
           <button type="button" class="btn-close" @click="modalChanges">
             <div class="close-icon">
               <svg
@@ -136,7 +136,7 @@
       </div>
       <div class="modalJoin" v-if="modalJoinData">
         <div class="modalLogoClose">
-          <div class="modalLogo">logo</div>
+          <div class="modalLogo">stockNews</div>
           <div class="modalClose">
             <button type="button" class="btn-close" @click="modalChanges">
               <div class="close-icon">
@@ -159,8 +159,8 @@
           </div>
         </div>
         <div class="modalWrap">
-          <button @click="modalLoginChange">로그인</button
-          ><button @click="modalJoinChange">회원가입</button>
+          <button @click="modalLoginChange" class="modalBtn">로그인</button
+          ><button @click="modalJoinChange" class="modalBtn">회원가입</button>
         </div>
         <div class="join">
           <form @submit.prevent="modalJoinSubmit">
@@ -202,25 +202,33 @@
               />
               <label class="label">비밀번호 확인</label>
             </div>
-            <div class="gender">
-              남성
-              <input
-                type="radio"
-                name="gender"
-                value="M"
-                v-model="modalJoinGender"
-              />
-              여성
-              <input
-                type="radio"
-                name="gender"
-                value="F"
-                v-model="modalJoinGender"
-              />
-            </div>
-            <div class="birthday">
-              <label class="label">생년월일</label>
-              <input type="date" id="birthDay" v-model="modalJoinbirthDay" />
+            <div class="genderBirthday">
+              <div class="gender">
+                남성
+                <input
+                  type="radio"
+                  name="gender"
+                  value="M"
+                  v-model="modalJoinGender"
+                />
+                여성
+                <input
+                  type="radio"
+                  name="gender"
+                  value="F"
+                  v-model="modalJoinGender"
+                />
+              </div>
+              <div class="birthday">
+                <input
+                  type="date"
+                  id="birthDay"
+                  v-model="modalJoinbirthDay"
+                  data-placeholder="생년 월 일"
+                  required
+                  aria-required="true"
+                />
+              </div>
             </div>
             <button type="submit" class="modalJoinBtn">회원가입</button>
           </form>
@@ -635,22 +643,50 @@ export default {
   display: flex;
   justify-content: center;
   margin: 25px;
+  font-size: 1.5rem;
 }
 
-.modalLoginChange {
-  width: 18rem;
+.modalBtn {
+  width: 13rem;
   line-height: 2.4rem;
-  font-size: 1.6rem;
+  font-size: 1.1rem;
   font-weight: 500;
   color: #999999;
+  border: none;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffffff;
 }
 
-.modalJoinChange {
+.gender {
+  color: #8aa1a1;
+  margin-right: 40px;
+  margin-bottom: 30px;
+}
+
+.birthday {
+  border-radius: 4px;
+}
+
+.genderBirthday {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.modalJoinBtn {
+  background: #f4b7b7;
+  width: 23rem;
+  height: 3rem;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  margin-left: 1.6rem;
 }
 
 .input-box {
   position: relative;
-  margin: 20px 20px;
+  margin: 40px 20px;
+  text-align: center;
 }
 
 .input-box > input {

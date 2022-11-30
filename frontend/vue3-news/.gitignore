@@ -25,3 +25,5 @@ pnpm-debug.log*
 # assets
 assets
 
+# yarn 
+yarn.lock
