@@ -29,7 +29,7 @@
       :redrawOnUpdate="true"
       :animateOnUpdate="false"
     ></highcharts>
-    <button @click="searchByDate" :disabled="btnOn === true">조회</button>
+    <button @click="searchByDate" :disabled="btnOn === false">조회</button>
   </div>
 </template>
 
@@ -118,13 +118,7 @@ export default {
             name: this.stockName,
             data: null,
             dataGrouping: {
-              units: [
-                [
-                  "week", // unit name
-                  [1], // allowed multiples
-                ],
-                ["month", [1, 2, 3, 4, 6]],
-              ],
+              units: null,
             },
           },
           {
@@ -133,20 +127,11 @@ export default {
             data: null,
             yAxis: 1,
             dataGrouping: {
-              units: [
-                [
-                  "week", // unit name
-                  [1], // allowed multiples
-                ],
-                ["month", [1, 2, 3, 4, 6]],
-              ],
+              units: null,
             },
           },
         ],
       },
-
-      // 주식 종목
-      //stockCode: "005930",
 
       // btn on/off
       btnOn: false,
@@ -159,8 +144,6 @@ export default {
     this.chartDraw();
   },
 
-  beforeUpdate() {},
-
   // 템플릿에 데이터가 변경이 일어난 후
   updated() {
     console.log("updated");
@@ -169,9 +152,7 @@ export default {
   },
 
   methods: {
-    searchByDate() {
-      this.chartDraw();
-    },
+    searchByDate() {},
 
     chartDraw() {
       console.log("chartDraw");
@@ -185,13 +166,13 @@ export default {
           let volume = [];
 
           // set the allowed units for data grouping
-          // let groupingUnits = [
-          //   [
-          //     "week", // unit name
-          //     [1], // allowed multiples
-          //   ],
-          //   ["month", [1, 2, 3, 4, 6]],
-          // ];
+          let groupingUnits = [
+            [
+              "week", // unit name
+              [1], // allowed multiples
+            ],
+            ["month", [1, 2, 3, 4, 6]],
+          ];
 
           let i = 0;
 
@@ -213,32 +194,32 @@ export default {
           this.stockOptions.series[0].data = ohlc;
           this.stockOptions.series[1].data = volume;
 
-          // this.stockOptions.series[0].dataGrouping.units = groupingUnits;
-          // this.stockOptions.series[1].dataGrouping.units = groupingUnits;
-
-          setTimeout(() => {}, 1000);
+          this.stockOptions.series[0].dataGrouping.units = groupingUnits;
+          this.stockOptions.series[1].dataGrouping.units = groupingUnits;
         })
         .finally(() => {
-          //this.btnOn = true;
+          this.searchByDate = () => {
+            let dateEls = document.querySelectorAll(
+              ".highcharts-range-input text"
+            );
+            let fromDate = dateEls[0].innerHTML;
+            let toDate = dateEls[1].innerHTML;
+
+            console.log(fromDate, toDate);
+
+            axios
+              .post("http://192.168.0.36:8089/api/news/getSearchNews", {
+                searchTerm: this.stockName,
+                fromDate: fromDate,
+                toDate: toDate,
+              })
+              .then((res) => {
+                console.log(res.data);
+              });
+          };
+
+          this.btnOn = true;
         });
-
-      // this.searchByDate = () => {
-      //   let dateEls = document.querySelectorAll(".highcharts-range-input text");
-      //   let fromDate = dateEls[0].innerHTML;
-      //   let toDate = dateEls[1].innerHTML;
-
-      //   console.log(fromDate, toDate);
-
-      //   axios
-      //     .post("http://localhost:8089/api/news/getSearchNews", {
-      //       searchTerm: "삼성전자",
-      //       fromDate: fromDate,
-      //       toDate: toDate,
-      //     })
-      //     .then((res) => {
-      //       console.log(res.data);
-      //     });
-      // };
     },
   },
 };
