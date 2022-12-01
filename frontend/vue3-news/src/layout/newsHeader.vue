@@ -204,6 +204,17 @@
                 v-model="modalJoinEmail"
               />
               <label class="label">이메일</label>
+              <div class="joinDiv">
+                <span v-if="modalEmailCheck" class="passChk"
+                  >이메일을 확인해주세요.</span
+                >
+                <span v-if="modalchkEamilFalse" class="passChk"
+                  >동일한 이메일이 존재합니다.</span
+                >
+                <span v-if="modalchkEmailTrue" class="chkEmailTrue"
+                  >사용가능한 이메일입니다.</span
+                >
+              </div>
             </div>
             <div class="input-box">
               <input
@@ -211,9 +222,19 @@
                 name="nickName"
                 id="nickName"
                 class="modalJoinNickName"
-                v-model="modalJoinNickName"
+                :value="nickInput"
+                @input="modalNickChange"
+                maxlength="15"
               />
               <label class="label">닉네임</label>
+              <div class="joinDiv">
+                <span v-if="modalchkNickFalse" class="passChk"
+                  >동일한 닉네임이 존재합니다.</span
+                >
+                <span v-if="modalchkNickTrue" class="chkEmailTrue"
+                  >사용가능한 닉네임입니다.
+                </span>
+              </div>
             </div>
             <div class="input-box">
               <input
@@ -225,15 +246,22 @@
                 maxlength="16"
               />
               <label class="label">비밀번호</label>
+              <div class="joinDiv"></div>
             </div>
             <div class="input-box">
               <input
                 type="password"
                 name="password"
                 class="modalJoinPassword"
+                v-model="modalJoinPasswordTwo"
                 maxlength="16"
               />
               <label class="label">비밀번호 확인</label>
+              <div class="joinDiv">
+                <span v-if="modalPasswordCheck" class="passChk"
+                  >비밀번호가 서로 일치하지 않습니다.</span
+                >
+              </div>
             </div>
             <div class="genderBirthday">
               <div class="gender">
@@ -256,9 +284,23 @@
                 <input type="date" id="birthDay" v-model="modalJoinbirthDay" />
               </div>
             </div>
-            <button type="submit" class="modalJoinBtn">회원가입</button>
+            <button
+              type="submit"
+              class="modalJoinBtn"
+              :disabled="
+                !modalJoinPassword || !modalJoinPasswordTwo || !resNickCheck
+              "
+            >
+              회원가입
+            </button>
           </form>
         </div>
+      </div>
+      <div class="joinComplate" v-if="joinComChk">
+        <div class="comSpan">
+          <span>가입이 완료 되었습니다. 서비스를 이용해 보세요.</span>
+        </div>
+        <button class="complateBtn" @click="modalChanges">확인</button>
       </div>
     </div></teleport
   >
@@ -268,7 +310,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
@@ -292,6 +334,17 @@ export default {
     let modalJoinbirthDay = ref("");
     let modalLoginEmail = ref("");
     let modalLoginPassword = ref("");
+    let modalJoinPasswordTwo = ref("");
+    let modalPasswordCheck = ref(null);
+    let modalchkEmailTrue = ref(false);
+    let modalchkEamilFalse = ref(false);
+    let modalEmailCheck = ref(false);
+    let resEmailCheck = ref(null);
+    let resNickCheck = ref(null);
+    let modalchkNickTrue = ref(false);
+    let modalchkNickFalse = ref(false);
+    let nickInput = ref("");
+    let joinComChk = ref(false);
 
     let {
       stockName,
@@ -344,18 +397,100 @@ export default {
       modalJoinData.value = true;
     };
 
+    const modalNickChange = (e) => {
+      nickInput.value = e.target.value;
+    };
+
+    watch(modalJoinPasswordTwo, () => {
+      if (modalJoinPasswordTwo.value == "") {
+        modalPasswordCheck.value = false;
+      } else if (modalJoinPassword.value !== modalJoinPasswordTwo.value) {
+        modalPasswordCheck.value = true;
+      } else if (modalJoinPassword.value === modalJoinPasswordTwo.value) {
+        modalPasswordCheck.value = false;
+      }
+    });
+
+    watch(modalJoinEmail, () => {
+      if (modalJoinEmail.value == "") {
+        modalEmailCheck.value = false;
+      }
+    });
+
+    watch(modalJoinEmail, () => {
+      if (modalJoinEmail.value.length < 13) {
+        modalEmailCheck.value = true;
+        modalchkEmailTrue.value = false;
+      } else if (
+        resEmailCheck.value == true ||
+        modalJoinEmail.value.length > 10
+      ) {
+        modalEmailCheck.value = false;
+        modalchkEmailTrue.value = true;
+      }
+    });
+
+    watch(resEmailCheck, () => {
+      if (resEmailCheck.value == false) {
+        modalEmailCheck.value = false;
+        modalchkEmailTrue.value = false;
+        modalchkEamilFalse.value = true;
+      } else {
+        modalchkEamilFalse.value = false;
+      }
+    });
+
+    watch(modalJoinEmail, () => {
+      axios
+        .get(
+          "http://192.168.0.36:8089/api/member/chkEmail/" +
+            modalJoinEmail.value,
+        )
+        .then((emailchk) => {
+          resEmailCheck.value = emailchk.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+
+    watch(nickInput, () => {
+      if (nickInput.value == "") {
+        modalchkNickTrue.value = false;
+        modalchkNickFalse.value = false;
+      } else {
+        modalchkNickTrue.value = true;
+      }
+    });
+
+    watch(resNickCheck, () => {
+      if (resNickCheck.value == false) {
+        modalchkNickFalse.value = true;
+        modalchkNickTrue.value = false;
+      } else if (resNickCheck.value == true) {
+        modalchkNickFalse.value = false;
+        modalchkNickTrue.value = true;
+      }
+    });
+
+    watch(nickInput, () => {
+      axios
+        .get(
+          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value,
+        )
+        .then((nickchk) => {
+          resNickCheck.value = nickchk.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+
     const modalJoinSubmit = () => {
-      console.log(
-        modalJoinEmail.value,
-        modalJoinNickName.value,
-        modalJoinPassword.value,
-        modalJoinGender.value,
-        modalJoinbirthDay.value,
-      );
       const url = "http://192.168.0.36:8089/api/member/signUp";
       let joinData = {
         email: modalJoinEmail.value,
-        nickName: modalJoinNickName.value,
+        nickName: nickInput.value,
         password: modalJoinPassword.value,
         gender: modalJoinGender.value,
         birthDay: modalJoinbirthDay.value,
@@ -364,6 +499,9 @@ export default {
         .post(url, joinData)
         .then((response) => {
           console.log(response);
+          modalFormData.value = false;
+          modalJoinData.value = false;
+          joinComChk.value = true;
         })
         .catch((error) => {
           console.log(error);
@@ -498,12 +636,24 @@ export default {
       modalJoinEmail,
       modalJoinNickName,
       modalJoinPassword,
+      modalJoinPasswordTwo,
       modalJoinGender,
       modalJoinbirthDay,
       modalJoinSubmit,
       modalLoginEmail,
       modalLoginPassword,
       modalLoginSubmit,
+      modalPasswordCheck,
+      modalchkEmailTrue,
+      modalchkEamilFalse,
+      modalEmailCheck,
+      resEmailCheck,
+      resNickCheck,
+      modalchkNickTrue,
+      modalchkNickFalse,
+      modalNickChange,
+      nickInput,
+      joinComChk,
     };
   },
 };
@@ -556,6 +706,7 @@ export default {
   background: white;
 }
 
+/* X 버튼 호버 */
 .btn-icon:hover {
   filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg)
     brightness(97%) contrast(113%);
@@ -571,6 +722,7 @@ export default {
   background-color: white;
 }
 
+/* 로그인 버튼 호버 */
 .btn-login:hover {
   background-color: #e5e5e5;
 }
@@ -652,7 +804,7 @@ export default {
 .modalForm {
   position: absolute;
   width: 420px;
-  height: 30rem;
+  height: 35rem;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   background-color: #ffffff;
@@ -663,13 +815,14 @@ export default {
 .modalJoin {
   position: absolute;
   width: 420px;
-  height: 40rem;
+  height: 43rem;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   background-color: #ffffff;
   color: red;
 }
 
+/* 모달창 로고  */
 .modalLogoClose {
   display: flex;
   justify-content: center;
@@ -677,6 +830,7 @@ export default {
   font-size: 1.5rem;
 }
 
+/* 로그인 회원가입 버튼 */
 .modalBtn {
   width: 13rem;
   line-height: 2.4rem;
@@ -688,10 +842,12 @@ export default {
   background: #ffffff;
 }
 
+/* 로그인 회원가입 버튼 호버 */
 .modalBtn:hover {
   color: #d01411;
 }
 
+/* 로그인 회원가입 활성화 (삼항연산자) */
 .done {
   width: 13rem;
   line-height: 2.4rem;
@@ -703,23 +859,33 @@ export default {
   background: #ffffff;
 }
 
+/* 성별 체크박스  */
 .gender {
   color: #8aa1a1;
   margin-right: 40px;
   margin-bottom: 30px;
 }
 
-.birthday {
-  border-radius: 4px;
-}
-
+/* 성별 생년월일 div  */
 .genderBirthday {
   display: flex;
   justify-content: center;
   margin-top: 5px;
 }
 
+/* 모달 회원가입 버튼 */
 .modalJoinBtn {
+  background: #d01411;
+  width: 23rem;
+  height: 3rem;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  margin-left: 1.6rem;
+  cursor: pointer;
+}
+
+.modalJoinBtn:disabled {
   background: #f4b7b7;
   width: 23rem;
   height: 3rem;
@@ -727,8 +893,10 @@ export default {
   border: 1px solid #ffffff;
   color: #ffffff;
   margin-left: 1.6rem;
+  cursor: auto;
 }
 
+/* 모달 로그인 버튼 */
 .modalLogin {
   background: #d01411;
   width: 23rem;
@@ -740,6 +908,7 @@ export default {
   cursor: pointer;
 }
 
+/* 모달 로그인 버튼 disabled  */
 .modalLogin:disabled {
   background: #f4b7b7;
   width: 23rem;
@@ -751,12 +920,14 @@ export default {
   cursor: auto;
 }
 
+/* input div */
 .input-box {
   position: relative;
   margin: 40px 20px;
   text-align: center;
 }
 
+/* input div input 상속 */
 .input-box > input {
   background: transparent;
   border: none;
@@ -766,16 +937,19 @@ export default {
   width: 90%;
 }
 
+/* 모달창 placeholder  */
 .input::placeholder {
   color: transparent;
 }
 
+/* 모달창 input */
 input:placeholder-shown + label {
   color: #aaa;
   font-size: 14pt;
   top: 15px;
 }
 
+/* 모달창 input label  */
 input:focus + label,
 label {
   color: #8aa1a1;
@@ -790,9 +964,57 @@ label {
   -o-transition: all 0.2s ease;
 }
 
+/* 모달창 input focus  */
 input:focus,
 input:not(:placeholder-shown) {
   /* border-bottom: solid 1px #8aa1a1; */
   outline: none;
+}
+
+/* 회원가입 유효성 문구 */
+.joinDiv {
+  font-size: 6px;
+  width: 380px;
+  height: 10px;
+}
+
+/* 회원가입 유효성 문구 true */
+.chkEmailTrue {
+  color: #2679ed;
+}
+
+/* 회원가입 유효성 문구 false */
+.passChk {
+  color: #e07900;
+}
+
+/* 회원가입 완료 모달창 */
+.joinComplate {
+  position: absolute;
+  width: 420px;
+  height: 8rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1c1c1c;
+}
+
+/* 회원가입 완료 문단 */
+.comSpan {
+  margin-top: 23px;
+  margin-left: 38px;
+}
+
+.complateBtn {
+  background: #d01411;
+  color: #fef6f6;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  width: 7.8rem;
+  height: 2rem;
+  margin-top: 30px;
+  margin-left: 154px;
+  font-size: 1.1rem;
 }
 </style>

@@ -357,22 +357,26 @@ export default {
   margin-top: 0.1rem;
 }
 
+/* 종목 구성 모음 */
 .stockPriceWrap {
   display: flex;
   color: #ed2926;
 }
 
+/* 종목 구성 (삼항연산자) */
 .doneTwo {
   display: flex;
   color: #2679ed;
 }
 
-.price-minus {
+/* 종목 금일 - 전날 퍼센트 */
+.price-percent {
   margin-top: 25px;
   margin-left: 8px;
 }
 
-.price-percent {
+/* 종목 금일 - 전날  */
+.price-minus {
   margin-top: 25px;
   margin-left: 8px;
 }

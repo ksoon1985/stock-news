@@ -190,6 +190,7 @@ export default {
 .company-description {
   margin-top: 35px;
   margin-left: 7px;
+  font-family: "GmarketSansMedium";
 }
 
 .one-contents-blue {
