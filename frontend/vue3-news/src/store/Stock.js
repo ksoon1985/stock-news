@@ -8,9 +8,7 @@ export const useStockStore = defineStore("stock", () => {
   let stockMarket = ref(null); //종목 마켓
   let listCode = ref("005930"); //쿼리스트링 종목코드
   let contentStockPrice = ref(null); //컨텐츠 종목 일일 가격 배열
-  let stockPrice = ref(0); // 종목 종가 가격
-  let stockPriceTwo = ref(0); // 종목 종가 전날 가격
-  let stockMinus = ref(null); //종목 종가 금일 - 전일
+  let stockPrice = ref(null); // 종목 종가 가격
   let stockVolume = ref(null); // 종목 종가 거래량
   let listStockMarketCap = ref(null); //종목요약 마켓금액
   let listStockMarketRanking = ref(null); // 종목요약 기업순위
@@ -39,8 +37,6 @@ export const useStockStore = defineStore("stock", () => {
     stockNameMarket,
     contentStockPrice,
     stockPrice,
-    stockPriceTwo,
-    stockMinus,
     stockVolume,
     listStockMarketRanking,
     listStockNumberOfStocks,

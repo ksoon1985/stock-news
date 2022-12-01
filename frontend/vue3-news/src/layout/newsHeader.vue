@@ -156,7 +156,7 @@
       </div>
       <div class="modalJoin" v-if="modalJoinData">
         <div class="modalLogoClose">
-          <div class="modalLogo">stockNews</div>
+          <div class="modalLogo">logo</div>
           <div class="modalClose">
             <button type="button" class="btn-close" @click="modalChanges">
               <div class="close-icon">
@@ -304,8 +304,27 @@
       </div>
     </div></teleport
   >
+
   <div class="support-menu">
-    <button type="button" class="btn-login" @click="modalChange">로그인</button>
+    <span :hidden="!isLogin">{{ nickName }} &nbsp; &nbsp;</span>
+
+    <button
+      :hidden="isLogin"
+      type="button"
+      class="btn-login"
+      @click="modalChange"
+    >
+      로그인
+    </button>
+
+    <button
+      :hidden="!isLogin"
+      type="button"
+      class="btn-login"
+      @click="modalLogoutSubmit"
+    >
+      로그아웃
+    </button>
   </div>
 </template>
 
@@ -314,6 +333,7 @@ import { ref, watch } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
+import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 
 export default {
@@ -324,6 +344,7 @@ export default {
     // let stockData = ref([]);
     const route = useRoute();
     const store = useStockStore();
+    const userStore = useUserStore();
     let modalData = ref(false);
     let modalFormData = ref(true);
     let modalJoinData = ref(false);
@@ -345,6 +366,8 @@ export default {
     let modalchkNickFalse = ref(false);
     let nickInput = ref("");
     let joinComChk = ref(false);
+
+    let { isLogin, nickName } = storeToRefs(userStore);
 
     let {
       stockName,
@@ -443,8 +466,7 @@ export default {
     watch(modalJoinEmail, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkEmail/" +
-            modalJoinEmail.value,
+          "http://192.168.0.36:8089/api/member/chkEmail/" + modalJoinEmail.value
         )
         .then((emailchk) => {
           resEmailCheck.value = emailchk.data;
@@ -476,7 +498,7 @@ export default {
     watch(nickInput, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value,
+          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value
         )
         .then((nickchk) => {
           resNickCheck.value = nickchk.data;
@@ -517,22 +539,45 @@ export default {
       };
       axios
         .post(loginUrl, loginData)
-        .then((response) => {
-          console.log(response);
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            localStorage.setItem("isLogin", true);
+            localStorage.setItem("nickName", res.data.nickName);
+            isLogin.value = true;
+            nickName.value = res.data.nickName;
+
+            modalData.value = false;
+          } else {
+            console.log(res.status);
+          }
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const modalLogoutSubmit = () => {
+      axios
+        .get("/api/member/logout")
+        .then((res) => {
+          console.log(res);
+          localStorage.removeItem("isLogin");
+          localStorage.removeItem("nickName");
+          isLogin.value = false;
+          nickName.value = "";
+        })
+        .catch((err) => {
+          console.log(err);
         });
     };
 
     const getKeyWord = () => {
-      axios
-        .get("http://192.168.0.36:8089/api/stock/stocks/" + searchInput.value)
-        .then((data) => {
-          // console.log(data);
-          resultData.value = data.data;
-          console.log(resultData);
-        });
+      axios.get("/api/stock/stocks/" + searchInput.value).then((data) => {
+        // console.log(data);
+        resultData.value = data.data;
+        console.log(resultData);
+      });
     };
 
     const resultChange = (e) => {
@@ -547,7 +592,7 @@ export default {
       listCode.value = route.query.code;
       axios
         .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
+          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value
         )
         .then((itemData) => {
           stockCode.value = itemData.data;
@@ -654,6 +699,9 @@ export default {
       modalNickChange,
       nickInput,
       joinComChk,
+      isLogin,
+      nickName,
+      modalLogoutSubmit,
     };
   },
 };

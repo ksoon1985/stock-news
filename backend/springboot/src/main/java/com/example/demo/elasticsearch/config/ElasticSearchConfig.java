@@ -12,9 +12,9 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
-@Configuration
-@EnableElasticsearchRepositories(basePackages = "com.example.demo.elasticsearch.repository")
-@ComponentScan(basePackages = "com.example.demo.elasticsearch")
+//@Configuration
+//@EnableElasticsearchRepositories(basePackages = "com.example.demo.elasticsearch.repository")
+//@ComponentScan(basePackages = "com.example.demo.elasticsearch")
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
     @Value("${elasticsearch.host}")

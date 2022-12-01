@@ -1,5 +1,6 @@
 package com.example.demo.member.controller;
 
+import com.example.demo.member.dto.JwtResDTO;
 import com.example.demo.member.dto.LoginReqDTO;
 import com.example.demo.member.model.Member;
 import com.example.demo.member.service.MemberService;
@@ -24,6 +25,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.util.Arrays;
 
 @Slf4j
@@ -42,7 +44,7 @@ public class MemberController {
     public ResponseEntity signUpUser(@Valid @RequestBody Member member, BindingResult result, HttpServletRequest request){
 
         System.out.println("MemberController 회원가입 요청");
-        
+
         String memEmail = member.getEmail();
         String memNickName = member.getNickName();
         System.out.println(member);
@@ -66,6 +68,7 @@ public class MemberController {
     @Operation(summary = "이메일 중복 체크", description = "회원가입할 때 이메일 중복체크 확인 요청, true 사용 가능  false : 사용 불가능")
     @GetMapping("/chkEmail/{email}")
     public Boolean emailChk(@PathVariable("email") String email) {
+
         return memberService.emailChk(email);
     }
 
@@ -100,7 +103,16 @@ public class MemberController {
             cookie.setMaxAge((int)JwtTokenUtil.JWT_TOKEN_VALIDITY);
             response.addCookie(cookie);
 
-            return ResponseEntity.ok().body(token);
+            String nickName = securityUser.getMember().getNickName();
+
+            JwtResDTO jwtResDTO = JwtResDTO.builder()
+                    .token(token)
+                    .email(((SecurityUser) authentication.getPrincipal()).getUsername())
+                    .role(authentication.getAuthorities().toString())
+                    .nickName(nickName)
+                    .build();
+
+            return ResponseEntity.ok().body(jwtResDTO);
         }else{
             log.info("login fail");
         }

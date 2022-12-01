@@ -13,7 +13,9 @@
     "highcharts": "^10.3.2",
     "highcharts-vue": "^1.4.0",
     "pinia": "^2.0.25",
+    "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.2.13",
+    "vue-cookies": "^1.8.2",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
   },
