@@ -5,6 +5,7 @@ import com.example.demo.community.repository.CommunityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +31,21 @@ public class CommunityService {
     /**
     * 글 조회
      * 종목에 맞는 커뮤니티 글 조회
+     * 먼저 최 상단 댓글 (대댓글 x) 목록 출력
      */
     public List<Comment> getCommentsByStockCode(String stockCode){
 
-        return communityRepository.findByCodeOrderByRegDateDesc(stockCode);
+        return communityRepository.findByCodeAndParentIdOrderByRegDateAsc(stockCode,"");
+    }
+
+    /**
+     * 글 조회
+     * 종목에 맞는 커뮤니티 글 조회
+     * 먼저 최 상단 댓글 (대댓글 x) 목록 출력
+     */
+    public List<Comment> getCommentsByParentId(String commentId){
+
+        return communityRepository.findByParentIdOrderByRegDateAsc(commentId);
     }
 
 

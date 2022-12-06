@@ -16,6 +16,8 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +40,8 @@ public class CommunityController {
             return ResponseEntity.badRequest().body(false);
         }
 
-        comment.setMember(member.getMember());
+        comment.setEmail(member.getMember().getEmail());
+        comment.setNickName(member.getMember().getNickName());
         comment.setRegDate(LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
@@ -55,8 +58,34 @@ public class CommunityController {
         }
 
         List<Comment> comments = communityService.getCommentsByStockCode(stockCode);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("comments",comments);
+        resultMap.put("totalCount",comments.size());
+        return ResponseEntity.ok().body(resultMap);
 
-        return ResponseEntity.ok().body(comments);
+    }
+
+    @Operation(summary = "특정 코멘트에 대한 코멘트 목록 요청 (대댓글)")
+    @PostMapping("/comments/{stockCode}")
+    public ResponseEntity commentsByParentId(@RequestBody Map<String, String> idMap){
+
+        List<Comment> comments = new ArrayList<>();
+
+        try{
+            String commentId = idMap.get("id");
+
+            if(commentId.trim().equals("") || commentId == null){
+                throw new NullPointerException();
+            }
+
+            comments = communityService.getCommentsByParentId(commentId);
+
+        }catch (NullPointerException e){
+
+            return ResponseEntity.badRequest().body("id 값이 없습니다.");
+        }
+
+        return ResponseEntity.ok(comments);
 
     }
 

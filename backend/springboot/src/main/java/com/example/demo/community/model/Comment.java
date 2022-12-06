@@ -29,10 +29,6 @@ public class Comment {
     @NotBlank
     private String code;
 
-    // 작성한 유저
-    @ApiModelProperty(value = "_id",required = false,hidden = true)
-    private Member member;
-
     // 커뮤니티 글 내용
     @NotBlank
     @Size(min = 5, max = 100)
@@ -44,6 +40,18 @@ public class Comment {
     private String regDate;
 
     // 대댓글 깊이
-    @ApiModelProperty(value = "등록일",required = false,hidden = true)
+    @ApiModelProperty(required = false,hidden = true)
     private int depth;
+
+    // 부모 댓글
+    @ApiModelProperty(required = false,hidden = true)
+    private String parentId = "";
+
+    // 작성한 유저 이메일
+    @ApiModelProperty(required = false,hidden = true)
+    private String email;
+
+    // 작성한 유저 닉네임
+    @ApiModelProperty(required = false,hidden = true)
+    private String nickName;
 }
