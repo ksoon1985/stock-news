@@ -288,7 +288,10 @@
               type="submit"
               class="modalJoinBtn"
               :disabled="
-                !modalJoinPassword || !modalJoinPasswordTwo || !resNickCheck
+                !modalJoinPassword ||
+                !modalJoinPasswordTwo ||
+                !resNickCheck ||
+                !modalJoinGender
               "
             >
               회원가입
@@ -329,9 +332,9 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
@@ -343,9 +346,9 @@ export default {
     let resultData = ref([]);
     // let stockData = ref([]);
     const route = useRoute();
+    const router = useRouter();
     const store = useStockStore();
     const userStore = useUserStore();
-    let modalData = ref(false);
     let modalFormData = ref(true);
     let modalJoinData = ref(false);
     let modalJoinEmail = ref("");
@@ -366,8 +369,9 @@ export default {
     let modalchkNickFalse = ref(false);
     let nickInput = ref("");
     let joinComChk = ref(false);
+    let routeTest = ref("");
 
-    let { isLogin, nickName } = storeToRefs(userStore);
+    let { tempCode, isLogin, nickName } = storeToRefs(userStore);
 
     let {
       stockName,
@@ -389,7 +393,20 @@ export default {
       listLowYear,
       listHighYear,
       listSummaryInfo,
+      modalData,
     } = storeToRefs(store);
+
+    // listCode.value = route.query.code;
+
+    // watch(routeTest, () => {
+    //   listCode.value = routeTest.value;
+    // });
+
+    // watch(listCode, () => {
+    //   itemTest(), itemStockGet(), contentStockPriceGet();
+    // });
+
+    // listCode.value = route.query.code;
 
     let sendEventBus = () => {
       sendEventBus.$emit("name", resultData);
@@ -423,6 +440,18 @@ export default {
     const modalNickChange = (e) => {
       nickInput.value = e.target.value;
     };
+
+    onMounted(async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+      console.log("비포마운트", routeTest.value);
+      itemTest(), itemStockGet(), contentStockPriceGet();
+    });
+
+    // localStorage.setItem("tempCode", listCode.value);
+    // tempCode.value = localStorage.getItem("tempCode");
+    // console.log("tempCode : ", tempCode.value);
 
     watch(modalJoinPasswordTwo, () => {
       if (modalJoinPasswordTwo.value == "") {
@@ -466,7 +495,8 @@ export default {
     watch(modalJoinEmail, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkEmail/" + modalJoinEmail.value
+          "http://192.168.0.36:8089/api/member/chkEmail/" +
+            modalJoinEmail.value,
         )
         .then((emailchk) => {
           resEmailCheck.value = emailchk.data;
@@ -498,7 +528,7 @@ export default {
     watch(nickInput, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value
+          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value,
         )
         .then((nickchk) => {
           resNickCheck.value = nickchk.data;
@@ -592,7 +622,7 @@ export default {
       listCode.value = route.query.code;
       axios
         .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value
+          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
         )
         .then((itemData) => {
           stockCode.value = itemData.data;
@@ -605,8 +635,6 @@ export default {
           listLowYear.value = stockCode.value.highYear;
           listHighYear.value = stockCode.value.lowYear;
           listSummaryInfo.value = stockCode.value.summaryInfo;
-          console.log(stockCode);
-          console.log(listSummaryInfo);
         });
     };
 
@@ -702,6 +730,10 @@ export default {
       isLogin,
       nickName,
       modalLogoutSubmit,
+      route,
+      routeTest,
+      tempCode,
+      router,
     };
   },
 };

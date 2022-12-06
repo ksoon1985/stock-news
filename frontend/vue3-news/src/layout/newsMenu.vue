@@ -169,8 +169,6 @@ export default {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
 /* 메뉴 메인  */
 .main-tab {
   width: 100%;
