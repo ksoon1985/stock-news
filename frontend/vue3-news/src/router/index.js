@@ -22,7 +22,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    redirect: "/news/now",
+    redirect: "/news/now?code=005930",
     component: HomeView,
   },
   {
