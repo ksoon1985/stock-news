@@ -33,7 +33,7 @@ export const useStockStore = defineStore("stock", () => {
   let stockInformationDataQyarterTwo = ref(null); //재무정보 분기 데이터[1]
   let stockInformationDataQyarterThree = ref(null); //재무정보 분기 데이터[2]
   let stockInformationDataQyarterFour = ref(null); //재무정보 분기 데이터[3]
-  let modalData = ref(false);
+  let modalData = ref(false); //모달창 전체
 
   return {
     stockCode,

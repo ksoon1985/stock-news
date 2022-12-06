@@ -858,6 +858,10 @@ export default {
   color: black;
 }
 
+.results-list-router:hover {
+  background-color: #d2d2d2;
+}
+
 .header-logo-image {
   width: 3rem;
   height: 3rem;

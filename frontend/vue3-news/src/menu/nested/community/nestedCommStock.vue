@@ -1,5 +1,5 @@
 <template>
-  <div class="comm-stock-wrap">
+  <div class="sub-view-result">
     <div class="comm-stock-panel">
       <h2 class="panel-tag">
         <span class="panel-name"> ${{ stockName }} </span>
@@ -8,10 +8,56 @@
     </div>
 
     <div class="comm-create-comments">
-      <div class="create-comments-header">
-        <img class="profile-img" src="" />
-        <p class="nickname">{{ nickName }}</p>
+      <div class="create-comments-click" v-if="comNoClick">
+        <div class="comments-icon">
+          <svg
+            width="30"
+            height="30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style="display: block"
+          >
+            <image
+              href="@/assets/svg/group-of-people-svgrepo-com.svg"
+              width="30"
+              height="30"
+            />
+          </svg>
+        </div>
+        <div class="comments-btn">
+          <button class="commentBtn" @click="comClickEvent">
+            이 종목에 대해 어떻게 생각하시나요?
+          </button>
+        </div>
       </div>
+      <div class="create-comments-header" v-if="comClick">
+        <div class="create-post-header">
+          <p class="nickname">{{ nickName }}</p>
+          <div class="post-close-div">
+            <button type="button" class="postBtn">
+              <div class="post-close">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style="display: block"
+                >
+                  <image
+                    href="@/assets/svg/x-svgrepo-com.svg"
+                    width="20"
+                    height="20"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+        <div class="quill-editor">
+          <textarea>안녕하세요</textarea>
+        </div>
+      </div>
+      <div></div>
     </div>
 
     <div v-for="(item, index) in comments" :key="index">
@@ -21,7 +67,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
@@ -31,11 +77,34 @@ export default {
     const store = useStockStore();
     const userStore = useUserStore();
 
-    let { stockName, listCode } = storeToRefs(store);
-    let { nickName } = storeToRefs(userStore);
+    let { stockName, listCode, modalData } = storeToRefs(store);
+    let { nickName, isLogin } = storeToRefs(userStore);
 
     let comments = ref([]);
     let totalCount = ref(0);
+    let comNoClick = ref(false);
+    let comClick = ref(true);
+
+    onMounted(() => {
+      commentData();
+    });
+
+    const comClickEvent = () => {
+      if (isLogin.value == false) {
+        modalData.value = true;
+      } else {
+        comNoClick.value = false;
+        comClick.value = true;
+      }
+    };
+
+    const commentData = () => {
+      axios.get("/api/community/comments/" + listCode.value).then((res) => {
+        console.log(res);
+        comments.value = res.data.comments;
+        totalCount.value = res.data.totalCount;
+      });
+    };
 
     return {
       stockName,
@@ -43,28 +112,22 @@ export default {
       nickName,
       comments,
       totalCount,
+      commentData,
+      comNoClick,
+      comClick,
+      modalData,
+      isLogin,
+      comClickEvent,
     };
-  },
-
-  mounted() {
-    axios.get("/api/community/comments/" + this.listCode).then((res) => {
-      console.log(res);
-      this.comments = res.data.comments;
-      this.totalCount = res.data.totalCount;
-    });
   },
 };
 </script>
 
 <style scoped>
-.div {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font: inherit;
-  font-family: AlphaSans, sans-serif !important;
-  text-decoration: none;
+.comm-stock-wrap {
+  width: 100%;
 }
+
 /* 커뮤니티 - 종목 토론 - 최상단 영역 */
 .comm-stock-panel {
   width: 100%;
@@ -119,5 +182,43 @@ export default {
   -ms-flex-pack: start;
   justify-content: flex-start;
   position: relative;
+}
+
+.create-comments-click {
+  display: flex;
+}
+
+.commentBtn {
+  margin-left: 25px;
+  border-radius: 1.6rem;
+  font-size: 1rem;
+  color: #525252;
+  background-color: #f2f2f2;
+  width: 30rem;
+  height: 2rem;
+  border: none;
+}
+
+.commentBtn:hover {
+  background-color: #d2d2d2;
+}
+
+.create-post-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post-close-div {
+  margin-left: 30rem;
+}
+
+.postBtn {
+  border: none;
+  background: #ffffff;
+}
+
+.quill-editor {
+  display: flex;
+  justify-content: center;
 }
 </style>
