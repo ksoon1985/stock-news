@@ -13,7 +13,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -94,7 +96,9 @@ public class StockController {
 
         stockService.likeStock(stockCode,member.getUsername());
 
-        return ResponseEntity.ok().body("like success");
+        ArrayList<SearchResDTO> wishList = getLikeStocksHandler(member);
+
+        return ResponseEntity.ok().body(wishList);
     }
 
     @Operation(summary = "주식 종목 즐겨찾기 해제 요청" , description = "로그인 인증을 받은 유저의 주식 종목 즐겨찾기 해제 요청입니다.")
@@ -108,7 +112,9 @@ public class StockController {
 
         stockService.dislikeStock(stockCode,member.getUsername());
 
-        return ResponseEntity.ok().body("dislike success");
+        ArrayList<SearchResDTO> wishList = getLikeStocksHandler(member);
+
+        return ResponseEntity.ok().body(wishList);
     }
 
     @Operation(summary = "즐겨찾기한 목록 요청" , description = "로그인 인증을 받은 유저의 즐겨찾기 목록을 요청합니다.")
@@ -119,8 +125,15 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
         }
 
-        ArrayList<SearchResDTO> wishList = stockService.stockLikeList(member.getUsername());
+        ArrayList<SearchResDTO> wishList = getLikeStocksHandler(member);
 
         return ResponseEntity.ok().body(wishList);
+    }
+
+    public ArrayList<SearchResDTO> getLikeStocksHandler(@AuthenticationPrincipal SecurityUser member){
+
+        ArrayList<SearchResDTO> wishList = stockService.stockLikeList(member.getUsername());
+
+        return wishList;
     }
 }
