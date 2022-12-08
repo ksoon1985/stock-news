@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Array;
@@ -87,7 +88,7 @@ public class StockController {
     // @AuthenticationPrincipal : 로그인한 유저 (UserDetails)
     @Operation(summary = "주식 종목 즐겨찾기 요청", description = "로그인 인증을 받은 유저의 주식 종목 즐겨찾기 요청입니다.")
     @GetMapping("/stock-like/{stockCode}")
-    public ResponseEntity likeStock(@PathVariable String stockCode, @AuthenticationPrincipal SecurityUser member){
+    public ResponseEntity likeStock(@PathVariable String stockCode, @ApiIgnore @AuthenticationPrincipal SecurityUser member){
 
         // 인증이 안된 요청임
         if(member == null){
@@ -103,7 +104,7 @@ public class StockController {
 
     @Operation(summary = "주식 종목 즐겨찾기 해제 요청" , description = "로그인 인증을 받은 유저의 주식 종목 즐겨찾기 해제 요청입니다.")
     @GetMapping("/stock-dislike/{stockCode}")
-    public ResponseEntity dislikeStock(@PathVariable String stockCode, @AuthenticationPrincipal SecurityUser member){
+    public ResponseEntity dislikeStock(@PathVariable String stockCode, @ApiIgnore @AuthenticationPrincipal SecurityUser member){
 
         // 인증이 안된 요청임
         if(member == null){
@@ -119,7 +120,7 @@ public class StockController {
 
     @Operation(summary = "즐겨찾기한 목록 요청" , description = "로그인 인증을 받은 유저의 즐겨찾기 목록을 요청합니다.")
     @GetMapping("/stocks/likes")
-    public ResponseEntity getLikeStocks(@AuthenticationPrincipal SecurityUser member){
+    public ResponseEntity getLikeStocks(@ApiIgnore @AuthenticationPrincipal SecurityUser member){
         // 인증이 안된 요청임
         if(member == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
@@ -130,7 +131,7 @@ public class StockController {
         return ResponseEntity.ok().body(wishList);
     }
 
-    public ArrayList<SearchResDTO> getLikeStocksHandler(@AuthenticationPrincipal SecurityUser member){
+    public ArrayList<SearchResDTO> getLikeStocksHandler(@ApiIgnore @AuthenticationPrincipal SecurityUser member){
 
         ArrayList<SearchResDTO> wishList = stockService.stockLikeList(member.getUsername());
 

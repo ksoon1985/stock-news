@@ -29,6 +29,18 @@ public class CommunityService {
     }
 
     /**
+     * 대댓글 등록 요청시
+     * 부모 댓글 subCount 증가
+     */
+    public void increaseSubCount(String parentId){
+        Comment comment = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(parentId)), Comment.class);
+        if(comment != null){
+            comment.setSubCount(comment.getSubCount() + 1);
+            mongoTemplate.save(comment,"comment");
+        }
+    }
+
+    /**
     * 글 조회
      * 종목에 맞는 커뮤니티 글 조회
      * 먼저 최 상단 댓글 (대댓글 x) 목록 출력
@@ -55,7 +67,25 @@ public class CommunityService {
      */
     public void delComment(String id){
         if(communityRepository.existsById(id)){
+            Comment comment = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), Comment.class);
+            // 대댓글일때 부모 댓글 subCount 감소
+            if(!comment.getParentId().equals("")) {
+                decreaseSubCount(comment.getParentId());
+            }
             communityRepository.deleteById(id);
+        }
+    }
+
+
+    /**
+     * 댓글 삭제 요청시
+     * 부모 댓글 subCount 감소 (대댓글일때)
+     */
+    public void decreaseSubCount(String parentId){
+        Comment comment = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(parentId)), Comment.class);
+        if(comment != null){
+            comment.setSubCount(comment.getSubCount() - 1);
+            mongoTemplate.save(comment,"comment");
         }
     }
 

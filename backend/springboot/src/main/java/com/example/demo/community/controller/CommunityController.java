@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class CommunityController {
     private final CommunityService communityService;
     @Operation(summary = "커뮤니티 글 등록 요청")
     @PostMapping("/addComment")
-    public ResponseEntity addComment(@Valid @RequestBody Comment comment, BindingResult result, @AuthenticationPrincipal SecurityUser member){
+    public ResponseEntity addComment(@Valid @RequestBody Comment comment, BindingResult result,@ApiIgnore @AuthenticationPrincipal SecurityUser member){
 
         if(member == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
@@ -38,6 +39,12 @@ public class CommunityController {
 
         if(result.hasErrors()){
             return ResponseEntity.badRequest().body(false);
+        }
+
+        // 대댓글 등록 요청 시 부모 댓글의 subCount 수 ++ (update)
+        // comment 에 parentId 값이 있을 때
+        if(!comment.getParentId().trim().equals("") ){
+            communityService.increaseSubCount(comment.getParentId());
         }
 
         comment.setEmail(member.getMember().getEmail());

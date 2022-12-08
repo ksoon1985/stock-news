@@ -371,7 +371,7 @@ export default {
     let joinComChk = ref(false);
     let routeTest = ref("");
 
-    let { tempCode, isLogin, nickName } = storeToRefs(userStore);
+    let { tempCode, isLogin, nickName, likeList } = storeToRefs(userStore);
 
     let {
       stockName,
@@ -495,8 +495,7 @@ export default {
     watch(modalJoinEmail, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkEmail/" +
-            modalJoinEmail.value,
+          "http://192.168.0.36:8089/api/member/chkEmail/" + modalJoinEmail.value
         )
         .then((emailchk) => {
           resEmailCheck.value = emailchk.data;
@@ -528,7 +527,7 @@ export default {
     watch(nickInput, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value,
+          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value
         )
         .then((nickchk) => {
           resNickCheck.value = nickchk.data;
@@ -578,6 +577,18 @@ export default {
             nickName.value = res.data.nickName;
 
             modalData.value = false;
+
+            axios.get("/api/stock/stocks/likes").then((res) => {
+              likeList.value = res.data;
+
+              setTimeout(function tick() {
+                localStorage.removeItem("isLogin");
+                localStorage.removeItem("nickName");
+                isLogin.value = false;
+                nickName.value = "";
+                window.location.reload();
+              }, 5 * 60 * 60 * 1000); //5 시간 후 jwt 만료시간에 맞게 로그아웃 처리
+            });
           } else {
             console.log(res.status);
           }
@@ -622,7 +633,7 @@ export default {
       listCode.value = route.query.code;
       axios
         .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
+          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value
         )
         .then((itemData) => {
           stockCode.value = itemData.data;

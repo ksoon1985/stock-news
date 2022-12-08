@@ -8,6 +8,8 @@ export const useUserStore = defineStore("storeUser", {
 
       isLogin: ref(false),
       nickName: ref(""),
+
+      likeList: ref([]),
     };
   },
   actions: {

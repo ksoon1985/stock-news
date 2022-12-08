@@ -29,6 +29,26 @@
         <p class="stock-volume">{{ stockVolume }}</p>
       </div>
     </div>
+
+    <!-- 즐겨찾기 아이콘 추가 -->
+    <div class="star-icon">
+      <svg
+        width="30"
+        height="30"
+        xmlns="http://www.w3.org/2000/svg"
+        style="display: block"
+        @click="stockLike"
+      >
+        <image
+          id="icon"
+          class="icon"
+          :class="[isActive ? 'active' : '']"
+          href="@/assets/svg/star-svgrepo-com.svg"
+          width="30"
+          height="30"
+        ></image>
+      </svg>
+    </div>
   </div>
   <!-- <div class="loding-nav"></div> -->
   <div>
@@ -45,17 +65,24 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import { useStockStore } from "@/store/Stock.js";
+import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 
 export default {
   setup() {
+    const route = useRoute();
+    const router = useRouter();
     let stockChange = ref(false);
     let stockPercent = ref(0);
     let stockPercentTwo = ref(0);
     const store = useStockStore();
+    const userStore = useUserStore();
+    let routeTest = ref("");
+
     let {
       stockCode,
       listCode,
@@ -69,6 +96,40 @@ export default {
       contentStockPrice,
     } = storeToRefs(store);
 
+    let { isLogin, likeList } = storeToRefs(userStore);
+
+    /* star icon 색상 변경 부분  */
+    let isActive = ref(false);
+
+    onMounted(async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+      changeStarColor(likeList.value);
+    });
+
+    onUpdated(() => {
+      changeStarColor(likeList.value);
+    });
+
+    watch(likeList, () => {
+      changeStarColor(likeList.value);
+    });
+
+    const changeStarColor = (likelist) => {
+      let tmp = false;
+
+      likelist.forEach((item) => {
+        if (item.code == listCode.value) {
+          tmp = true;
+        }
+      });
+
+      isActive.value = tmp;
+    };
+
+    /* star icon 색상 변경 부분 끝*/
+
     watch(stockMinus, () => {
       if (stockMinus.value < 0) {
         stockChange.value = true;
@@ -81,6 +142,23 @@ export default {
         ((stockPrice.value - stockPriceTwo.value) / stockPriceTwo.value) * 100;
       stockPercentTwo.value = Math.round(stockPercent.value * 100) / 100;
     });
+
+    const stockLike = () => {
+      // 현재 즐겨찾기 하려는 종목이 좋아요 목록에 있는지 체크
+      // 있으면 -> 즐겨찾기 해제
+      // 없으면 -> 즐겨찾기 요청
+      let apiPath = "stock-like";
+      likeList.value.forEach((item) => {
+        if (item.code == listCode.value) {
+          apiPath = "stock-dislike";
+        }
+      });
+
+      axios.get("/api/stock/" + apiPath + "/" + listCode.value).then((res) => {
+        console.log(isLogin.value);
+        likeList.value = res.data;
+      });
+    };
 
     return {
       stockCode,
@@ -96,6 +174,9 @@ export default {
       stockChange,
       stockPercent,
       stockPercentTwo,
+      stockLike,
+      isActive,
+      changeStarColor,
     };
   },
 
@@ -234,7 +315,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text",
+              ".highcharts-range-input text"
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
@@ -267,6 +348,7 @@ export default {
   border-bottom: 1px solid #e0e0e0;
   position: relative;
   display: flex;
+  justify-content: space-between;
 }
 
 /* 종목표시 첫번째 바  */
@@ -379,5 +461,27 @@ export default {
 .price-minus {
   margin-top: 25px;
   margin-left: 8px;
+}
+
+/* 즐겨찾기 아이콘 */
+.star-icon {
+  display: flex;
+  float: right;
+}
+.star-icon svg {
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
+.icon:hover {
+  filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg)
+    brightness(97%) contrast(113%);
+  cursor: pointer;
+}
+
+.icon.active {
+  filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg)
+    brightness(97%) contrast(113%);
+  fill: red;
 }
 </style>

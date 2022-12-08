@@ -152,7 +152,7 @@ public class SearchUtil {
                 .orElse(null);
     }
 
-    // board created >= date 인 경우
+    //  created >= date 인 경우
     public static QueryBuilder getQueryBuilder(String field , Date date){
         return QueryBuilders.rangeQuery(field).gte(date);
     }

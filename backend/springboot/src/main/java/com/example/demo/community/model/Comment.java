@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 /**
- * 커뮤니티 코멘트(짧은 게시글)
+ * 커뮤니티 코멘트(댓글)
  */
 @Document(collection="comment")
 @Getter
@@ -46,6 +46,10 @@ public class Comment {
     // 부모 댓글
     @ApiModelProperty(required = false,hidden = true)
     private String parentId = "";
+
+    // 해당 댓글의 대댓글 수
+    @ApiModelProperty(required = false,hidden = true)
+    private int subCount;
 
     // 작성한 유저 이메일
     @ApiModelProperty(required = false,hidden = true)

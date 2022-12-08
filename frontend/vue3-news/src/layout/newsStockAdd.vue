@@ -226,6 +226,44 @@
           </button>
         </div>
       </div>
+      <!-- 로그인 후 즐겨찾기한 목록 영역-->
+      <div v-if="!leftHeader">
+        <div class="noLoginDiv" v-for="(item, index) in likeList" :key="index">
+          <button
+            class="noLogBtn"
+            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+          >
+            <div class="noLoginWrap">
+              <div class="noLogLogo">
+                <img
+                  class="noLoginImg"
+                  :src="require(`@/assets/stock_logo/${item.code}.png`)"
+                />
+              </div>
+              <router-link
+                class="results-list-router"
+                :to="{
+                  name: 'StockOne',
+                  query: { code: item.code },
+                }"
+              >
+                <div class="noLogWrap">
+                  <div class="cnameWrapSix">
+                    <p>{{ item.name }}</p>
+                  </div>
+                  <div class="cstockMark">
+                    <p class="daqColor">{{ item.market }}</p>
+                  </div>
+                </div>
+                <div class="noLogCode">
+                  <p>{{ item.code }}</p>
+                </div>
+              </router-link>
+            </div>
+          </button>
+        </div>
+      </div>
+      <!-- 로그인 후 즐겨찾기한 목록 영역 끝 -->
       <div class="log"></div>
     </div>
   </div>
@@ -274,7 +312,7 @@ export default {
       modalData,
     } = storeToRefs(store);
 
-    let { isLogin } = storeToRefs(userStore);
+    let { isLogin, likeList } = storeToRefs(userStore);
 
     const onClean = () => {
       searchInput.value = "";
@@ -303,9 +341,9 @@ export default {
 
     const itemCodeClick = (code) => {
       console.log("코드값을 알아봅시다", code);
-      // axios
-      //   .get("http://192.168.0.36:8089/api/stock/stock-like/" + code)
-      //   .then(() => {});
+      axios.get("/api/stock/stock-like/" + code).then((res) => {
+        likeList.value = res.data;
+      });
     };
 
     onMounted(() => {
@@ -343,7 +381,7 @@ export default {
       listCode.value = route.query.code;
       axios
         .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
+          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value
         )
         .then((itemData) => {
           stockCode.value = itemData.data;
@@ -412,6 +450,7 @@ export default {
       searchInput,
       blurClose,
       itemCodeClick,
+      likeList,
     };
   },
 };
@@ -606,9 +645,6 @@ export default {
 
 .leftSearchResults::-webkit-scrollbar {
   display: none;
-}
-
-.leftItem-1 {
 }
 
 .leftResultsBtn {

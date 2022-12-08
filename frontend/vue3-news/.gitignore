@@ -23,7 +23,8 @@ pnpm-debug.log*
 *.sw?
 
 # assets
-assets
+stock_logo
+
 
 # yarn 
 yarn.lock
