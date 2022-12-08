@@ -1,5 +1,5 @@
 <template>
-  <div class="logo">logo</div>
+  <div class="logo">스탁뉴스</div>
   <div class="search-wrap">
     <div class="main-search">
       <div class="header-empty">
@@ -539,7 +539,7 @@ export default {
     });
 
     const modalJoinSubmit = () => {
-      const url = "http://192.168.0.36:8089/api/member/signUp";
+      const url = "/api/member/signUp";
       let joinData = {
         email: modalJoinEmail.value,
         nickName: nickInput.value,

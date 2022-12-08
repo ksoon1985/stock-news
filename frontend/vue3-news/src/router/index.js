@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/layout/HomeView.vue";
 import MenuNews from "@/menu/menuNews.vue";
 import MenuStock from "@/menu/menuStock.vue";
-import MenuSns from "@/menu/menuSns.vue";
 import MenuCommunity from "@/menu/menuCommunity.vue";
 import MenuRank from "@/menu/menuRank.vue";
 import NestedCommStock from "@/menu/nested/community/nestedCommStock.vue";
@@ -11,12 +10,13 @@ import NestedNewsNow from "@/menu/nested/news/nestedNewsNow.vue";
 import NestedNewsPast from "@/menu/nested/news/nestedNewsPast.vue";
 import NestedRankOne from "@/menu/nested/rank/nestedRankOne.vue";
 import NestedRankTwo from "@/menu/nested/rank/nestedRankTwo.vue";
-import NestedSnsNow from "@/menu/nested/sns/nestedSnsNow.vue";
-import NestedSnsPast from "@/menu/nested/sns/nestedSnsPast.vue";
 import NestedStockOne from "@/menu/nested/stock/nestedStockOne.vue";
 import NestedStockTwo from "@/menu/nested/stock/nestedStockTwo.vue";
 import stockTwoYear from "@/menu/nested/stock/stockTwoNested/stockTwoYear.vue";
 import stockTwoQyarter from "@/menu/nested/stock/stockTwoNested/stockTwoQyarter.vue";
+// import MenuSns from "@/menu/menuSns.vue";
+// import NestedSnsNow from "@/menu/nested/sns/nestedSnsNow.vue";
+// import NestedSnsPast from "@/menu/nested/sns/nestedSnsPast.vue";
 
 const routes = [
   {
@@ -74,24 +74,24 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/sns",
-    name: "Sns",
-    component: MenuSns,
-    redirect: "/sns/now",
-    children: [
-      {
-        path: "now",
-        name: "SnsNow",
-        component: NestedSnsNow,
-      },
-      {
-        path: "past",
-        name: "SnsPast",
-        component: NestedSnsPast,
-      },
-    ],
-  },
+  // {
+  //   path: "/sns",
+  //   name: "Sns",
+  //   component: MenuSns,
+  //   redirect: "/sns/now",
+  //   children: [
+  //     {
+  //       path: "now",
+  //       name: "SnsNow",
+  //       component: NestedSnsNow,
+  //     },
+  //     {
+  //       path: "past",
+  //       name: "SnsPast",
+  //       component: NestedSnsPast,
+  //     },
+  //   ],
+  // },
   {
     path: "/community",
     name: "Community",

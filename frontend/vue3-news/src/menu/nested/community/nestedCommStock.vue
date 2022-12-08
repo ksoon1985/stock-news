@@ -31,37 +31,54 @@
         </div>
       </div>
       <div class="create-comments-header" v-if="comClick">
-        <div class="create-post-header">
-          <p class="nickname">{{ nickName }}</p>
-          <div class="post-close-div">
-            <button type="button" class="postBtn">
-              <div class="post-close">
-                <svg
-                  width="20"
-                  height="20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style="display: block"
-                >
-                  <image
-                    href="@/assets/svg/x-svgrepo-com.svg"
+        <form @submit.prevent="comContentSubmit">
+          <div class="create-post-header">
+            <div class="heraderNickName">
+              <p class="nickname">{{ nickName }}</p>
+            </div>
+            <div class="post-close-div">
+              <button type="button" class="postBtn" @click="comCloseEvent">
+                <div class="post-close">
+                  <svg
                     width="20"
                     height="20"
-                  />
-                </svg>
-              </div>
-            </button>
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style="display: block"
+                  >
+                    <image
+                      href="@/assets/svg/x-svgrepo-com.svg"
+                      width="20"
+                      height="20"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="quill-editor">
-          <textarea>안녕하세요</textarea>
-        </div>
+          <div class="quill-editor">
+            <textarea class="quillTextArea" v-model="comTextarea"></textarea>
+          </div>
+          <div class="quill-btn">
+            <button class="quillBtn" @click="commentData">게시</button>
+          </div>
+        </form>
       </div>
-      <div></div>
     </div>
 
-    <div v-for="(item, index) in comments" :key="index">
-      <span>{{ item.content }}</span>
+    <div class="comments-wrap">
+      <div class="stock-post">
+        <div v-for="(item, index) in comments" :key="index" class="contentDiv">
+          <div class="nickNameWrap">
+            <h3>{{ item.nickName }}</h3>
+          </div>
+          <p class="contentRegDate">{{ item.regDate }}</p>
+          <div class="postContent">
+            <p>{{ item.content }}</p>
+          </div>
+          <StockCom></StockCom>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -70,24 +87,56 @@
 import { ref, onMounted } from "vue";
 import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
+import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import axios from "axios";
+import StockCom from "@/menu/nested/community/nestedCommStockCom/commStockCom.vue";
+
 export default {
+  components: { StockCom },
+
   setup() {
     const store = useStockStore();
     const userStore = useUserStore();
+    const route = useRoute();
 
     let { stockName, listCode, modalData } = storeToRefs(store);
     let { nickName, isLogin } = storeToRefs(userStore);
 
     let comments = ref([]);
     let totalCount = ref(0);
-    let comNoClick = ref(false);
-    let comClick = ref(true);
+    let comNoClick = ref(true);
+    let comClick = ref(false);
+    let comTextarea = ref("");
+    let commentsStatus = ref(false);
 
     onMounted(() => {
       commentData();
     });
+
+    const comContentSubmit = () => {
+      listCode.value = route.query.code;
+      const url = "/api/community/addComment";
+      let comData = {
+        code: listCode.value,
+        content: comTextarea.value,
+      };
+      axios
+        .post(url, comData)
+        .then((res) => {
+          commentData();
+          comNoClick.value = true;
+          comClick.value = false;
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const comStatusClickEvent = () => {
+      commentsStatus.value = !commentsStatus.value;
+    };
 
     const comClickEvent = () => {
       if (isLogin.value == false) {
@@ -98,11 +147,18 @@ export default {
       }
     };
 
+    const comCloseEvent = () => {
+      comNoClick.value = true;
+      comClick.value = false;
+    };
+
     const commentData = () => {
+      listCode.value = route.query.code;
       axios.get("/api/community/comments/" + listCode.value).then((res) => {
         console.log(res);
         comments.value = res.data.comments;
         totalCount.value = res.data.totalCount;
+        console.log("등록된 글 보기", comments);
       });
     };
 
@@ -118,6 +174,11 @@ export default {
       modalData,
       isLogin,
       comClickEvent,
+      comCloseEvent,
+      comTextarea,
+      comContentSubmit,
+      commentsStatus,
+      comStatusClickEvent,
     };
   },
 };
@@ -166,22 +227,25 @@ export default {
 
 /* 코멘트 작성 영역 */
 .comm-create-comments {
-  width: 100%;
-  height: auto;
+  width: 90%;
   padding: 1.6rem 2.4rem 1.2rem;
   border-bottom: 4px solid #f2f2f2;
-  -webkit-transition: height 0.3s ease-out;
-  transition: height 0.3s ease-out;
+  text-align: center;
+  word-break: break-all;
+  height: auto;
 }
 
 /* 코멘트 헤더 영역 */
 .create-comments-header {
-  height: 3.2rem;
+  height: auto;
   display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  word-break: break-all;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .create-comments-click {
@@ -217,8 +281,133 @@ export default {
   background: #ffffff;
 }
 
-.quill-editor {
+.postBtn:hover {
+  background-color: #d2d2d2;
+}
+
+.heraderNickName {
+  width: auto;
+  position: relative;
+  top: -19px;
+  font-size: 1.2rem;
+  color: #1c1c1c;
+}
+
+.quillTextArea {
+  width: 35rem;
+  height: 5rem;
+  border: none;
+  border-bottom: 2px solid #f2f2f2;
+}
+
+.quill-btn {
+  margin-top: 10px;
+  margin-right: 1rem;
+  width: 100%;
+  text-align: right;
+}
+
+.quillBtn {
+  width: 5rem;
+  height: 2rem;
+  border-radius: 4px;
+  background-color: #d01411;
+  color: #fef6f6;
+  border: none;
+  cursor: pointer;
+}
+
+.quillBtn:hover {
+  color: #1c1c1c;
+}
+
+/* .postContent {
+  border-bottom: 2px solid #f2f2f2;
+} */
+
+.contentRegDate {
+  position: relative;
+  top: -16px;
+  left: 12px;
+  color: #999999;
+  font-size: 0.7rem;
+}
+
+.contentDiv {
+  height: auto;
+  border-bottom: 4px solid #f2f2f2;
+}
+
+.nickNameWrap {
+  margin-left: 10px;
+}
+
+.postContent {
+  margin-left: 10px;
+  margin-bottom: 1.6rem;
+}
+
+.post-menu {
+  border-top: 1px solid #f2f2f2;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.postMenuBtn {
+  width: 5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  background-color: #d01411;
+  color: #fef6f6;
+  border: none;
+}
+
+.post-menu-btn {
+  margin-right: 1.5rem;
+}
+
+.post-bubble-div {
+  margin-left: 1rem;
+}
+
+.con-comment {
+  border-top: 1px solid #f2f2f2;
+}
+
+.for-empty-text {
+  color: #999999;
+}
+
+.for-empty-wrap {
+  width: 100%;
+  position: relative;
+  top: 50%;
+  left: 38%;
+}
+
+.create-comment {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: flex-start;
+  border-top: 1px solid #f2f2f2;
+}
+
+.ql-input {
+  width: 33rem;
+  border: none;
+  font-size: 1.1rem;
+  margin-top: 7px;
+}
+
+.ql-btn {
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  background-color: #d01411;
+  color: #fef6f6;
+  border: none;
+  margin-top: 6px;
 }
 </style>

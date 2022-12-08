@@ -58,7 +58,7 @@
         <span class="title" id="title">종목정보</span>
       </button></Router-link
     >
-    <Router-link
+    <!-- <Router-link
       class="router-tab"
       id="router-tab"
       :to="{
@@ -86,7 +86,7 @@
         </div>
         <span class="title" id="title">SNS여론</span>
       </button></Router-link
-    >
+    > -->
     <Router-link
       class="router-tab"
       id="router-tab"
@@ -192,7 +192,7 @@ export default {
   justify-content: center;
   flex: none;
   cursor: pointer;
-  margin-left: 5px;
+  margin-left: 35px;
   margin-top: 13px;
   text-decoration: none;
   background: white;

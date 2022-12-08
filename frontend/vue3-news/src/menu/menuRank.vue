@@ -13,7 +13,7 @@
         <span class="sub-title" id="sub-title">검색어</span>
       </button></router-link
     >
-    <router-link
+    <!-- <router-link
       class="router-tab"
       exact-active-class="exact-active-link"
       :to="{
@@ -25,7 +25,7 @@
       ><button class="btn-close">
         <span class="sub-title" id="sub-title">연령별</span>
       </button></router-link
-    >
+    > -->
   </div>
   <div class="main-view">
     <Router-view class="router-view"></Router-view>
