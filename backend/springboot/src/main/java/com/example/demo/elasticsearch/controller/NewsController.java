@@ -2,28 +2,21 @@ package com.example.demo.elasticsearch.controller;
 
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
+import com.example.demo.elasticsearch.dto.json.NewsClusteredResDTO;
 import com.example.demo.elasticsearch.model.News;
 import com.example.demo.elasticsearch.service.NewsService;
-import com.example.demo.elasticsearch.utils.Indices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-//import org.carrot2.language.korean.KoreanLanguageComponents;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +24,7 @@ import java.util.List;
 public class NewsController {
 
     private final NewsService newsService;
-    private final ObjectMapper MAPPER = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/getNews/{id}")
@@ -47,9 +40,8 @@ public class NewsController {
         return ResponseEntity.ok().body(newsService.getNews(dto));
     }
 
-
     @GetMapping("/getClusteredNews")
-    public String getClusteredNews() throws JsonProcessingException {
+    public NewsClusteredResDTO getClusteredNews() throws JsonProcessingException {
 
         // news req dto
         NewsClusteredReqDTO newsDto = new NewsClusteredReqDTO();
@@ -117,12 +109,13 @@ public class NewsController {
          // algorithm
         newsDto.setAlgorithm("Lingo");
 
+        // es 에 요청 ================================================================================
+
         // dto -> json String
-        String jsonString = MAPPER.writeValueAsString(newsDto);
+        String jsonString = objectMapper.writeValueAsString(newsDto);
 
         System.out.println("########################"+jsonString);
 
-        // es 에 요청 ================================================================================
         // Header set
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -133,6 +126,11 @@ public class NewsController {
         String url = "http://192.168.0.47:9200/naver.news/_search_with_clusters?pretty=true";
         // Request
         HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
-        return response.getBody();
+
+
+        // es 응답 json string -> java object 파싱 ===================================================
+        NewsClusteredResDTO resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO.class);
+
+        return resDto;
     }
 }
