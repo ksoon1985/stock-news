@@ -1,15 +1,29 @@
 package com.example.demo.elasticsearch.controller;
 
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
+import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import com.example.demo.elasticsearch.model.News;
 import com.example.demo.elasticsearch.service.NewsService;
+import com.example.demo.elasticsearch.utils.Indices;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 //import org.carrot2.language.korean.KoreanLanguageComponents;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,6 +31,8 @@ import java.util.ArrayList;
 public class NewsController {
 
     private final NewsService newsService;
+    private final ObjectMapper MAPPER = new ObjectMapper();
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/getNews/{id}")
     public News getNews(@PathVariable String id){
@@ -33,10 +49,90 @@ public class NewsController {
 
 
     @GetMapping("/getClusteredNews")
-    public String getTest(){
-        //KoreanLanguageComponents koreanLanguageComponents = new KoreanLanguageComponents();
-        //return newsService.getClusteredNews();
-        return null;
+    public String getClusteredNews() throws JsonProcessingException {
 
+        // news req dto
+        NewsClusteredReqDTO newsDto = new NewsClusteredReqDTO();
+
+         // search_request
+        NewsClusteredReqDTO.SearchRequest searchRequest = new NewsClusteredReqDTO.SearchRequest();
+
+          // _source
+        ArrayList<String> sourceList = new ArrayList<>();
+        sourceList.add("url");
+        sourceList.add("title");
+        sourceList.add("content");
+        sourceList.add("registration_date");
+        searchRequest.setSource(sourceList);
+
+          // highlight
+        NewsClusteredReqDTO.Highlight highlight = new NewsClusteredReqDTO.Highlight();
+        ArrayList<String> preTagsList = new ArrayList<>();
+        preTagsList.add("");
+        preTagsList.add("");
+        highlight.setPreTags(preTagsList);
+        ArrayList<String> postTagsList = new ArrayList<>();
+        postTagsList.add("");
+        postTagsList.add("");
+        highlight.setPostTags(postTagsList);
+        NewsClusteredReqDTO.Fields fields = new NewsClusteredReqDTO.Fields();
+        NewsClusteredReqDTO.Title title = new NewsClusteredReqDTO.Title();
+        title.setFragmentSize(150);
+        title.setNumberOfFragments(3);
+        fields.setTitle(title);
+        NewsClusteredReqDTO.Content content = new NewsClusteredReqDTO.Content();
+        content.setFragmentSize(150);
+        content.setNumberOfFragments(3);
+        fields.setContent(content);
+        highlight.setFields(fields);
+        searchRequest.setHighlight(highlight);
+
+          // query
+        NewsClusteredReqDTO.Match match = new NewsClusteredReqDTO.Match();
+        match.setContent("삼성전자");
+        NewsClusteredReqDTO.Query query = new NewsClusteredReqDTO.Query();
+        query.setMatch(match);
+        searchRequest.setQuery(query);
+
+          // size
+        searchRequest.setSize(100);
+        newsDto.setSearchRequest(searchRequest);
+
+         // query_hint
+        newsDto.setQueryHint("");
+
+         // field_mapping
+        NewsClusteredReqDTO.FieldMapping fieldMapping = new NewsClusteredReqDTO.FieldMapping();
+        ArrayList<String> titleList = new ArrayList<>();
+        titleList.add("_source.title");
+        fieldMapping.setTitle(titleList);
+        ArrayList<String> contentList = new ArrayList<>();
+        contentList.add("highlight.content");
+        fieldMapping.setContent(contentList);
+        newsDto.setFieldMapping(fieldMapping);
+
+         // language
+        newsDto.setLanguage("Korean");
+
+         // algorithm
+        newsDto.setAlgorithm("Lingo");
+
+        // dto -> json String
+        String jsonString = MAPPER.writeValueAsString(newsDto);
+
+        System.out.println("########################"+jsonString);
+
+        // es 에 요청 ================================================================================
+        // Header set
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+        // Message
+        HttpEntity<?> requestMessage = new HttpEntity<>(newsDto, httpHeaders);
+
+        String url = "http://192.168.0.47:9200/naver.news/_search_with_clusters?pretty=true";
+        // Request
+        HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
+        return response.getBody();
     }
 }
