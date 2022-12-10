@@ -1,9 +1,14 @@
 package com.example.demo.elasticsearch.dto.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter @Setter
 public class NewsClusteredReqDTO {
 
     @JsonProperty("algorithm")
@@ -19,77 +24,15 @@ public class NewsClusteredReqDTO {
     @JsonProperty("search_request")
     private SearchRequest searchRequest;
 
-    public String getAlgorithm() {
-        return algorithm;
-    }
-
-    public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public int getLabelcount() {
-        return labelcount;
-    }
-
-    public void setLabelcount(int labelcount) {
-        this.labelcount = labelcount;
-    }
-
-    public FieldMapping getFieldMapping() {
-        return fieldMapping;
-    }
-
-    public void setFieldMapping(FieldMapping fieldMapping) {
-        this.fieldMapping = fieldMapping;
-    }
-
-    public String getQueryHint() {
-        return queryHint;
-    }
-
-    public void setQueryHint(String queryHint) {
-        this.queryHint = queryHint;
-    }
-
-    public SearchRequest getSearchRequest() {
-        return searchRequest;
-    }
-
-    public void setSearchRequest(SearchRequest searchRequest) {
-        this.searchRequest = searchRequest;
-    }
-
+    @Getter @Setter
     public static class FieldMapping {
         @JsonProperty("content")
         private List<String> content;
         @JsonProperty("title")
         private List<String> title;
-
-        public List<String> getContent() {
-            return content;
-        }
-
-        public void setContent(List<String> content) {
-            this.content = content;
-        }
-
-        public List<String> getTitle() {
-            return title;
-        }
-
-        public void setTitle(List<String> title) {
-            this.title = title;
-        }
     }
 
+    @Getter @Setter
     public static class SearchRequest {
         @JsonProperty("size")
         private int size;
@@ -99,66 +42,59 @@ public class NewsClusteredReqDTO {
         private Highlight highlight;
         @JsonProperty("_source")
         private List<String> source;
-
-        public int getSize() {
-            return size;
-        }
-
-        public void setSize(int size) {
-            this.size = size;
-        }
-
-        public Query getQuery() {
-            return query;
-        }
-
-        public void setQuery(Query query) {
-            this.query = query;
-        }
-
-        public Highlight getHighlight() {
-            return highlight;
-        }
-
-        public void setHighlight(Highlight highlight) {
-            this.highlight = highlight;
-        }
-
-        public List<String> getSource() {
-            return source;
-        }
-
-        public void setSource(List<String> source) {
-            this.source = source;
-        }
     }
 
+    @Getter @Setter
     public static class Query {
+        @JsonProperty("bool")
+        private Bool bool;
+    }
+    @Getter @Setter
+    public static class Bool {
+        @JsonProperty("must")
+        private List<Must> must;
+    }
+
+    @Getter @Setter
+    public static class Must {
         @JsonProperty("match")
         private Match match;
 
-        public Match getMatch() {
-            return match;
-        }
-
-        public void setMatch(Match match) {
-            this.match = match;
-        }
+        @JsonProperty("range")
+        private Range range;
     }
 
+    @Getter @Setter
+    @JsonNaming
     public static class Match {
         @JsonProperty("content")
-        private String content;
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
+        private QContent content;
     }
 
+    @Getter @Setter
+    public static class QContent {
+        @JsonProperty("operator")
+        private String operator;
+        @JsonProperty("query")
+        private String query;
+    }
+
+    @Getter @Setter
+    @JsonNaming
+    public static class Range{
+        @JsonProperty("registration_date")
+        private RegDate regDate;
+    }
+
+    @Getter @Setter
+    public static class RegDate{
+        @JsonProperty("gte")
+        private String gte;
+        @JsonProperty("lte")
+        private String lte;
+    }
+
+    @Getter @Setter
     public static class Highlight {
         @JsonProperty("fields")
         private Fields fields;
@@ -167,97 +103,31 @@ public class NewsClusteredReqDTO {
         @JsonProperty("pre_tags")
         private List<String> preTags;
 
-        public Fields getFields() {
-            return fields;
-        }
-
-        public void setFields(Fields fields) {
-            this.fields = fields;
-        }
-
-        public List<String> getPostTags() {
-            return postTags;
-        }
-
-        public void setPostTags(List<String> postTags) {
-            this.postTags = postTags;
-        }
-
-        public List<String> getPreTags() {
-            return preTags;
-        }
-
-        public void setPreTags(List<String> preTags) {
-            this.preTags = preTags;
-        }
     }
 
+    @Getter @Setter
     public static class Fields {
         @JsonProperty("title")
         private Title title;
         @JsonProperty("content")
         private Content content;
-
-        public Title getTitle() {
-            return title;
-        }
-
-        public void setTitle(Title title) {
-            this.title = title;
-        }
-
-        public Content getContent() {
-            return content;
-        }
-
-        public void setContent(Content content) {
-            this.content = content;
-        }
     }
 
+    @Getter @Setter
     public static class Title {
         @JsonProperty("number_of_fragments")
         private int numberOfFragments;
         @JsonProperty("fragment_size")
         private int fragmentSize;
 
-        public int getNumberOfFragments() {
-            return numberOfFragments;
-        }
-
-        public void setNumberOfFragments(int numberOfFragments) {
-            this.numberOfFragments = numberOfFragments;
-        }
-
-        public int getFragmentSize() {
-            return fragmentSize;
-        }
-
-        public void setFragmentSize(int fragmentSize) {
-            this.fragmentSize = fragmentSize;
-        }
     }
 
+    @Getter @Setter
     public static class Content {
         @JsonProperty("number_of_fragments")
         private int numberOfFragments;
         @JsonProperty("fragment_size")
         private int fragmentSize;
 
-        public int getNumberOfFragments() {
-            return numberOfFragments;
-        }
-
-        public void setNumberOfFragments(int numberOfFragments) {
-            this.numberOfFragments = numberOfFragments;
-        }
-
-        public int getFragmentSize() {
-            return fragmentSize;
-        }
-
-        public void setFragmentSize(int fragmentSize) {
-            this.fragmentSize = fragmentSize;
-        }
     }
 }

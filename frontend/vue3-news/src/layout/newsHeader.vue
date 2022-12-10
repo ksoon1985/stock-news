@@ -372,6 +372,7 @@ export default {
     let routeTest = ref("");
 
     let { tempCode, isLogin, nickName, likeList } = storeToRefs(userStore);
+    let setTimeoutHandler = ref(null);
 
     let {
       stockName,
@@ -581,11 +582,8 @@ export default {
             axios.get("/api/stock/stocks/likes").then((res) => {
               likeList.value = res.data;
 
-              setTimeout(function tick() {
-                localStorage.removeItem("isLogin");
-                localStorage.removeItem("nickName");
-                isLogin.value = false;
-                nickName.value = "";
+              setTimeoutHandler.value = setTimeout(() => {
+                modalLogoutSubmit();
                 window.location.reload();
               }, 5 * 60 * 60 * 1000); //5 시간 후 jwt 만료시간에 맞게 로그아웃 처리
             });
@@ -607,6 +605,10 @@ export default {
           localStorage.removeItem("nickName");
           isLogin.value = false;
           nickName.value = "";
+
+          likeList.value = [];
+
+          clearTimeout(setTimeoutHandler.value);
         })
         .catch((err) => {
           console.log(err);

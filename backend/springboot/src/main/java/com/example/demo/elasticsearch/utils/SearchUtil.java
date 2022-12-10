@@ -2,12 +2,14 @@ package com.example.demo.elasticsearch.utils;
 
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
 import com.example.demo.elasticsearch.dto.SearchReqDTO;
+import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,103 @@ public class SearchUtil {
             return null;
         }
     }
+
+    // 뉴스 클러스터링 요청 json(dto) 만드는 기능 (custom)
+    public static NewsClusteredReqDTO buildRequestJsonQuery(SearchNewsReqDTO newsReqDTO){
+
+        String searchTerm = newsReqDTO.getSearchTerm();
+        String fromDate = newsReqDTO.getFromDate();
+        String toDate = newsReqDTO.getToDate();
+
+        // news req dto
+        NewsClusteredReqDTO newsDto = new NewsClusteredReqDTO();
+
+        // search_request
+        NewsClusteredReqDTO.SearchRequest searchRequest = new NewsClusteredReqDTO.SearchRequest();
+
+        // _source
+        ArrayList<String> sourceList = new ArrayList<>();
+        sourceList.add("url");
+        sourceList.add("title");
+        sourceList.add("content");
+        sourceList.add("registration_date");
+        searchRequest.setSource(sourceList);
+
+        // highlight
+        NewsClusteredReqDTO.Highlight highlight = new NewsClusteredReqDTO.Highlight();
+        ArrayList<String> preTagsList = new ArrayList<>();
+        preTagsList.add("");
+        preTagsList.add("");
+        highlight.setPreTags(preTagsList);
+        ArrayList<String> postTagsList = new ArrayList<>();
+        postTagsList.add("");
+        postTagsList.add("");
+        highlight.setPostTags(postTagsList);
+        NewsClusteredReqDTO.Fields fields = new NewsClusteredReqDTO.Fields();
+        NewsClusteredReqDTO.Title title = new NewsClusteredReqDTO.Title();
+        title.setFragmentSize(150);
+        title.setNumberOfFragments(3);
+        fields.setTitle(title);
+        NewsClusteredReqDTO.Content content = new NewsClusteredReqDTO.Content();
+        content.setFragmentSize(150);
+        content.setNumberOfFragments(3);
+        fields.setContent(content);
+        highlight.setFields(fields);
+        searchRequest.setHighlight(highlight);
+
+        // query
+        NewsClusteredReqDTO.Query query = new NewsClusteredReqDTO.Query();
+        NewsClusteredReqDTO.Bool bool = new NewsClusteredReqDTO.Bool();
+
+        NewsClusteredReqDTO.Must must1 = new NewsClusteredReqDTO.Must();
+        NewsClusteredReqDTO.Match match = new NewsClusteredReqDTO.Match();
+        NewsClusteredReqDTO.QContent qContent = new NewsClusteredReqDTO.QContent();
+        qContent.setQuery(searchTerm);
+        qContent.setOperator("and");
+        match.setContent(qContent);
+        must1.setMatch(match);
+
+        NewsClusteredReqDTO.Must must2 = new NewsClusteredReqDTO.Must();
+        NewsClusteredReqDTO.Range range = new NewsClusteredReqDTO.Range();
+        NewsClusteredReqDTO.RegDate regDate = new NewsClusteredReqDTO.RegDate();
+        regDate.setGte(fromDate);
+        regDate.setLte(toDate);
+        range.setRegDate(regDate);
+        must2.setRange(range);
+        ArrayList<NewsClusteredReqDTO.Must> musts = new ArrayList<>();
+        musts.add(must1);
+        musts.add(must2);
+        bool.setMust(musts);
+        query.setBool(bool);
+        searchRequest.setQuery(query);
+
+        // size
+        searchRequest.setSize(100);
+        newsDto.setSearchRequest(searchRequest);
+
+        // query_hint
+        newsDto.setQueryHint("");
+
+        // field_mapping
+        NewsClusteredReqDTO.FieldMapping fieldMapping = new NewsClusteredReqDTO.FieldMapping();
+        ArrayList<String> titleList = new ArrayList<>();
+        titleList.add("_source.title");
+        fieldMapping.setTitle(titleList);
+        ArrayList<String> contentList = new ArrayList<>();
+        contentList.add("highlight.content");
+        fieldMapping.setContent(contentList);
+        newsDto.setFieldMapping(fieldMapping);
+
+        // language
+        newsDto.setLanguage("Korean");
+
+        // algorithm
+        newsDto.setAlgorithm("Lingo");
+
+        return newsDto;
+    }
+
+
 
 
     // 임시 참고용 ================================================================================

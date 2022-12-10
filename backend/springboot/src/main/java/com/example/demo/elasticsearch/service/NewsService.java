@@ -1,10 +1,15 @@
 package com.example.demo.elasticsearch.service;
 
+import com.example.demo.elasticsearch.dto.ClusteredNews;
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
 import com.example.demo.elasticsearch.dto.SearchReqDTO;
+import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
+import com.example.demo.elasticsearch.dto.json.NewsClusteredResDTO;
 import com.example.demo.elasticsearch.model.News;
+import com.example.demo.elasticsearch.repository.NewsSearchRepository;
 import com.example.demo.elasticsearch.utils.Indices;
 import com.example.demo.elasticsearch.utils.SearchUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,23 +25,24 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class NewsService {
 
-    private final ObjectMapper MAPPER = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
     private final RestHighLevelClient client;
+    private final NewsSearchRepository newsSearchRepository;
 
     @Value("${elasticsearch.host}")
     private String host;
@@ -54,35 +60,12 @@ public class NewsService {
             }
 
             // json 형태를 객체 형태로 반환
-            return MAPPER.readValue(documentFields.getSourceAsString(), News.class);
+            return objectMapper.readValue(documentFields.getSourceAsString(), News.class);
         } catch (IOException e) {
             log.error(e.getMessage());
             return null;
         }
     }
-
-    // news cluster 값 조회 << 미구현 >>
-    public String getClusteredNews(){
-
-        // Header set
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-        // Body set
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-
-
-
-        // Message
-        HttpEntity<?> requestMessage = new HttpEntity<>(body, httpHeaders);
-
-        String url = "http://192.168.0.47:9200/"+Indices.NEWS_CLUSTERED_INDEX;
-        // Request
-        HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
-
-        return response.getBody();
-    }
-
 
     // 조건에 맞는 모든 뉴스 가져오기
     public List<News> getNews(SearchNewsReqDTO dto){
@@ -90,9 +73,57 @@ public class NewsService {
         return searchInternal(request);
     }
 
-    public List<News> getNews(SearchReqDTO dto){
-        SearchRequest request = SearchUtil.buildSearchRequest(Indices.NEWS_INDEX, dto);
-        return searchInternal(request);
+    public  ArrayList<ClusteredNews> getClusteredNews(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
+
+        // 엘라스틱 서치에 요청할 carrot2 전용 json dto 생성 ====================================================
+        NewsClusteredReqDTO newsDto = SearchUtil.buildRequestJsonQuery(newsReqDTO);
+
+        System.out.println("########################"+objectMapper.writeValueAsString(newsDto).toString());
+
+        // HTTP Header set
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+        // HTTP Message set
+        HttpEntity<?> requestMessage = new HttpEntity<>(newsDto, httpHeaders);
+
+        // 엘라스틱 서치 요청 url
+        String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+
+        // 요청 실행 !!!
+        HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
+
+        // 엘라스틱서치에서 준 응답 데이터
+        // json String -> json dto 로 변환 ===================================================================
+        NewsClusteredResDTO resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO.class);
+
+
+        // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
+        List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
+
+        // 클러스터링된 뉴스 결과 리스트
+        ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
+
+        for (NewsClusteredResDTO.Clusters cluster : clusters) {
+
+            ClusteredNews clusteredNews = new ClusteredNews();
+            ArrayList<News> newsList = new ArrayList<>();
+
+            clusteredNews.setScore(cluster.getScore());
+            clusteredNews.setLabel(cluster.getLabel());
+
+            cluster.getDocuments().forEach(documentId->{
+                News news = getNewsById(documentId);
+                if(news != null){
+                    newsList.add(news);
+                }
+            });
+            clusteredNews.setNews(newsList);
+
+            clusteredNewsList.add(clusteredNews);
+        }
+
+        return clusteredNewsList;
     }
 
     // elasticsearch 로 부터 hit 가져오기
@@ -103,12 +134,13 @@ public class NewsService {
         }
 
         try {
+
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
             SearchHit[] searchHits = response.getHits().getHits();
             List<News> news = new ArrayList<>(searchHits.length);
             for (SearchHit hit : searchHits) {
                 news.add(
-                        MAPPER.readValue(hit.getSourceAsString(), News.class)
+                        objectMapper.readValue(hit.getSourceAsString(), News.class)
                 );
             }
 

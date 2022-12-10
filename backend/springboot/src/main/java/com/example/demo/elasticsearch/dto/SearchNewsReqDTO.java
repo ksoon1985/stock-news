@@ -1,5 +1,6 @@
 package com.example.demo.elasticsearch.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.elasticsearch.search.sort.SortOrder;
@@ -13,10 +14,8 @@ import java.util.List;
 public class SearchNewsReqDTO extends PagedReqDTO{
 
     private String searchTerm; // 검색 term
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date fromDate; // 검색 시작 날짜
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date toDate; // 검색 종료 날짜
+    private String fromDate; // 검색 시작 날짜
+    private String toDate; // 검색 종료 날짜
     private String sortBy; // sort 할 field
     private SortOrder order; // sort 방식 (asc,desc)
 

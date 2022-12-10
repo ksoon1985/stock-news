@@ -76,6 +76,7 @@ public class SecurityConfig {
                                 "/api/member/**",
                                 "/api/stock/**",
                                 "/api/news/**",
+                                "/api/community/**",
 
                                 "/api/swagger/**",
                                 "/v3/api-docs",

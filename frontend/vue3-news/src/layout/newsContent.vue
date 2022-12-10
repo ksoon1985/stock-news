@@ -94,6 +94,7 @@ export default {
       stockMinus,
       stockVolume,
       contentStockPrice,
+      modalData,
     } = storeToRefs(store);
 
     let { isLogin, likeList } = storeToRefs(userStore);
@@ -144,6 +145,13 @@ export default {
     });
 
     const stockLike = () => {
+      // 로그인한 회원인지 확인
+      // 안했으면 -> 로그인 모달창 생성
+      if (!isLogin.value) {
+        modalData.value = true;
+        return;
+      }
+
       // 현재 즐겨찾기 하려는 종목이 좋아요 목록에 있는지 체크
       // 있으면 -> 즐겨찾기 해제
       // 없으면 -> 즐겨찾기 요청
