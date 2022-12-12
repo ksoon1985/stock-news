@@ -40,10 +40,10 @@
         @click="stockLike"
       >
         <image
-          id="icon"
-          class="icon"
+          id="icontwo"
+          class="icontwo"
           :class="[isActive ? 'active' : '']"
-          href="@/assets/svg/star-svgrepo-com.svg"
+          href="@/assets/svg/star-sign-svgrepo-com.svg"
           width="30"
           height="30"
         ></image>
@@ -323,7 +323,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text"
+              ".highcharts-range-input text",
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
@@ -481,15 +481,19 @@ export default {
   margin-right: 20px;
 }
 
-.icon:hover {
-  filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg)
-    brightness(97%) contrast(113%);
-  cursor: pointer;
+.icontwo:hover {
+  filter: invert(58%) sepia(96%) saturate(801%) hue-rotate(358deg)
+    brightness(100%) contrast(106%);
 }
 
-.icon.active {
-  filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg)
-    brightness(97%) contrast(113%);
-  fill: red;
+/* .icon:hover {
+  filter: invert(85%) sepia(92%) saturate(4924%) hue-rotate(321deg)
+    brightness(102%) contrast(109%);
+  cursor: pointer;
+} */
+
+.icontwo.active {
+  filter: invert(58%) sepia(96%) saturate(801%) hue-rotate(358deg)
+    brightness(100%) contrast(106%);
 }
 </style>

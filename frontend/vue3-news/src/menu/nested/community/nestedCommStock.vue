@@ -76,7 +76,12 @@
           <div class="postContent">
             <p>{{ item.content }}</p>
           </div>
-          <StockCom></StockCom>
+          <StockCom
+            :subCount="item.subCount"
+            :subId="item._id"
+            :subNickName="item.nickName"
+            @event1="commentData()"
+          />
         </div>
       </div>
     </div>
@@ -84,7 +89,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUpdated, watch } from "vue";
 import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { useRoute } from "vue-router";
@@ -100,7 +105,7 @@ export default {
     const userStore = useUserStore();
     const route = useRoute();
 
-    let { stockName, listCode, modalData } = storeToRefs(store);
+    let { stockName, listCode, modalData, commSubCount } = storeToRefs(store);
     let { nickName, isLogin } = storeToRefs(userStore);
 
     let comments = ref([]);
@@ -158,9 +163,9 @@ export default {
         console.log(res);
         comments.value = res.data.comments;
         totalCount.value = res.data.totalCount;
-        console.log("등록된 글 보기", comments);
       });
     };
+    watch(() => {});
 
     return {
       stockName,
@@ -179,6 +184,9 @@ export default {
       comContentSubmit,
       commentsStatus,
       comStatusClickEvent,
+      commSubCount,
+      onUpdated,
+      watch,
     };
   },
 };
@@ -330,7 +338,7 @@ export default {
   top: -16px;
   left: 12px;
   color: #999999;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
 }
 
 .contentDiv {
@@ -345,69 +353,5 @@ export default {
 .postContent {
   margin-left: 10px;
   margin-bottom: 1.6rem;
-}
-
-.post-menu {
-  border-top: 1px solid #f2f2f2;
-  display: flex;
-  justify-content: space-between;
-  padding: 3px;
-}
-
-.postMenuBtn {
-  width: 5rem;
-  height: 1.5rem;
-  border-radius: 4px;
-  background-color: #d01411;
-  color: #fef6f6;
-  border: none;
-}
-
-.post-menu-btn {
-  margin-right: 1.5rem;
-}
-
-.post-bubble-div {
-  margin-left: 1rem;
-}
-
-.con-comment {
-  border-top: 1px solid #f2f2f2;
-}
-
-.for-empty-text {
-  color: #999999;
-}
-
-.for-empty-wrap {
-  width: 100%;
-  position: relative;
-  top: 50%;
-  left: 38%;
-}
-
-.create-comment {
-  width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: flex-start;
-  border-top: 1px solid #f2f2f2;
-}
-
-.ql-input {
-  width: 33rem;
-  border: none;
-  font-size: 1.1rem;
-  margin-top: 7px;
-}
-
-.ql-btn {
-  width: 3rem;
-  height: 1.5rem;
-  border-radius: 4px;
-  background-color: #d01411;
-  color: #fef6f6;
-  border: none;
-  margin-top: 6px;
 }
 </style>

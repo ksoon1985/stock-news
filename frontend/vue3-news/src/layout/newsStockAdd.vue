@@ -72,7 +72,7 @@
                 <img class="noLoginImg" src="@/assets/stock_logo/005930.png" />
               </div>
               <router-link
-                class="results-list-router"
+                class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: '005930' },
@@ -99,7 +99,7 @@
                 <img class="noLoginImg" src="@/assets/stock_logo/035720.png" />
               </div>
               <router-link
-                class="results-list-router"
+                class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: '035720' },
@@ -126,7 +126,7 @@
                 <img class="noLoginImg" src="@/assets/stock_logo/011200.png" />
               </div>
               <router-link
-                class="results-list-router"
+                class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: '011200' },
@@ -154,7 +154,7 @@
                 <img class="noLoginImg" src="@/assets/stock_logo/304100.png" />
               </div>
               <router-link
-                class="results-list-router"
+                class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: '304100' },
@@ -181,7 +181,7 @@
                 <img class="noLoginImg" src="@/assets/stock_logo/032850.png" />
               </div>
               <router-link
-                class="results-list-router"
+                class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: '032850' },
@@ -208,7 +208,7 @@
                 <img class="noLoginImg" src="@/assets/stock_logo/250060.png" />
               </div>
               <router-link
-                class="results-list-router"
+                class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: '250060' },
@@ -228,7 +228,7 @@
       </div>
       <!-- 로그인 후 즐겨찾기한 목록 영역-->
       <div v-if="!leftHeader">
-        <div class="noLoginDiv" v-for="(item, index) in likeList" :key="index">
+        <div class="LoginDiv" v-for="(item, index) in likeList" :key="index">
           <button
             class="noLogBtn"
             @click="itemTest(), itemStockGet(), contentStockPriceGet()"
@@ -241,26 +241,44 @@
                 />
               </div>
               <router-link
-                class="results-list-router"
+                class="Logresults-list-router"
                 :to="{
                   name: 'StockOne',
                   query: { code: item.code },
                 }"
               >
-                <div class="noLogWrap">
-                  <div class="cnameWrapSix">
-                    <p>{{ item.name }}</p>
+                <div class="LogWrap">
+                  <div class="LogcnameWrapSix">
+                    <p class="LogName">{{ item.name }}</p>
                   </div>
-                  <div class="cstockMark">
-                    <p class="daqColor">{{ item.market }}</p>
+                  <div class="LogincstockMark">
+                    <!-- <p class="daqColorTwo">{{ item.market }}</p> -->
                   </div>
                 </div>
-                <div class="noLogCode">
+                <div class="LogCode">
                   <p>{{ item.code }}</p>
                 </div>
               </router-link>
             </div>
           </button>
+          <div class="loginCloseBtnDiv">
+            <button class="loginCloseBtn" @click="loginBtnClose(item.code)">
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style="display: block"
+              >
+                <image
+                  href="@/assets/svg/close-svgrepo-com.svg"
+                  width="20"
+                  height="20"
+                  fill="red"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <!-- 로그인 후 즐겨찾기한 목록 영역 끝 -->
@@ -318,6 +336,17 @@ export default {
       searchInput.value = "";
     };
 
+    const loginBtnClose = (code) => {
+      axios
+        .get("/api/stock/stock-dislike/" + code)
+        .then((res) => {
+          likeList.value = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     const blurClose = () => {
       resultSearch.value = false;
       leftInputChangeTwo.value = false;
@@ -333,17 +362,28 @@ export default {
     };
 
     const getKeyWord = () => {
-      axios.get("/api/stock/stocks/" + searchInput.value).then((data) => {
-        resultData.value = data.data;
-        console.log(resultData);
-      });
+      axios
+        .get("/api/stock/stocks/" + searchInput.value)
+        .then((data) => {
+          resultData.value = data.data;
+          console.log(resultData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     const itemCodeClick = (code) => {
       console.log("코드값을 알아봅시다", code);
-      axios.get("/api/stock/stock-like/" + code).then((res) => {
-        likeList.value = res.data;
-      });
+
+      axios
+        .get("/api/stock/stock-like/" + code)
+        .then((res) => {
+          likeList.value = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     onMounted(() => {
@@ -381,7 +421,7 @@ export default {
       listCode.value = route.query.code;
       axios
         .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value
+          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
         )
         .then((itemData) => {
           stockCode.value = itemData.data;
@@ -394,6 +434,9 @@ export default {
           listLowYear.value = stockCode.value.highYear;
           listHighYear.value = stockCode.value.lowYear;
           listSummaryInfo.value = stockCode.value.summaryInfo;
+        })
+        .catch((error) => {
+          console.log(error);
         });
     };
 
@@ -406,6 +449,9 @@ export default {
           stockName.value = stockNameMarket.value[0].name;
           stockMarket.value = stockNameMarket.value[0].market;
           console.log(stockNameMarket);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     };
 
@@ -423,6 +469,9 @@ export default {
             contentStockPrice.value[contentStockPrice.value.length - 1][5];
           stockMinus.value = stockPrice.value - stockPriceTwo.value;
           console.log(stockMinus);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     };
 
@@ -451,12 +500,13 @@ export default {
       blurClose,
       itemCodeClick,
       likeList,
+      loginBtnClose,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 /* 관심목록  */
 .stock-list {
   border-bottom: 1px solid #e0e0e0;
@@ -610,6 +660,10 @@ export default {
   color: #2679ed;
 }
 
+.daqColorTwo {
+  color: #999999;
+}
+
 .koDiv {
   border-bottom: 1px solid #e5e5e5;
   font-size: 0.8rem;
@@ -619,6 +673,14 @@ export default {
 }
 
 .noLoginDiv:hover {
+  border-left: 4px solid #ed2926;
+}
+
+.LoginDiv {
+  height: 3.4rem;
+}
+
+.LoginDiv:hover {
   border-left: 4px solid #ed2926;
 }
 
@@ -661,5 +723,60 @@ export default {
 
 .leftResultsBtn:hover {
   border-left: 4px solid #ed2926;
+}
+
+.LogcnameWrapSix {
+  font-size: 0.9rem;
+  position: relative;
+  top: -10px;
+  color: #1c1c1c;
+  width: 5.5rem;
+  text-align: left;
+}
+
+.noresults-list-router {
+  text-decoration: none;
+}
+
+.Logresults-list-router {
+  text-decoration: none;
+  width: 12rem;
+  height: 4rem;
+  position: relative;
+  top: -35px;
+  left: 32px;
+}
+
+.LogCode {
+  position: relative;
+  top: -25px;
+  left: -73px;
+  color: #999999;
+}
+
+.LogincstockMark {
+  position: relative;
+  top: -30px;
+  left: 40px;
+}
+
+.loginCloseBtn {
+  border: none;
+  background-color: #ffffff;
+}
+
+.loginCloseBtnDiv {
+  position: relative;
+  left: 170px;
+  top: -43px;
+}
+
+.loginCloseBtn {
+  cursor: pointer;
+}
+
+.loginCloseBtn:hover {
+  filter: invert(16%) sepia(89%) saturate(10%) hue-rotate(358deg)
+    brightness(97%) contrast(113%);
 }
 </style>
