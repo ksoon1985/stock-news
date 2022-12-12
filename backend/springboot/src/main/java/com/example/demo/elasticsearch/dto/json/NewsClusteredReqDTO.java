@@ -1,5 +1,6 @@
 package com.example.demo.elasticsearch.dto.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -56,6 +57,7 @@ public class NewsClusteredReqDTO {
     }
 
     @Getter @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Must {
         @JsonProperty("match")
         private Match match;

@@ -95,6 +95,7 @@ export default {
       stockVolume,
       contentStockPrice,
       modalData,
+      searchNewsParams,
     } = storeToRefs(store);
 
     let { isLogin, likeList } = storeToRefs(userStore);
@@ -185,6 +186,7 @@ export default {
       stockLike,
       isActive,
       changeStarColor,
+      searchNewsParams,
     };
   },
 
@@ -328,17 +330,18 @@ export default {
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
 
-            console.log(fromDate, toDate);
+            this.searchNewsParams = {
+              searchTerm: this.stockName,
+              fromDate: fromDate,
+              toDate: toDate,
+            };
 
-            axios
-              .post("http://192.168.0.36:8089/api/news/getSearchNews", {
-                searchTerm: this.stockName,
-                fromDate: fromDate,
-                toDate: toDate,
-              })
-              .then((res) => {
-                console.log(res.data);
-              });
+            console.log(this.searchNewsParams);
+
+            this.$router.push({
+              name: "NewsPast",
+              query: { code: this.listCode },
+            });
           };
 
           this.btnOn = true;

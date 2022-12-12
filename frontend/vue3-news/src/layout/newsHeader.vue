@@ -332,7 +332,7 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { onBeforeMount, onMounted, ref, watch } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
@@ -449,6 +449,8 @@ export default {
       console.log("비포마운트", routeTest.value);
       itemTest(), itemStockGet(), contentStockPriceGet();
     });
+
+    onBeforeMount(() => {});
 
     // localStorage.setItem("tempCode", listCode.value);
     // tempCode.value = localStorage.getItem("tempCode");

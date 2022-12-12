@@ -28,7 +28,7 @@ const routes = [
   {
     path: "/news",
     name: "News",
-    redirect: "/news/now",
+    redirect: "/news/past",
     component: MenuNews,
     children: [
       {
