@@ -15,27 +15,27 @@
       </div>
     </teleport>
 
+    <div v-if="clusteredNewsList.length > 0"></div>
+    <div v-else></div>
+
     <div class="news-wrap">
-      <div v-if="clusteredNewsList.length > 0">
+      <div
+        class=""
+        v-for="(clusteredNews, cIndex) in clusteredNewsList"
+        :key="cIndex"
+      >
+        <div class="news-headline">
+          <h1>{{ clusteredNews.label }}</h1>
+        </div>
         <div
-          class=""
-          v-for="(clusteredNews, cIndex) in clusteredNewsList"
-          :key="cIndex"
+          class="news-title"
+          v-for="(news, nIndex) in clusteredNews.news"
+          :key="nIndex"
+          @click="modalOpenFunc(news)"
         >
-          <div class="news-headline">
-            <h1>{{ clusteredNews.label }}</h1>
-          </div>
-          <div
-            class="news-title"
-            v-for="(news, nIndex) in clusteredNews.news"
-            :key="nIndex"
-            @click="modalOpenFunc(news)"
-          >
-            {{ news.title }}
-          </div>
+          {{ news.title }}
         </div>
       </div>
-      <div v-else>잠시만 기다려 주세요</div>
     </div>
   </div>
 </template>
@@ -54,6 +54,8 @@ export default {
     let clusteredNewsList = ref([]); // 클러스터링 된 뉴스 리스트
     let modalOpen = ref(false); // 모달 on/off 변수
     let modalNews = ref({}); // 모달 상세 뉴스 정보 변수
+
+    //let isLoading = ref(false); // 뉴스 리스트 로딩 중 변수
 
     onMounted(() => {
       console.log("news onMounted");
@@ -130,6 +132,7 @@ export default {
 }
 
 .news-modal-wrap {
+  overflow: scroll;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
@@ -142,7 +145,9 @@ export default {
 }
 
 .news-modal-detail {
-  width: 50%;
+  width: 45%;
+  max-height: 80%;
+  overflow: scroll;
   background: white;
   border-radius: 8px;
   padding: 20px;

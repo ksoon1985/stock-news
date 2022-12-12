@@ -41,10 +41,11 @@ public class StockController {
 
         log.info("Client IP : {} , PORT : {}",request.getRemoteAddr(),request.getRemotePort());
 
-
         if(stockCode.equals("") || stockCode == null){
             return ResponseEntity.badRequest().body("종목 코드 값이 없습니다.");
         }
+
+
 
         return ResponseEntity.ok().body(stockService.selectStockPrice(stockCode));
     }

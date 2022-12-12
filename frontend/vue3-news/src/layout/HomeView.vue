@@ -28,10 +28,10 @@ export default defineComponent({
 /* 웹 전체 */
 .sevice {
   width: 100%;
-  height: 98vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: scroll;
   background-color: #ffffff;
   position: fixed;
 }
