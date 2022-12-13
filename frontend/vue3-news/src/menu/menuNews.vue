@@ -10,7 +10,7 @@
         },
       }"
       ><button class="btn-close">
-        <span class="sub-title" id="sub-title">과거뉴스</span>
+        <span class="sub-title" id="sub-title">토픽뉴스</span>
       </button></router-link
     >
     <router-link

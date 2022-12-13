@@ -7,7 +7,7 @@
       <span class="commPropsCount">{{ childrenCount }}개</span>
     </div>
     <button class="comMenuBtn" @click="commChildrenChange">답글달기</button>
-    <button class="comDelBtn" @click="commChildAlert(childrenId)" v-if="delBtn">
+    <button class="comDelBtn" @click="modalOpen = true" v-if="delBtn">
       삭제
     </button>
   </div>
@@ -41,6 +41,21 @@
       <button class="rp-btn">게시</button>
     </div>
   </form>
+
+  <teleport to="#teleport-menu-modal">
+    <div class="menu-modal-wrap" v-if="modalOpen">
+      <div class="menu-modal">
+        <div class="menu-modal-close"><h4>삭제</h4></div>
+        <div class="menu-modal-p">삭제하시겠습니까?</div>
+        <div class="menu-modal-Btn">
+          <button class="modalBtnOne" @click="modalOpen = false">취소</button>
+          <form @submit.prevent="commDelSubit(childrenId)">
+            <button class="modalBtnTwo">확인</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </teleport>
 </template>
 
 <script>
@@ -51,7 +66,7 @@ import axios from "axios";
 import { useRoute } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 export default {
-  emits: ["event1"],
+  emits: ["event1", "event2"],
 
   props: {
     childrenCount: Number,
@@ -73,6 +88,7 @@ export default {
     let replayCommentArray = ref(null);
     let rpInput = ref("");
     let delBtn = ref(false);
+    let modalOpen = ref(false);
 
     onMounted(() => {
       delBtnChange();
@@ -81,11 +97,6 @@ export default {
     watch(isLogin, () => {
       delBtnChange();
     });
-
-    const commChildAlert = (id) => {
-      alert("정말로 삭제하시겠습니까?");
-      commDelSubit(id);
-    };
 
     const commChildrenChange = () => {
       commChildrenStatus.value = !commChildrenStatus.value;
@@ -96,7 +107,6 @@ export default {
         delBtn.value = true;
       } else {
         delBtn.value = false;
-        console.log("닉네임 값은", props.childrenNick);
       }
     };
 
@@ -165,7 +175,7 @@ export default {
       };
       axios.post(url, comData).then((res) => {
         console.log(res);
-        emit("event1");
+        emit("event1", "event2");
       });
     };
 
@@ -190,7 +200,7 @@ export default {
       delBtn,
       isLogin,
       delBtnChange,
-      commChildAlert,
+      modalOpen,
     };
   },
 };
@@ -285,5 +295,65 @@ export default {
 .chlidrenContent {
   font-size: 0.8rem;
   margin: 8px 0px;
+}
+
+.menu-modal-wrap {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  z-index: 990;
+}
+
+.menu-modal {
+  width: 20%;
+  height: 15%;
+  border: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.menu-modal-Btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.menu-modal-close {
+  margin-left: 10px;
+}
+
+.menu-modal-p {
+  margin-left: 10px;
+}
+
+.modalBtnOne {
+  background-color: #fde8e7;
+  color: #d01411;
+  border: none;
+  width: 4.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+.modalBtnTwo {
+  color: #fef6f6;
+  background-color: #d01411;
+  border: none;
+  width: 4.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+}
+
+.menu-modal-Btn {
+  margin-top: 20px;
+  margin-right: 15px;
 }
 </style>

@@ -240,7 +240,7 @@ export default {
         series: [
           {
             type: "candlestick",
-            name: this.stockName,
+            name: "candlestick",
             data: null,
             dataGrouping: {
               units: null,
@@ -319,13 +319,16 @@ export default {
           this.stockOptions.series[0].data = ohlc;
           this.stockOptions.series[1].data = volume;
 
+          this.stockOptions.series[0].name = this.stockName;
+          this.stockOptions.series[1].name = this.stockName;
+
           this.stockOptions.series[0].dataGrouping.units = groupingUnits;
           this.stockOptions.series[1].dataGrouping.units = groupingUnits;
         })
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text",
+              ".highcharts-range-input text"
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
