@@ -23,9 +23,9 @@
     </div>
 
     <div class="post-menu-btn">
-      <form @submit.prevent="comDelSubit(subId)">
-        <button class="postMenuBtn" v-if="delBtn">삭제하기</button>
-      </form>
+      <button class="postMenuBtn" v-if="delBtn" @click="modalCloseEvent">
+        삭제하기
+      </button>
     </div>
   </div>
   <div class="con-comment" v-if="commStatus">
@@ -89,6 +89,21 @@
       </div>
     </form>
   </div>
+
+  <teleport to="#teleport-menu-modal">
+    <div class="menu-modal-wrap" v-if="modalOpen">
+      <div class="menu-modal">
+        <div class="menu-modal-close"><h4>삭제</h4></div>
+        <div class="menu-modal-p">삭제하시겠습니까?</div>
+        <div class="menu-modal-Btn">
+          <button class="modalBtnOne" @click="modalOpen = false">취소</button>
+          <form @submit.prevent="comDelSubit(subId)">
+            <button class="modalBtnTwo">확인</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </teleport>
 </template>
 
 <script>
@@ -130,6 +145,7 @@ export default {
     let qlInput = ref("");
     let rpInput = ref("");
     let delBtn = ref(false);
+    let modalOpen = ref(false);
 
     onMounted(() => {
       countChangeEvent();
@@ -144,6 +160,10 @@ export default {
       if (isLogin.value == false) {
         modalData.value = true;
       }
+    };
+
+    const modalCloseEvent = () => {
+      modalOpen.value = true;
     };
 
     const delBtnChange = () => {
@@ -277,6 +297,8 @@ export default {
       delBtnChange,
       isLogin,
       commClickEvent,
+      modalOpen,
+      modalCloseEvent,
     };
   },
 };
@@ -389,5 +411,65 @@ export default {
   font-size: 1rem;
   position: relative;
   top: -1px;
+}
+
+.menu-modal-wrap {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  z-index: 990;
+}
+
+.menu-modal {
+  width: 20%;
+  height: 15%;
+  border: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.menu-modal-Btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.menu-modal-close {
+  margin-left: 10px;
+}
+
+.menu-modal-p {
+  margin-left: 10px;
+}
+
+.modalBtnOne {
+  background-color: #fde8e7;
+  color: #d01411;
+  border: none;
+  width: 4.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+.modalBtnTwo {
+  color: #fef6f6;
+  background-color: #d01411;
+  border: none;
+  width: 4.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+}
+
+.menu-modal-Btn {
+  margin-top: 20px;
+  margin-right: 15px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="logo">스탁뉴스</div>
+  <div class="logo">STOCKNEWS</div>
   <div class="search-wrap">
     <div class="main-search">
       <div class="header-empty">
@@ -85,8 +85,8 @@
       <div class="modalForm" v-if="modalFormData">
         <div class="modalLogoClose">
           <div class="modalLogo">
-            stockNews
-            <button type="button" class="btn-close" @click="modalChanges">
+            <h5 class="modal-logo-h5">STOCKNEWS</h5>
+            <button type="button" class="btn-close-one" @click="modalChanges">
               <div class="close-icon">
                 <svg
                   width="24"
@@ -156,9 +156,9 @@
       </div>
       <div class="modalJoin" v-if="modalJoinData">
         <div class="modalLogoClose">
-          <div class="modalLogo">logo</div>
+          <div class="modalLogo"><h5 class="modal-join-h5">STOCKNEWS</h5></div>
           <div class="modalClose">
-            <button type="button" class="btn-close" @click="modalChanges">
+            <button type="button" class="btn-close-two" @click="modalChanges">
               <div class="close-icon">
                 <svg
                   width="24"
@@ -498,7 +498,8 @@ export default {
     watch(modalJoinEmail, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkEmail/" + modalJoinEmail.value
+          "http://192.168.0.36:8089/api/member/chkEmail/" +
+            modalJoinEmail.value,
         )
         .then((emailchk) => {
           resEmailCheck.value = emailchk.data;
@@ -530,7 +531,7 @@ export default {
     watch(nickInput, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value
+          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value,
         )
         .then((nickchk) => {
           resNickCheck.value = nickchk.data;
@@ -637,7 +638,7 @@ export default {
       listCode.value = route.query.code;
       axios
         .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value
+          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
         )
         .then((itemData) => {
           stockCode.value = itemData.data;
@@ -914,7 +915,7 @@ export default {
 .modalJoin {
   position: absolute;
   width: 420px;
-  height: 43rem;
+  height: 46rem;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   background-color: #ffffff;
@@ -1115,5 +1116,39 @@ input:not(:placeholder-shown) {
   margin-top: 30px;
   margin-left: 154px;
   font-size: 1.1rem;
+}
+
+.modalLogo {
+  display: flex;
+}
+
+.btn-close-one {
+  position: relative;
+  top: -10px;
+  left: 110px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  height: 2rem;
+}
+
+.modal-logo-h5 {
+  position: relative;
+  left: 23px;
+}
+
+.btn-close-two {
+  position: relative;
+  top: -10px;
+  left: 110px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  height: 2rem;
+}
+
+.modal-join-h5 {
+  position: relative;
+  left: 25px;
 }
 </style>

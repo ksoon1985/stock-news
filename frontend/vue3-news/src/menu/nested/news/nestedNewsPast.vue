@@ -3,14 +3,29 @@
     <teleport to="#teleport-news-detail">
       <div class="news-modal-wrap" v-if="modalOpen === true">
         <div class="news-modal-detail">
-          <div class="news-modal-title">제목 : {{ modalNews.title }}</div>
-          <div class="news-modal-content">내용 : {{ modalNews.content }}</div>
-          <div class="news-modal-journalist">
-            기자 : {{ modalNews.journalist }}
+          <div class="news-modal-logo">
+            <img
+              :src="require(`@/assets/code_media/${modalNews.office}.png`)"
+              class="modalLogoNews"
+            />
           </div>
-          <div class="news-modal-regdate">등록일 : {{ modalNews.regdate }}</div>
-          <hr />
-          <button @click="modalOpen = false">닫기</button>
+          <div class="news-modal-title">
+            <h3>{{ modalNews.title }}</h3>
+          </div>
+          <div class="news-modal-journalist">
+            {{ modalNews.regdate }} {{ modalNews.journalist }}
+          </div>
+          <div class="news-modal-content">
+            <p
+              class="newsModalP"
+              v-html="modalNews.content.split('다.').join('다.<br /><br />')"
+            ></p>
+          </div>
+          <div class="new-modal-Btn">
+            <button class="newsModalBtn" @click="modalOpen = false">
+              닫기
+            </button>
+          </div>
         </div>
       </div>
     </teleport>
@@ -102,6 +117,7 @@ export default {
     const modalOpenFunc = (news) => {
       modalNews.value = {
         title: news.title,
+        office: news.office_id,
         content: news.content,
         journalist: news.journalist_name,
         regdate: news.registration_date,
@@ -139,12 +155,55 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
+  z-index: 990;
 }
 
 .news-modal-detail {
-  width: 50%;
+  width: 37%;
   background: white;
   border-radius: 8px;
   padding: 20px;
+  overflow-y: auto;
+  max-height: 90%;
+}
+
+.news-modal-journalist {
+  color: #999999;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 1rem;
+  height: 2rem;
+}
+
+.news-modal-title {
+  margin: 0px;
+  padding: 0px;
+}
+
+.news-modal-content {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.new-modal-Btn {
+  text-align: right;
+}
+
+.newsModalBtn {
+  width: 3rem;
+  height: 1.8rem;
+  border-radius: 4px;
+  background-color: #d01411;
+  color: #fef6f6;
+  border: none;
+  margin-top: 6px;
+}
+
+.news-modal-logo {
+  width: auto;
+  height: auto;
+  border-radius: 0px;
 }
 </style>
