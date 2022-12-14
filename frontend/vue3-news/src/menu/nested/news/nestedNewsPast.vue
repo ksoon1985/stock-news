@@ -182,6 +182,7 @@ export default {
   justify-content: center;
   align-items: center;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 990;
 }
 

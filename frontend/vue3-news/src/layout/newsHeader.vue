@@ -305,11 +305,69 @@
         </div>
         <button class="complateBtn" @click="modalChanges">확인</button>
       </div>
-    </div></teleport
-  >
+    </div>
+    <div class="modal" v-if="modalUserIcon">
+      <div class="modalUser">
+        <div class="UserProfill"><h3>프로필</h3></div>
+        <div class="userIconClose">
+          <button class="userIconBtn" @click="modalUserIcon = false">
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style="display: block"
+              class="btn-icon"
+            >
+              <image
+                href="@/assets/svg/x-svgrepo-com.svg"
+                width="24"
+                height="24"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="userNickNameWrap">
+          <p class="userNick">닉네임</p>
+          <div class="UserNickName">{{ nickName }}</div>
+        </div>
+        <div class="userMy">
+          <p class="userso">내소개</p>
+          <div class="userMyText">
+            <textarea class="userMyTextarea"></textarea>
+          </div>
+        </div>
+        <div class="userBtnWrap">
+          <div class="userBtn"><button class="userBtnSave">저장</button></div>
+          <div class="userDelBtn">
+            <button class="userBtnDel">회원탈퇴</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </teleport>
 
   <div class="support-menu">
-    <span :hidden="!isLogin">{{ nickName }} &nbsp; &nbsp;</span>
+    <button :hidden="!isLogin" class="hiddenBtn" @click="modalUserIcon = true">
+      <svg
+        width="30"
+        height="30"
+        xmlns="http://www.w3.org/2000/svg"
+        style="display: block"
+      >
+        <image
+          id="icon"
+          class="icon"
+          href="@/assets/svg/people-svgrepo-comTwo.svg"
+          width="30"
+          height="30"
+        />
+      </svg>
+    </button>
+
+    <!-- <span :hidden="!isLogin" class="hiddenNickName"
+      >{{ nickName }} &nbsp; &nbsp;</span
+    > -->
 
     <button
       :hidden="isLogin"
@@ -323,7 +381,7 @@
     <button
       :hidden="!isLogin"
       type="button"
-      class="btn-login"
+      class="btn-login-two"
       @click="modalLogoutSubmit"
     >
       로그아웃
@@ -370,6 +428,7 @@ export default {
     let nickInput = ref("");
     let joinComChk = ref(false);
     let routeTest = ref("");
+    let modalUserIcon = ref(false);
 
     let { tempCode, isLogin, nickName, likeList } = storeToRefs(userStore);
     let setTimeoutHandler = ref(null);
@@ -745,12 +804,26 @@ export default {
       routeTest,
       tempCode,
       router,
+      modalUserIcon,
     };
   },
 };
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+.logo {
+  font-family: "Pretendard-Regular";
+  color: #d01411;
+}
+
 /* 헤더 메인 */
 .main-search {
   overflow: hidden;
@@ -1129,7 +1202,9 @@ input:not(:placeholder-shown) {
 
 .modal-logo-h5 {
   position: relative;
-  left: 23px;
+  left: 22px;
+  font-family: "Pretendard-Regular";
+  color: #d01411;
 }
 
 .btn-close-two {
@@ -1144,6 +1219,129 @@ input:not(:placeholder-shown) {
 
 .modal-join-h5 {
   position: relative;
-  left: 25px;
+  left: 19px;
+  font-family: "Pretendard-Regular";
+  color: #d01411;
+}
+
+.hiddenNickName {
+  font-family: "Pretendard-Regular";
+}
+
+.hiddenBtn {
+  border: none;
+  background-color: #ffffff;
+  position: relative;
+  left: -1px;
+  top: 2px;
+  cursor: pointer;
+}
+
+.btn-login-two {
+  font-size: 1rem;
+  border: 1px solid #d01411;
+  color: #d01411;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: white;
+  position: relative;
+  top: -7px;
+}
+
+.btn-login-two:hover {
+  background-color: #e5e5e5;
+}
+
+.support-menu {
+  position: relative;
+  left: 1px;
+}
+
+.modalUser {
+  width: 30%;
+  height: 40%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  font-family: "Pretendard-Regular";
+}
+
+.UserProfill {
+  color: #1c1c1c;
+}
+
+.userNick {
+  font-size: 0.9rem;
+}
+
+.UserNickName {
+  color: #1c1c1c;
+}
+
+.userIconBtn {
+  border: none;
+  background-color: white;
+  cursor: pointer;
+}
+
+.userIconClose {
+  position: relative;
+  top: -3rem;
+  margin-left: 33rem;
+}
+
+.userNickNameWrap {
+  color: #1c1c1c;
+  position: relative;
+  top: -2rem;
+}
+
+.userso {
+  font-size: 0.9rem;
+}
+
+.userMy {
+  color: #1c1c1c;
+}
+
+.userMyTextarea {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  overflow-y: auto;
+  padding: 1.2rem;
+  width: 93%;
+  height: 3rem;
+}
+
+.userBtnWrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3rem;
+}
+
+.userBtnSave {
+  font-size: 1rem;
+  border: 1px solid #d01411;
+  color: #fef6f6;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #d01411;
+  width: 7rem;
+  height: 2rem;
+  margin-right: 5px;
+  font-family: "Pretendard-Regular";
+}
+
+.userBtnDel {
+  font-size: 1rem;
+  border: 1px solid #d01411;
+  color: #fef6f6;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #d01411;
+  width: 7rem;
+  height: 2rem;
+  margin-right: 5px;
+  font-family: "Pretendard-Regular";
 }
 </style>

@@ -96,22 +96,22 @@
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
-                <img class="noLoginImg" src="@/assets/stock_logo/035720.png" />
+                <img class="noLoginImg" src="@/assets/stock_logo/034730.png" />
               </div>
               <router-link
                 class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
-                  query: { code: '035720' },
+                  query: { code: '034730' },
                 }"
               >
                 <div class="noLogWrap">
                   <div class="cnameWrapTwo">
-                    <p>카카오</p>
+                    <p>SK</p>
                   </div>
                   <div class="cstockMark"><p>KOSPI</p></div>
                 </div>
-                <div class="noLogCode"><p>035720</p></div>
+                <div class="noLogCode"><p>034730</p></div>
               </router-link>
             </div>
           </button>
@@ -205,22 +205,22 @@
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
-                <img class="noLoginImg" src="@/assets/stock_logo/250060.png" />
+                <img class="noLoginImg" src="@/assets/stock_logo/079940.png" />
               </div>
               <router-link
                 class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
-                  query: { code: '250060' },
+                  query: { code: '079940' },
                 }"
               >
                 <div class="noLogWrap">
                   <div class="cnameWrapSix">
-                    <p>모비스</p>
+                    <p>가비아</p>
                   </div>
                   <div class="cstockMark"><p class="daqColor">KOSDAQ</p></div>
                 </div>
-                <div class="noLogCode"><p>250060</p></div>
+                <div class="noLogCode"><p>079940</p></div>
               </router-link>
             </div>
           </button>
@@ -505,6 +505,14 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
 /* 관심목록  */
 .stock-list {
   border-bottom: 1px solid #e0e0e0;
@@ -535,8 +543,10 @@ export default {
 
 /* 종목 추가 글자 */
 .btn-text {
+  margin-top: 3px;
   font-size: 1rem;
   color: #999999;
+  font-family: "Pretendard-Regular";
 }
 
 /* 종목 추가 글자 호버 */
@@ -588,61 +598,68 @@ export default {
 .cnameWrap {
   display: flex;
   font-size: 1rem;
-  margin-right: 31px;
+  margin-right: 41px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .cnameWrapTwo {
   display: flex;
   font-size: 1rem;
-  margin-right: 46px;
+  margin-right: 77px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .cnameWrapThree {
   display: flex;
   font-size: 1rem;
-  margin-right: 56px;
+  margin-right: 58px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .cnameWrapFour {
   display: flex;
   font-size: 1rem;
-  margin-right: 18px;
+  margin-right: 27px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .cnameWrapFive {
   display: flex;
   font-size: 1rem;
-  margin-right: 2px;
+  margin-right: 13px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .cnameWrapSix {
   display: flex;
   font-size: 1rem;
-  margin-right: 34px;
+  margin-right: 41px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .cstockMark {
   display: flex;
   align-items: center;
   color: #ed2926;
+  font-family: "Pretendard-Regular";
 }
 
 .noLogCode {
@@ -656,6 +673,7 @@ export default {
 
 .daqColor {
   color: #2679ed;
+  font-family: "Pretendard-Regular";
 }
 
 .daqColorTwo {
@@ -724,12 +742,13 @@ export default {
 }
 
 .LogcnameWrapSix {
-  font-size: 0.9rem;
+  font-size: 1rem;
   position: relative;
   top: -10px;
   color: #1c1c1c;
   width: 5.5rem;
   text-align: left;
+  font-family: "Pretendard-Regular";
 }
 
 .noresults-list-router {

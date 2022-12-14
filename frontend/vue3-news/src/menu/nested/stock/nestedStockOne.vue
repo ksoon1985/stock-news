@@ -125,6 +125,14 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 .header-contents {
   width: 100%;
   border-bottom: 1px solid #e0e0e0;
@@ -156,12 +164,14 @@ export default {
   font-size: 1rem;
   margin: 0;
   padding: 0;
+  font-family: "Pretendard-Regular";
 }
 
 /* 헤더 코스피 코더 div */
 .stock-one-info {
   left: 84.9rem;
   bottom: 46rem;
+  font-family: "Pretendard-Regular";
 }
 
 /* 종목정보 */
@@ -169,6 +179,7 @@ export default {
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   flex-wrap: wrap;
+  font-family: "Pretendard-Regular";
   /* margin-left: 7px; */
 }
 
@@ -190,7 +201,7 @@ export default {
 .company-description {
   margin-top: 35px;
   margin-left: 7px;
-  font-family: "GmarketSansMedium";
+  font-family: "Pretendard-Regular";
 }
 
 .one-contents-blue {
