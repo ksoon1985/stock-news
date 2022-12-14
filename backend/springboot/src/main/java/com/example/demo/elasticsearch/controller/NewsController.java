@@ -33,10 +33,11 @@ public class NewsController {
         return newsService.getNewsById(id);
     }
 
-    @Operation(summary = "종목이름, 날짜를 조건으로 엘라스틱 서치에서 뉴스 데이터 요청")
+
+    @Operation(summary = "종목이름, 키워드를 조건으로 엘라스틱 서치에서 뉴스 데이터 요청 (클러스터링 x)",
+            description = "종목은 제목에서, 키워드는 내용에서 조회를 합니다.")
     @PostMapping("/getSearchNews")
     public ResponseEntity getSearchNews(@RequestBody SearchNewsReqDTO dto){
-        System.out.println("######"+dto.getSearchTerm()+"######"+dto.getFromDate());
         return ResponseEntity.ok().body(newsService.getNews(dto));
     }
 
@@ -48,4 +49,5 @@ public class NewsController {
 
         return ResponseEntity.ok().body(clusteredNewsList);
     }
+
 }

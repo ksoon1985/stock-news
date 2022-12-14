@@ -2,6 +2,7 @@ package com.example.demo.stock.controller;
 
 import com.example.demo.security.jwt.SecurityUser;
 import com.example.demo.stock.dto.SearchResDTO;
+import com.example.demo.stock.dto.StockSummaryResDTO;
 import com.example.demo.stock.service.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,6 +69,18 @@ public class StockController {
         log.info("Client IP : {} , PORT : {}",request.getRemoteAddr(),request.getRemotePort());
 
         return ResponseEntity.ok().body(stockService.selectStockSummary(stockCode));
+    }
+
+    @Operation(summary = "종목 요약정보 - 대표키워드 요청")
+    @GetMapping("/stock-themeKeyword/{stockCode}")
+    public ResponseEntity getStockThemeKeyword(@PathVariable String stockCode){
+        if(stockCode.equals("") || stockCode == null){
+            return ResponseEntity.badRequest().body("종목 코드 값이 없습니다.");
+        }
+
+        StockSummaryResDTO summaryResDTO = stockService.selectStockSummary(stockCode);
+
+        return ResponseEntity.ok().body(summaryResDTO.getThemeKeywords());
     }
 
     @Operation(summary = "종목 연간 재무정보 요청",description = "종목에 해당하는 연간 재무정보 데이터를 응답합니다.")

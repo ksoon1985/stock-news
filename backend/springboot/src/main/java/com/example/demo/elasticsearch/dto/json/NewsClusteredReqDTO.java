@@ -26,6 +26,7 @@ public class NewsClusteredReqDTO {
     private SearchRequest searchRequest;
 
     @Getter @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class FieldMapping {
         @JsonProperty("content")
         private List<String> content;
