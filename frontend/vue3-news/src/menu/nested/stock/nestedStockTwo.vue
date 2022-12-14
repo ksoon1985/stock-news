@@ -83,6 +83,14 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 .sub-sub-tab {
   display: flex;
   margin-top: 10px;
@@ -92,6 +100,7 @@ export default {
 .stock-two-title {
   margin: 15px;
   font-size: 1.3rem;
+  font-family: "Pretendard-Regular";
 }
 
 .two-router-tab {

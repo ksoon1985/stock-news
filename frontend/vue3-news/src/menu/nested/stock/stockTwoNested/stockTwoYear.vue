@@ -536,6 +536,14 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 .financial-information-table {
   width: 100%;
 }
@@ -543,10 +551,12 @@ export default {
 .name-table {
   width: 25rem;
   color: #999999;
+  font-family: "Pretendard-Regular";
 }
 
 .value {
   width: 9.2rem;
+  font-family: "Pretendard-Regular";
 }
 
 .contents {
@@ -560,5 +570,6 @@ table {
 
 .data-contents {
   color: #999999;
+  font-family: "Pretendard-Regular";
 }
 </style>

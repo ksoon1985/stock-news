@@ -31,7 +31,7 @@ export default defineComponent({
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: hidden;
   background-color: #ffffff;
   position: fixed;
 }

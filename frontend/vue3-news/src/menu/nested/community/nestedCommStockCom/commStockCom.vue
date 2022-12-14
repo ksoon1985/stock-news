@@ -54,6 +54,7 @@
           :childrenId="item._id"
           :childrenNick="item.nickName"
           @event1="commStatEvent()"
+          @event2="countChangeEvent()"
         />
       </div>
     </div>

@@ -328,7 +328,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text"
+              ".highcharts-range-input text",
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
@@ -355,6 +355,14 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 /* 종목표시 전체  */
 .stock-nav {
   width: 100%;
@@ -386,6 +394,7 @@ export default {
 /* 종목 로고 이름  */
 .logo-name-wrap {
   display: flex;
+  font-family: "Pretendard-Regular";
 }
 
 /* 종목 코드 */
@@ -398,14 +407,14 @@ export default {
 /* 종목 코드 거래량 표시 */
 .stockVolume {
   margin-left: 10px;
-  margin-top: 25px;
+  margin-top: 27px;
   color: #999999;
 }
 
 /* 종목 코드 거래량 */
 .stock-volume {
   margin-left: 10px;
-  margin-top: 24px;
+  margin-top: 26px;
   color: #525252;
   font-size: 1.1rem;
 }
@@ -426,7 +435,7 @@ export default {
 
 /* 종목 종가 가격  */
 .price-close {
-  margin-top: 18px;
+  margin-top: 20px;
   margin-left: 10px;
 }
 
@@ -467,13 +476,13 @@ export default {
 
 /* 종목 금일 - 전날 퍼센트 */
 .price-percent {
-  margin-top: 25px;
+  margin-top: 27px;
   margin-left: 8px;
 }
 
 /* 종목 금일 - 전날  */
 .price-minus {
-  margin-top: 25px;
+  margin-top: 27px;
   margin-left: 8px;
 }
 

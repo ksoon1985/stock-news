@@ -1,7 +1,7 @@
 <template>
   <div class="sub-tab">
     <router-link
-      class="router-tab"
+      class="router-tab-rank"
       exact-active-class="exact-active-link"
       :to="{
         name: 'RankOne',
@@ -48,4 +48,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.router-tab-rank {
+  margin-top: 0.5rem;
+  margin-left: 31rem;
+}
+</style>

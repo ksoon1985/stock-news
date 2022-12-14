@@ -193,6 +193,14 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 .comm-stock-wrap {
   width: 100%;
 }
@@ -212,6 +220,7 @@ export default {
   font-size: 1.6rem;
   margin-top: 4px;
   margin-bottom: 4px;
+  font-family: "Pretendard-Regular";
 }
 
 /* 커뮤니티 - 종목 토론 - 종목 이름 span */
@@ -220,6 +229,7 @@ export default {
   display: block;
   font-weight: 500;
   font-size: 1.5rem;
+  font-family: "Pretendard-Regular";
 }
 
 /* 커뮤니티 - 종목 토론 - 게시글 총 개수 p */
@@ -231,6 +241,7 @@ export default {
   margin-top: 0;
   margin-bottom: 0;
   color: #999999;
+  font-family: "Pretendard-Regular";
 }
 
 /* 코멘트 작성 영역 */
@@ -241,6 +252,7 @@ export default {
   text-align: center;
   word-break: break-all;
   height: auto;
+  font-family: "Pretendard-Regular";
 }
 
 /* 코멘트 헤더 영역 */
@@ -299,6 +311,7 @@ export default {
   top: -19px;
   font-size: 1.2rem;
   color: #1c1c1c;
+  font-family: "Pretendard-Regular";
 }
 
 .quillTextArea {
@@ -339,11 +352,13 @@ export default {
   left: 12px;
   color: #999999;
   font-size: 0.9rem;
+  font-family: "Pretendard-Regular";
 }
 
 .contentDiv {
   height: auto;
   border-bottom: 4px solid #f2f2f2;
+  font-family: "Pretendard-Regular";
 }
 
 .nickNameWrap {
