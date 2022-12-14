@@ -15,7 +15,9 @@
           <h3 class="themeKeywords">{{ item }}</h3>
           <div class="forBtn">
             <button class="fotBtnOne">관심</button
-            ><button class="forBtnTwo">뉴스조회</button>
+            ><button class="forBtnTwo" @click="keywordNewsSearch(item)">
+              뉴스조회
+            </button>
           </div>
         </div>
       </div>
@@ -26,16 +28,52 @@
 <script>
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
+import { onMounted, ref } from "vue-demi";
+import axios from "@/utils/axios";
 export default {
   setup() {
     const store = useStockStore();
+    const keyWordList = ref([]);
+    let { listCode, stockName } = storeToRefs(store);
 
-    let { listCode, stockName, keyWordList } = storeToRefs(store);
+    onMounted(() => {
+      // stockName loading issue
+      // -> setTimeout 0.5s lazy loading
+      setTimeout(() => {
+        axios
+          .get("/api/stock/stock-themeKeyword/" + listCode.value)
+          .then((res) => {
+            keyWordList.value = res.data;
+          });
+      }, 500);
+    });
+
+    const keywordNewsSearch = (themeKeyword) => {
+      let today = new Date();
+      // yyyy-mm-dd
+      let year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let date = today.getDate() - 1;
+
+      today = year + "-" + month + "-" + date;
+
+      let reqDto = {
+        searchTerm: stockName.value,
+        themeKeyword: themeKeyword,
+        fromDate: "2020-01-01",
+        toDate: today,
+      };
+      console.log(reqDto);
+      axios.post("/api/news/getSearchNews", reqDto).then((res) => {
+        console.log(res.data);
+      });
+    };
 
     return {
       listCode,
       stockName,
       keyWordList,
+      keywordNewsSearch,
     };
   },
 };

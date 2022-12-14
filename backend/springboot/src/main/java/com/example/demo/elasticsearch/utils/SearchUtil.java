@@ -30,6 +30,8 @@ public class SearchUtil {
             // sorting
             builder = builder.sort("registration_date",SortOrder.DESC);
 
+            builder = builder.from(0).size(50);
+
             SearchRequest request = new SearchRequest(indexName);
             request.source(builder);
 
