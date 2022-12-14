@@ -47,7 +47,13 @@
       >
         <!-- 토픽 뉴스 버전-->
         <div class="news-title" @click="modalOpenFunc(clusteredNews.news)">
-          {{ clusteredNews.news.title }}
+          <span class="news-title-span">{{
+            clusteredNews.news.registration_date
+          }}</span>
+          <h3>{{ clusteredNews.news.title }}</h3>
+          <div class="news-title-div-p">
+            <p class="news-title-p">{{ clusteredNews.news.content }}</p>
+          </div>
         </div>
 
         <!-- 
@@ -127,6 +133,7 @@ export default {
         .post("/api/news/getClusteredNews", searchNewsParams.value)
         .then((res) => {
           clusteredNewsList.value = res.data;
+          console.log("클러스터뉴스리스트", clusteredNewsList);
         })
         .catch((err) => {
           isLoading.value = false;
@@ -241,5 +248,28 @@ export default {
   left: 83%;
   transform: translate(-50%, -50%);
   box-shadow: rgba(0, 0, 0, 0) 0 0 0 9999px;
+}
+
+.news-title {
+  width: 95%;
+  border-bottom: 1px solid #e0e0e0;
+  margin-left: 7px;
+  margin-top: 15px;
+}
+
+.news-title-span {
+  font-size: 0.7rem;
+  color: #999999;
+}
+
+.news-title-p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  line-height: 1.2em;
+  height: 2.4em;
 }
 </style>

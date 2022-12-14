@@ -35,6 +35,7 @@ export const useStockStore = defineStore("stock", () => {
   let stockInformationDataQyarterFour = ref(null); //재무정보 분기 데이터[3]
   let modalData = ref(false); //모달창 전체
   let searchNewsParams = ref({}); // 뉴스 검색 조건
+  let keyWordList = ref(null); // 키워드 리스트
 
   return {
     stockCode,
@@ -70,5 +71,6 @@ export const useStockStore = defineStore("stock", () => {
     stockInformationDataQyarterFour,
     modalData,
     searchNewsParams,
+    keyWordList,
   };
 });

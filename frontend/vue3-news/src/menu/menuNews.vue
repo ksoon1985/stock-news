@@ -22,8 +22,8 @@
           code: listCode,
         },
       }"
-      ><button class="btn-close">
-        <span class="sub-title" id="sub-title">현재뉴스</span>
+      ><button class="btn-close" @click="keyWordClickEvent">
+        <span class="sub-title" id="sub-title">키워드뉴스</span>
       </button></router-link
     >
   </div>
@@ -35,14 +35,31 @@
 <script>
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
+import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
+import { ref } from "vue";
 export default {
   setup() {
     const store = useStockStore();
+    const route = useRoute();
+    const stockData = ref(null);
 
-    let { listCode } = storeToRefs(store);
+    let { listCode, keyWordList } = storeToRefs(store);
+
+    const keyWordClickEvent = () => {
+      listCode.value = route.query.code;
+      axios.get("/api/stock/stock-summary/" + listCode.value).then((res) => {
+        stockData.value = res.data;
+        keyWordList.value = stockData.value.themeKeywords;
+      });
+    };
 
     return {
       listCode,
+      useRouter,
+      keyWordClickEvent,
+      keyWordList,
+      stockData,
     };
   },
 };

@@ -60,7 +60,11 @@
       :redrawOnUpdate="true"
       :animateOnUpdate="false"
     ></highcharts>
-    <button @click="searchByDate" :disabled="btnOn === false">조회</button>
+  </div>
+  <div class="newsSelectBtn">
+    <button class="news-btn" @click="searchByDate" :disabled="btnOn === false">
+      뉴스조회
+    </button>
   </div>
 </template>
 
@@ -510,5 +514,26 @@ export default {
 .icontwo.active {
   filter: invert(58%) sepia(96%) saturate(801%) hue-rotate(358deg)
     brightness(100%) contrast(106%);
+}
+
+.newsSelectBtn {
+  width: 100%;
+  text-align: center;
+}
+
+.news-btn {
+  width: 20rem;
+  height: 1.8rem;
+  border-radius: 6px;
+  background-color: #d01411;
+  color: #fef6f6;
+  border: none;
+  margin-top: 6px;
+  font-family: "Pretendard-Regular";
+  cursor: pointer;
+}
+
+.news-btn:hover {
+  color: #1c1c1c;
 }
 </style>
