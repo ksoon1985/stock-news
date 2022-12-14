@@ -13,10 +13,9 @@ import java.util.List;
 @Setter
 public class SearchNewsReqDTO extends PagedReqDTO{
 
-    private String searchTerm; // 검색 term
+    private String searchTerm; // 검색 종목 term ex) 삼성전자
+    private String themeKeyword; // 검색 키워드 ex) 반도체
     private String fromDate; // 검색 시작 날짜
     private String toDate; // 검색 종료 날짜
-    private String sortBy; // sort 할 field
-    private SortOrder order; // sort 방식 (asc,desc)
 
 }

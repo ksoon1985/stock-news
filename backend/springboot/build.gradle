@@ -49,10 +49,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
 	// https://mvnrepository.com/artifact/org.carrot2/carrot2-core
-	implementation "org.carrot2:carrot2-core:4.5.0"
+	// implementation "org.carrot2:carrot2-core:4.5.0"
 
 	// https://mvnrepository.com/artifact/org.carrot2.lang/carrot2-lang-lucene-korean
-	implementation group: 'org.carrot2.lang', name: 'carrot2-lang-lucene-korean', version: '4.5.0'
+	// implementation group: 'org.carrot2.lang', name: 'carrot2-lang-lucene-korean', version: '4.5.0'
 
 }
 

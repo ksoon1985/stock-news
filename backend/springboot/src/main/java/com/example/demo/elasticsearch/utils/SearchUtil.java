@@ -19,11 +19,16 @@ public class SearchUtil {
     public static SearchRequest buildNewsSearchRequest(String indexName, SearchNewsReqDTO dto){
 
         try {
+            // query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("content", dto.getSearchTerm()))//ex 삼성전자
+                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()))// 삼성 전자
+                    .must(QueryBuilders.matchPhraseQuery("content",dto.getThemeKeyword()))
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
+
+            // sorting
+            builder = builder.sort("registration_date",SortOrder.DESC);
 
             SearchRequest request = new SearchRequest(indexName);
             request.source(builder);
@@ -104,7 +109,7 @@ public class SearchUtil {
         searchRequest.setQuery(query);
 
         // size
-        searchRequest.setSize(100);
+        searchRequest.setSize(1000);
         newsDto.setSearchRequest(searchRequest);
 
         // query_hint
@@ -115,20 +120,19 @@ public class SearchUtil {
         ArrayList<String> titleList = new ArrayList<>();
         titleList.add("_source.title");
         fieldMapping.setTitle(titleList);
-        ArrayList<String> contentList = new ArrayList<>();
-        contentList.add("highlight.content");
-        fieldMapping.setContent(contentList);
+//        ArrayList<String> contentList = new ArrayList<>();
+//        contentList.add("highlight.content");
+//        fieldMapping.setContent(contentList);
         newsDto.setFieldMapping(fieldMapping);
 
         // language
-        newsDto.setLanguage("Korean");
+        newsDto.setLanguage("English");
 
         // algorithm
-        newsDto.setAlgorithm("Lingo");
+        newsDto.setAlgorithm("Bisecting K-Means");
 
         return newsDto;
     }
-
 
 
 

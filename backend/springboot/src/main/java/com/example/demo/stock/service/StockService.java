@@ -84,10 +84,6 @@ public class StockService {
     }
 
     /**
-     * 종목 정보,차트 - 종목 코드, 이름, 마켓 정보 요청
-     */
-
-    /**
      * 종목 정보 - 종목 요약정보 요청
      */
     public StockSummaryResDTO selectStockSummary(String stockCode){

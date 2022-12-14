@@ -97,10 +97,10 @@ public class NewsService {
         // json String -> json dto 로 변환 ===================================================================
         NewsClusteredResDTO resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO.class);
 
-
         // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
         List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
+
 
         // 클러스터링된 뉴스 결과 리스트 - 토픽 뉴스 버전
         for (NewsClusteredResDTO.Clusters cluster : clusters) {
@@ -140,7 +140,6 @@ public class NewsService {
 
             clusteredNewsList.add(clusteredNews);
         }
-
          */
 
         return clusteredNewsList;
