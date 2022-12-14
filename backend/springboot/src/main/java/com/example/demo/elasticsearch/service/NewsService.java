@@ -100,10 +100,28 @@ public class NewsService {
 
         // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
         List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
-
-        // 클러스터링된 뉴스 결과 리스트
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
 
+        // 클러스터링된 뉴스 결과 리스트 - 토픽 뉴스 버전
+        for (NewsClusteredResDTO.Clusters cluster : clusters) {
+            ClusteredNews clusteredNews = new ClusteredNews();
+
+            clusteredNews.setScore(cluster.getScore());
+            clusteredNews.setLabel(cluster.getLabel());
+
+            // 군집화된 뉴스중에서 첫번째를 토픽뉴스로 선정
+            String documentId = cluster.getDocuments().get(0);
+
+            News news = getNewsById(documentId);
+            if(news != null){
+                clusteredNews.setNews(news);
+            }
+
+            clusteredNewsList.add(clusteredNews);
+        }
+
+        // 클러스터링된 뉴스 결과 리스트 - 헤드라인 뉴스 버전
+        /*
         for (NewsClusteredResDTO.Clusters cluster : clusters) {
 
             ClusteredNews clusteredNews = new ClusteredNews();
@@ -123,7 +141,14 @@ public class NewsService {
             clusteredNewsList.add(clusteredNews);
         }
 
+         */
+
         return clusteredNewsList;
+    }
+
+    private List<News> getRealTimeNews(){
+
+        return null;
     }
 
     // elasticsearch 로 부터 hit 가져오기

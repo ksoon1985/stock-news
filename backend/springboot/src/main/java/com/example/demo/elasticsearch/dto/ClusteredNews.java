@@ -10,5 +10,7 @@ import java.util.ArrayList;
 public class ClusteredNews {
     private double score;
     private String label;
-    private ArrayList<News> news;
+    private News news;
+
+    //private ArrayList<News> news;
 }

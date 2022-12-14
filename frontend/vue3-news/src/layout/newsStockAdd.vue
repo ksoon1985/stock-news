@@ -420,9 +420,7 @@ export default {
     const itemTest = () => {
       listCode.value = route.query.code;
       axios
-        .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
-        )
+        .get("/api/stock/stock-summary/" + listCode.value)
         .then((itemData) => {
           stockCode.value = itemData.data;
           listStockMarketCap.value = stockCode.value.marketCap;
@@ -443,7 +441,7 @@ export default {
     const itemStockGet = () => {
       listCode.value = route.query.code;
       axios
-        .get("http://192.168.0.36:8089/api/stock/stocks/" + listCode.value)
+        .get("/api/stock/stocks/" + listCode.value)
         .then((itemDataStock) => {
           stockNameMarket.value = itemDataStock.data;
           stockName.value = stockNameMarket.value[0].name;
@@ -458,7 +456,7 @@ export default {
     const contentStockPriceGet = () => {
       listCode.value = route.query.code;
       axios
-        .get("http://192.168.0.36:8089/api/stock/stock-price/" + listCode.value)
+        .get("/api/stock/stock-price/" + listCode.value)
         .then((itemDataPrice) => {
           contentStockPrice.value = itemDataPrice.data;
           stockPrice.value =

@@ -45,17 +45,26 @@
         v-for="(clusteredNews, cIndex) in clusteredNewsList"
         :key="cIndex"
       >
-        <div class="news-headline">
-          <h1>{{ clusteredNews.label }}</h1>
+        <!-- 토픽 뉴스 버전-->
+        <div class="news-title" @click="modalOpenFunc(clusteredNews.news)">
+          {{ clusteredNews.news.title }}
         </div>
-        <div
+
+        <!-- 
+          헤드라인 뉴스 버전
+          
+          <div class="news-headline">
+           <h1>{{ clusteredNews.label }}</h1>
+          </div>
+          
+          <div
           class="news-title"
           v-for="(news, nIndex) in clusteredNews.news"
           :key="nIndex"
           @click="modalOpenFunc(news)"
         >
           {{ news.title }}
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -91,7 +100,7 @@ export default {
       today = year + "-" + month + "-" + date;
 
       // stockName loading issue
-      // -> setTimeout 0.3s lazy loading
+      // -> setTimeout 0.5s lazy loading
       setTimeout(() => {
         searchNewsParams.value = {
           searchTerm: stockName.value,
@@ -101,7 +110,7 @@ export default {
 
         console.log(searchNewsParams.value);
         getClusteredNews();
-      }, 300);
+      }, 500);
     });
 
     watch(searchNewsParams, () => {

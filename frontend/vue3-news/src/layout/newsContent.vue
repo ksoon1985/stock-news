@@ -282,7 +282,7 @@ export default {
     chartDraw() {
       console.log("chartDraw");
       axios
-        .get("http://192.168.0.36:8089/api/stock/stock-price/" + this.listCode)
+        .get("/api/stock/stock-price/" + this.listCode)
         .then((data) => {
           // split the data set into ohlc and volume
           data = data.data;

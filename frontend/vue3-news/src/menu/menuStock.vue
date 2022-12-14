@@ -54,10 +54,7 @@ export default {
 
     const informationClick = () => {
       axios
-        .get(
-          "http://192.168.0.36:8089/api/stock/stock-finance/a/" +
-            listCode.value,
-        )
+        .get("/api/stock/stock-finance/a/" + listCode.value)
         .then((informationData) => {
           //console.log(informationData.data[0].keys);
           console.log(stockInformationData);

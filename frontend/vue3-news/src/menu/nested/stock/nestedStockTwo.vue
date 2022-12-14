@@ -56,10 +56,7 @@ export default {
 
     const informationTwoClick = () => {
       axios
-        .get(
-          "http://192.168.0.36:8089/api/stock/stock-finance/q/" +
-            listCode.value,
-        )
+        .get("/api/stock/stock-finance/q/" + listCode.value)
         .then((QyarterData) => {
           console.log(stockInformationDataQyarter);
           stockInformationDataQyarter.value = QyarterData.data[0];

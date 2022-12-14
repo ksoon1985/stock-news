@@ -498,8 +498,7 @@ export default {
     watch(modalJoinEmail, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkEmail/" +
-            modalJoinEmail.value,
+          "http://192.168.0.36:8089/api/member/chkEmail/" + modalJoinEmail.value
         )
         .then((emailchk) => {
           resEmailCheck.value = emailchk.data;
@@ -531,7 +530,7 @@ export default {
     watch(nickInput, () => {
       axios
         .get(
-          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value,
+          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value
         )
         .then((nickchk) => {
           resNickCheck.value = nickchk.data;
@@ -637,9 +636,7 @@ export default {
     const itemTest = () => {
       listCode.value = route.query.code;
       axios
-        .get(
-          "http://192.168.0.36:8089/api/stock/stock-summary/" + listCode.value,
-        )
+        .get("/api/stock/stock-summary/" + listCode.value)
         .then((itemData) => {
           stockCode.value = itemData.data;
           listStockMarketCap.value = stockCode.value.marketCap;
@@ -656,20 +653,18 @@ export default {
 
     const itemStockGet = () => {
       listCode.value = route.query.code;
-      axios
-        .get("http://192.168.0.36:8089/api/stock/stocks/" + listCode.value)
-        .then((itemDataStock) => {
-          stockNameMarket.value = itemDataStock.data;
-          stockName.value = stockNameMarket.value[0].name;
-          stockMarket.value = stockNameMarket.value[0].market;
-          console.log(stockNameMarket);
-        });
+      axios.get("/api/stock/stocks/" + listCode.value).then((itemDataStock) => {
+        stockNameMarket.value = itemDataStock.data;
+        stockName.value = stockNameMarket.value[0].name;
+        stockMarket.value = stockNameMarket.value[0].market;
+        console.log(stockNameMarket);
+      });
     };
 
     const contentStockPriceGet = () => {
       listCode.value = route.query.code;
       axios
-        .get("http://192.168.0.36:8089/api/stock/stock-price/" + listCode.value)
+        .get("/api/stock/stock-price/" + listCode.value)
         .then((itemDataPrice) => {
           contentStockPrice.value = itemDataPrice.data;
           stockPrice.value =
