@@ -2,9 +2,11 @@ package com.example.demo.stock.service;
 
 import com.example.demo.stock.dto.*;
 import com.example.demo.stock.model.StockInfoModel;
+import com.example.demo.stock.model.StockKeyword;
 import com.example.demo.stock.model.StockLikeModel;
 import com.example.demo.stock.model.StockPriceModel;
 import com.example.demo.stock.repository.StockInfoRepository;
+import com.example.demo.stock.repository.StockKeywordRepository;
 import com.example.demo.stock.repository.StockLikeRepository;
 import com.example.demo.stock.repository.StockPriceRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class StockService {
     private final StockPriceRepository stockPriceRepository;
     private final StockInfoRepository stockInfoRepository;
     private final StockLikeRepository stockLikeRepository;
+    private final StockKeywordRepository stockKeywordRepository;
     private final MongoTemplate mongoTemplate;
 
     /**
@@ -158,5 +161,41 @@ public class StockService {
         ArrayList<SearchResDTO> result = (ArrayList)mongoTemplate.find(query, SearchResDTO.class, "stock_price");
 
         return result;
+    }
+
+    /**
+     * 키워드 관심 요청
+     */
+    public void likeKeyword(String keyword, String email){
+
+        // 관심중으로 되어있는지 확인
+        StockKeyword stockKeyword = stockKeywordRepository.findByKeywordAndEmail(keyword, email);
+
+        // 없으면 추가
+        if(stockKeyword == null){
+            stockKeyword = new StockKeyword(keyword,email);
+            stockKeywordRepository.insert(stockKeyword);
+        }
+    }
+
+    /**
+     * 키워드 관심 해제 요청
+     */
+    public void dislikeKeyword(String keyword, String email){
+
+        // 관심중으로 되어있는지 확인
+        StockKeyword stockKeyword = stockKeywordRepository.findByKeywordAndEmail(keyword, email);
+
+        // 있으면 관심 삭제
+        if(stockKeyword != null){
+            stockKeywordRepository.delete(stockKeyword);
+        }
+    }
+
+    /**
+     * 키워드 관심 목록 가져오기
+     */
+    public ArrayList<StockKeyword> keywordLikeList(String email){
+        return stockKeywordRepository.findByEmail(email);
     }
 }

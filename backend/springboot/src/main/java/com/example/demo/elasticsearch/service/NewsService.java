@@ -67,12 +67,19 @@ public class NewsService {
         }
     }
 
-    // 조건에 맞는 모든 뉴스 가져오기
+    // 종목,대표 키워드, 기간에 맞는 모든 뉴스 가져오기
     public List<News> getNews(SearchNewsReqDTO dto){
         SearchRequest request = SearchUtil.buildNewsSearchRequest(Indices.NEWS_INDEX, dto);
         return searchInternal(request);
     }
 
+    // 종목에 맞는 실시간 뉴스 가져오기
+    public List<News> getRealTimeNews(SearchNewsReqDTO dto){
+        SearchRequest request = SearchUtil.buildNewsSearchRequest2(Indices.NEWS_INDEX, dto);
+        return searchInternal(request);
+    }
+
+    // 종목, 기간에 일치하는 클러스터링 된 뉴스 가져오기
     public  ArrayList<ClusteredNews> getClusteredNews(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
 
         // 엘라스틱 서치에 요청할 carrot2 전용 json dto 생성 ====================================================
@@ -143,11 +150,6 @@ public class NewsService {
          */
 
         return clusteredNewsList;
-    }
-
-    private List<News> getRealTimeNews(){
-
-        return null;
     }
 
     // elasticsearch 로 부터 hit 가져오기

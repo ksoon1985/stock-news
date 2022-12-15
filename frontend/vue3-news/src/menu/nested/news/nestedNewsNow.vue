@@ -14,7 +14,10 @@
           <span class="forKeyWordSpan">{{ index + 1 }}</span>
           <h3 class="themeKeywords">{{ item }}</h3>
           <div class="forBtn">
-            <button class="fotBtnOne">관심</button>
+            <button class="fotBtnOne" @click="likeKeyword(item)">
+              <span v-if="likeKeywordList.indexOf(item) !== -1"> 관심중 </span>
+              <span v-else> 관심 </span>
+            </button>
             <router-link
               class="forkeywordRouter"
               :to="{
@@ -52,6 +55,8 @@ export default {
     const userStore = useUserStore();
     const keyWordList = ref([]);
 
+    let likeKeywordList = ref([]);
+
     let keywordTwo = ref(false);
 
     let { listCode, stockName, keywordOne, modalData } = storeToRefs(store);
@@ -67,7 +72,14 @@ export default {
       keywordOne.value = false;
       keywordTwo.value = true;
     };
+
     onMounted(() => {
+      if (isLogin) {
+        axios.get("/api/stock/keywords/likes").then((res) => {
+          likeKeywordList.value = res.data;
+        });
+      }
+
       // stockName loading issue
       // -> setTimeout 0.3s lazy loading
       setTimeout(() => {
@@ -80,34 +92,27 @@ export default {
       }, 300);
     });
 
-    // const keywordNewsSearch = (themeKeyword) => {
-    //   let dateEls = document.querySelectorAll(".highcharts-range-input text");
-    //   let fromDate = dateEls[0].innerHTML;
-    //   let toDate = dateEls[1].innerHTML;
+    const likeKeyword = (themeKeyword) => {
+      let apiPath = "keyword-like";
 
-    //   //let today = new Date();
-    //   // yyyy-mm-dd
-    //   //let year = today.getFullYear();
-    //   //let month = today.getMonth() + 1;
-    //   //let date = today.getDate() - 1;
-    //   //today = year + "-" + month + "-" + date;
+      if (!isLogin) {
+        return;
+      }
 
-    //   let reqDto = {
-    //     searchTerm: stockName.value,
-    //     themeKeyword: themeKeyword,
-    //     fromDate: fromDate,
-    //     toDate: toDate,
-    //   };
-    //   console.log(reqDto);
-    //   axios.post("/api/news/getSearchNews", reqDto).then((res) => {
-    //     console.log("res 데이터 넘어오나", res.data);
-    //   });
-    // };
+      // 관심중이면
+      if (likeKeywordList.value.indexOf(themeKeyword) !== -1) {
+        apiPath = "keyword-dislike";
+      }
+
+      axios.get("/api/stock/" + apiPath + "/" + themeKeyword).then((res) => {
+        likeKeywordList.value = res.data;
+      });
+    };
+
     return {
       listCode,
       stockName,
       keyWordList,
-      // keywordNewsSearch,
       keywordOne,
       keywordTwo,
       keywordChangeEvent,
@@ -117,6 +122,8 @@ export default {
       nickName,
       modalData,
       interestClickEvent,
+      likeKeywordList,
+      likeKeyword,
     };
   },
 };

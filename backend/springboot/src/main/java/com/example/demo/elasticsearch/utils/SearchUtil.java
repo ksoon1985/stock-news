@@ -15,14 +15,14 @@ import java.util.List;
 
 public class SearchUtil {
 
-    // news search query builder
+    // 종목, 대표 키워드, 기간에 맞는 뉴스 쿼리 빌더
     public static SearchRequest buildNewsSearchRequest(String indexName, SearchNewsReqDTO dto){
 
         try {
             // query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                     .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()))// 삼성 전자
-                    .must(QueryBuilders.matchPhraseQuery("content",dto.getThemeKeyword()))
+                    .must(QueryBuilders.matchQuery("content",dto.getThemeKeyword())) // 반도체
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
@@ -35,6 +35,28 @@ public class SearchUtil {
             SearchRequest request = new SearchRequest(indexName);
             request.source(builder);
 
+            return request;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    // 종목에 맞는 뉴스 쿼리 빌더
+    public static SearchRequest buildNewsSearchRequest2(String indexName, SearchNewsReqDTO dto){
+        try{
+
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()));// 삼성 전자;
+
+            SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
+
+            // sorting
+            builder = builder.sort("registration_date",SortOrder.DESC);
+
+            builder = builder.from(0).size(50);
+
+            SearchRequest request = new SearchRequest(indexName);
+            request.source(builder);
             return request;
         }catch (Exception e){
             return null;

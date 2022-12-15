@@ -3,6 +3,7 @@ package com.example.demo.stock.controller;
 import com.example.demo.security.jwt.SecurityUser;
 import com.example.demo.stock.dto.SearchResDTO;
 import com.example.demo.stock.dto.StockSummaryResDTO;
+import com.example.demo.stock.model.StockKeyword;
 import com.example.demo.stock.service.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -150,5 +149,55 @@ public class StockController {
         ArrayList<SearchResDTO> wishList = stockService.stockLikeList(member.getUsername());
 
         return wishList;
+    }
+
+    @Operation(summary = "키워드 관심 요청")
+    @GetMapping("/keyword-like/{themeKeyword}")
+    public ResponseEntity likeKeyword(@PathVariable String themeKeyword, @ApiIgnore @AuthenticationPrincipal SecurityUser member){
+        // 인증이 안된 요청임
+        if(member == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+        }
+        stockService.likeKeyword(themeKeyword,member.getUsername());
+
+        ArrayList<String> wishList = getLikeKeywordsHandler(member.getUsername());
+
+        return ResponseEntity.ok().body(wishList);
+    }
+
+    @Operation(summary = "키워드 관심 해제 요청")
+    @GetMapping("/keyword-dislike/{themeKeyword}")
+    public ResponseEntity dislikeKeyword(@PathVariable String themeKeyword, @ApiIgnore @AuthenticationPrincipal SecurityUser member){
+        // 인증이 안된 요청임
+        if(member == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+        }
+        stockService.dislikeKeyword(themeKeyword,member.getUsername());
+
+        ArrayList<String> wishList = getLikeKeywordsHandler(member.getUsername());
+
+        return ResponseEntity.ok().body(wishList);
+    }
+
+    @Operation(summary = "관심중인 키워드 목록 요청")
+    @GetMapping("/keywords/likes")
+    public ResponseEntity getLikeKeywords(@ApiIgnore @AuthenticationPrincipal SecurityUser member){
+        // 인증이 안된 요청임
+        if(member == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+        }
+        ArrayList<String> wishList = getLikeKeywordsHandler(member.getUsername());
+
+        return ResponseEntity.ok().body(wishList);
+    }
+
+    public ArrayList<String> getLikeKeywordsHandler(String email){
+
+        ArrayList<StockKeyword> wishList = stockService.keywordLikeList(email);
+        ArrayList<String> keywordArr = new ArrayList<>();
+        for (StockKeyword stockKeyword : wishList) {
+            keywordArr.add(stockKeyword.getKeyword());
+        }
+        return keywordArr;
     }
 }
