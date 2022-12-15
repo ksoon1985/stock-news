@@ -38,30 +38,33 @@ export default {
 
     onMounted(() => {
       // stockName loading issue
-      // -> setTimeout 0.5s lazy loading
+      // -> setTimeout 0.3s lazy loading
       setTimeout(() => {
         axios
           .get("/api/stock/stock-themeKeyword/" + listCode.value)
           .then((res) => {
             keyWordList.value = res.data;
           });
-      }, 500);
+      }, 300);
     });
 
     const keywordNewsSearch = (themeKeyword) => {
-      let today = new Date();
-      // yyyy-mm-dd
-      let year = today.getFullYear();
-      let month = today.getMonth() + 1;
-      let date = today.getDate() - 1;
+      let dateEls = document.querySelectorAll(".highcharts-range-input text");
+      let fromDate = dateEls[0].innerHTML;
+      let toDate = dateEls[1].innerHTML;
 
-      today = year + "-" + month + "-" + date;
+      //let today = new Date();
+      // yyyy-mm-dd
+      //let year = today.getFullYear();
+      //let month = today.getMonth() + 1;
+      //let date = today.getDate() - 1;
+      //today = year + "-" + month + "-" + date;
 
       let reqDto = {
         searchTerm: stockName.value,
         themeKeyword: themeKeyword,
-        fromDate: "2020-01-01",
-        toDate: today,
+        fromDate: fromDate,
+        toDate: toDate,
       };
       console.log(reqDto);
       axios.post("/api/news/getSearchNews", reqDto).then((res) => {
