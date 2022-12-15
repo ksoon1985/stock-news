@@ -35,7 +35,7 @@
 
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
-        <pulse-loader />
+        <pulse-loader :color="color" />
       </div>
     </div>
 
@@ -166,6 +166,7 @@ export default {
       isLoading,
       modalOpenFunc,
       getClusteredNews,
+      color: "#d01411",
     };
   },
 };

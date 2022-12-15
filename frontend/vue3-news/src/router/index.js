@@ -14,6 +14,7 @@ import NestedStockOne from "@/menu/nested/stock/nestedStockOne.vue";
 import NestedStockTwo from "@/menu/nested/stock/nestedStockTwo.vue";
 import stockTwoYear from "@/menu/nested/stock/stockTwoNested/stockTwoYear.vue";
 import stockTwoQyarter from "@/menu/nested/stock/stockTwoNested/stockTwoQyarter.vue";
+import newsNow from "@/menu/nested/news/nestedNewsnow/newsNow.vue";
 // import MenuSns from "@/menu/menuSns.vue";
 // import NestedSnsNow from "@/menu/nested/sns/nestedSnsNow.vue";
 // import NestedSnsPast from "@/menu/nested/sns/nestedSnsPast.vue";
@@ -35,6 +36,13 @@ const routes = [
         path: "now",
         name: "NewsNow",
         component: NestedNewsNow,
+        children: [
+          {
+            path: "keyword",
+            name: "newsNowkeyword",
+            component: newsNow,
+          },
+        ],
       },
       {
         path: "past",

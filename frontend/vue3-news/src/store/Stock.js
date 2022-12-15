@@ -36,6 +36,8 @@ export const useStockStore = defineStore("stock", () => {
   let modalData = ref(false); //모달창 전체
   let searchNewsParams = ref({}); // 뉴스 검색 조건
   let keyWordList = ref(null); // 키워드 리스트
+  let keywordOne = ref(true); // 키워드 화면 리스트
+  let keywordTwo = ref(false); // 키워드 화면 뉴스조회 화면
 
   return {
     stockCode,
@@ -72,5 +74,7 @@ export const useStockStore = defineStore("stock", () => {
     modalData,
     searchNewsParams,
     keyWordList,
+    keywordOne,
+    keywordTwo,
   };
 });
