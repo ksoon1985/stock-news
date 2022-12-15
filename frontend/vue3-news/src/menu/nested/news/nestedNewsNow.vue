@@ -41,6 +41,7 @@
 
 <script>
 import { useStockStore } from "@/store/Stock.js";
+import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
 import { onMounted, ref } from "vue";
@@ -48,11 +49,19 @@ import { onMounted, ref } from "vue";
 export default {
   setup() {
     const store = useStockStore();
+    const userStore = useUserStore();
     const keyWordList = ref([]);
 
     let keywordTwo = ref(false);
 
-    let { listCode, stockName, keywordOne } = storeToRefs(store);
+    let { listCode, stockName, keywordOne, modalData } = storeToRefs(store);
+    let { nickName, isLogin } = storeToRefs(userStore);
+
+    const interestClickEvent = () => {
+      if (isLogin.value == false) {
+        modalData.value = true;
+      }
+    };
 
     const keywordChangeEvent = () => {
       keywordOne.value = false;
@@ -66,41 +75,48 @@ export default {
           .get("/api/stock/stock-themeKeyword/" + listCode.value)
           .then((res) => {
             keyWordList.value = res.data;
+            keywordOne.value = true;
           });
       }, 300);
     });
 
-    const keywordNewsSearch = (themeKeyword) => {
-      let dateEls = document.querySelectorAll(".highcharts-range-input text");
-      let fromDate = dateEls[0].innerHTML;
-      let toDate = dateEls[1].innerHTML;
+    // const keywordNewsSearch = (themeKeyword) => {
+    //   let dateEls = document.querySelectorAll(".highcharts-range-input text");
+    //   let fromDate = dateEls[0].innerHTML;
+    //   let toDate = dateEls[1].innerHTML;
 
-      //let today = new Date();
-      // yyyy-mm-dd
-      //let year = today.getFullYear();
-      //let month = today.getMonth() + 1;
-      //let date = today.getDate() - 1;
-      //today = year + "-" + month + "-" + date;
+    //   //let today = new Date();
+    //   // yyyy-mm-dd
+    //   //let year = today.getFullYear();
+    //   //let month = today.getMonth() + 1;
+    //   //let date = today.getDate() - 1;
+    //   //today = year + "-" + month + "-" + date;
 
-      let reqDto = {
-        searchTerm: stockName.value,
-        themeKeyword: themeKeyword,
-        fromDate: fromDate,
-        toDate: toDate,
-      };
-      console.log(reqDto);
-      axios.post("/api/news/getSearchNews", reqDto).then((res) => {
-        console.log(res.data);
-      });
-    };
+    //   let reqDto = {
+    //     searchTerm: stockName.value,
+    //     themeKeyword: themeKeyword,
+    //     fromDate: fromDate,
+    //     toDate: toDate,
+    //   };
+    //   console.log(reqDto);
+    //   axios.post("/api/news/getSearchNews", reqDto).then((res) => {
+    //     console.log("res 데이터 넘어오나", res.data);
+    //   });
+    // };
     return {
       listCode,
       stockName,
       keyWordList,
-      keywordNewsSearch,
+      // keywordNewsSearch,
       keywordOne,
       keywordTwo,
       keywordChangeEvent,
+      onMounted,
+      axios,
+      isLogin,
+      nickName,
+      modalData,
+      interestClickEvent,
     };
   },
 };
@@ -164,6 +180,7 @@ export default {
   position: relative;
   top: 14px;
   left: 7px;
+  width: 22px;
 }
 
 .themeKeywords {
@@ -183,6 +200,10 @@ export default {
   position: relative;
   top: 12px;
   left: 80px;
+}
+
+.fotBtnOne:hover {
+  opacity: 0.5;
 }
 
 .fotBtnOne {
@@ -210,5 +231,9 @@ export default {
   border: none;
   font-family: "Pretendard-Regular";
   cursor: pointer;
+}
+
+.forBtnTwo:hover {
+  opacity: 0.5;
 }
 </style>

@@ -40,6 +40,7 @@
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import axios from "axios";
+import { onMounted } from "vue";
 
 export default {
   setup() {
@@ -53,6 +54,10 @@ export default {
       stockInformationDataQyarterThree,
       stockInformationDataQyarterFour,
     } = storeToRefs(store);
+
+    onMounted(() => {
+      informationTwoClick();
+    });
 
     const informationTwoClick = () => {
       axios

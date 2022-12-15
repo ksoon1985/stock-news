@@ -238,12 +238,13 @@ export default {
 
 /* 메인 메뉴 활성화 */
 .exact-active-link {
-  border-bottom: 3px solid red;
+  /* border-bottom: 3px solid red; */
 }
 
 /* 서브 메뉴 활성화 */
 .router-link-active #sub-title {
-  color: #000000;
+  color: #1c1c1c;
+  border-bottom: 3px solid red;
 }
 
 /* 메인 메뉴 아이콘 활성화  */

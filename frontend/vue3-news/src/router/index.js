@@ -15,6 +15,7 @@ import NestedStockTwo from "@/menu/nested/stock/nestedStockTwo.vue";
 import stockTwoYear from "@/menu/nested/stock/stockTwoNested/stockTwoYear.vue";
 import stockTwoQyarter from "@/menu/nested/stock/stockTwoNested/stockTwoQyarter.vue";
 import newsNow from "@/menu/nested/news/nestedNewsnow/newsNow.vue";
+import commTopicChildren from "@/menu/nested/community/nestedCommTopic/commTopic.vue";
 // import MenuSns from "@/menu/menuSns.vue";
 // import NestedSnsNow from "@/menu/nested/sns/nestedSnsNow.vue";
 // import NestedSnsPast from "@/menu/nested/sns/nestedSnsPast.vue";
@@ -115,6 +116,13 @@ const routes = [
         path: "topic",
         name: "CommTopic",
         component: NestedCommTopic,
+        children: [
+          {
+            path: "TopicChildren",
+            name: "TopicChildren",
+            component: commTopicChildren,
+          },
+        ],
       },
     ],
   },

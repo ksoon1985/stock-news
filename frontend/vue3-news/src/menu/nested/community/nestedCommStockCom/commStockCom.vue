@@ -1,7 +1,7 @@
 <template>
   <div class="post-menu">
     <div class="post-bubble-div">
-      <button type="button" class="postBtn" @click="commStatEvent(subId)">
+      <button type="button" class="postBtnOne" @click="commStatEvent(subId)">
         <div class="post-close">
           <svg
             width="17"
@@ -9,6 +9,7 @@
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             style="display: block"
+            class="postBtnSvg"
           >
             <image
               href="@/assets/svg/speech-bubble-svgrepo-com.svg"
@@ -306,6 +307,14 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 .post-menu {
   border-top: 1px solid #f2f2f2;
   display: flex;
@@ -314,12 +323,18 @@ export default {
 }
 
 .postMenuBtn {
+  font-family: "Pretendard-Regular";
   width: 5rem;
   height: 1.5rem;
   border-radius: 4px;
   background-color: #d01411;
   color: #fef6f6;
   border: none;
+  cursor: pointer;
+}
+
+.postMenuBtn:hover {
+  opacity: 0.5;
 }
 
 .post-menu-btn {
@@ -330,11 +345,16 @@ export default {
   margin-left: 1rem;
 }
 
-.postBtn {
+.postBtnOne {
   margin-top: 3px;
   background-color: #ffffff;
   border: none;
   cursor: pointer;
+}
+
+.postBtnSvg:hover {
+  filter: invert(16%) sepia(89%) saturate(6054%) hue-rotate(358deg)
+    brightness(97%) contrast(113%);
 }
 
 .con-comment {
@@ -373,6 +393,7 @@ export default {
 }
 
 .ql-btn {
+  font-family: "Pretendard-Regular";
   width: 3rem;
   height: 1.5rem;
   border-radius: 4px;
@@ -380,6 +401,7 @@ export default {
   color: #fef6f6;
   border: none;
   margin-top: 6px;
+  cursor: pointer;
 }
 
 .for-comment {

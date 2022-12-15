@@ -534,6 +534,10 @@ export default {
 }
 
 .news-btn:hover {
-  color: #1c1c1c;
+  opacity: 0.7;
+}
+
+.star-icon {
+  cursor: pointer;
 }
 </style>

@@ -22,7 +22,7 @@
           code: listCode,
         },
       }"
-      ><button class="btn-close">
+      ><button class="btn-close" @click="topicOne = true">
         <span class="sub-title" id="sub-title">주제토론</span>
       </button></router-link
     >
@@ -39,10 +39,11 @@ export default {
   setup() {
     const store = useStockStore();
 
-    let { listCode } = storeToRefs(store);
+    let { listCode, topicOne } = storeToRefs(store);
 
     return {
       listCode,
+      topicOne,
     };
   },
 };

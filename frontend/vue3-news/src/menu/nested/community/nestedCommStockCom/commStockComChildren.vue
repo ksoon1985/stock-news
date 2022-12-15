@@ -207,6 +207,13 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
 .create-reply {
   display: flex;
 }
@@ -238,6 +245,7 @@ export default {
 }
 
 .rp-btn {
+  font-family: "Pretendard-Regular";
   width: 3.5rem;
   height: 1.5rem;
   border-radius: 4px;
@@ -245,6 +253,7 @@ export default {
   background-color: #d01411;
   border: none;
   color: #fef6f6;
+  cursor: pointer;
 }
 
 .post-bubble-div {

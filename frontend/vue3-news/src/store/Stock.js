@@ -38,6 +38,8 @@ export const useStockStore = defineStore("stock", () => {
   let keyWordList = ref(null); // 키워드 리스트
   let keywordOne = ref(true); // 키워드 화면 리스트
   let keywordTwo = ref(false); // 키워드 화면 뉴스조회 화면
+  let topicOne = ref(true); // 주제토론 화면 리스트
+  let topicTwo = ref(false); // 주제토론 토론 채팅 화면
 
   return {
     stockCode,
@@ -76,5 +78,7 @@ export const useStockStore = defineStore("stock", () => {
     keyWordList,
     keywordOne,
     keywordTwo,
+    topicOne,
+    topicTwo,
   };
 });
