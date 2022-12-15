@@ -37,7 +37,7 @@ import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 export default {
   setup() {
     const store = useStockStore();
@@ -54,12 +54,17 @@ export default {
       });
     };
 
+    onMounted(() => {
+      keyWordClickEvent();
+    });
+
     return {
       listCode,
       useRouter,
       keyWordClickEvent,
       keyWordList,
       stockData,
+      watch,
     };
   },
 };

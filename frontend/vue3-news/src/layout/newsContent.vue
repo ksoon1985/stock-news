@@ -522,7 +522,7 @@ export default {
 }
 
 .news-btn {
-  width: 20rem;
+  width: 6rem;
   height: 1.8rem;
   border-radius: 6px;
   background-color: #d01411;

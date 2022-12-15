@@ -1,6 +1,6 @@
 <template>
   <div class="sub-view-result">
-    <div class="topic-news">
+    <div class="topic-news" v-if="keywordOne">
       <div class="keyWordStockName">
         <span class="keyword-stock-name">{{ stockName }}</span>
         <span class="keyword-keyword">키워드</span>
@@ -14,11 +14,27 @@
           <span class="forKeyWordSpan">{{ index + 1 }}</span>
           <h3 class="themeKeywords">{{ item }}</h3>
           <div class="forBtn">
-            <button class="fotBtnOne">관심</button
-            ><button class="forBtnTwo">뉴스조회</button>
+            <button class="fotBtnOne">관심</button>
+            <router-link
+              class="forkeywordRouter"
+              :to="{
+                name: 'newsNowkeyword',
+                query: {
+                  code: listCode,
+                  keyword: item,
+                },
+              }"
+            >
+              <button class="forBtnTwo" @click="keywordChangeEvent">
+                뉴스조회
+              </button>
+            </router-link>
           </div>
         </div>
       </div>
+    </div>
+    <div class="" v-if="keywordTwo">
+      <Router-view class=""></Router-view>
     </div>
   </div>
 </template>
@@ -26,16 +42,27 @@
 <script>
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 export default {
   setup() {
     const store = useStockStore();
 
-    let { listCode, stockName, keyWordList } = storeToRefs(store);
+    let keywordTwo = ref(false);
+
+    let { listCode, stockName, keyWordList, keywordOne } = storeToRefs(store);
+
+    const keywordChangeEvent = () => {
+      keywordOne.value = false;
+      keywordTwo.value = true;
+    };
 
     return {
       listCode,
       stockName,
       keyWordList,
+      keywordOne,
+      keywordTwo,
+      keywordChangeEvent,
     };
   },
 };
