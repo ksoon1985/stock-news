@@ -15,8 +15,13 @@
           <h3 class="themeKeywords">{{ item }}</h3>
           <div class="forBtn">
             <button class="fotBtnOne" @click="likeKeyword(item)">
-              <span v-if="likeKeywordList.indexOf(item) !== -1"> 관심중 </span>
-              <span v-else> 관심 </span>
+              <span
+                class="forBtnSpanOne"
+                v-if="likeKeywordList.indexOf(item) !== -1"
+              >
+                관심중
+              </span>
+              <span class="forBtnSpanTwo" v-else> 관심 </span>
             </button>
             <router-link
               class="forkeywordRouter"
@@ -61,6 +66,8 @@ export default {
 
     let { listCode, stockName, keywordOne, modalData } = storeToRefs(store);
     let { nickName, isLogin } = storeToRefs(userStore);
+
+    let likeStatus = ref(true);
 
     const interestClickEvent = () => {
       if (isLogin.value == false) {
@@ -124,6 +131,7 @@ export default {
       interestClickEvent,
       likeKeywordList,
       likeKeyword,
+      likeStatus,
     };
   },
 };
@@ -217,7 +225,6 @@ export default {
   width: 5rem;
   height: 1.7rem;
   border-radius: 4px;
-  background-color: #d01411;
   font-size: 1rem;
   font-weight: 500;
   color: #fef6f6;
@@ -242,5 +249,31 @@ export default {
 
 .forBtnTwo:hover {
   opacity: 0.5;
+}
+
+.forBtnSpanTwo {
+  display: inline-block;
+  background-color: #d01411;
+  width: 80px;
+  height: 27.19px;
+  border-radius: 4px;
+  position: relative;
+  left: -4px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.forBtnSpanOne {
+  display: inline-block;
+  background-color: #999999;
+  width: 80px;
+  height: 27.19px;
+  border-radius: 4px;
+  position: relative;
+  left: -4px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 </style>
