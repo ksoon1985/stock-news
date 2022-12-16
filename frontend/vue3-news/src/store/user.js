@@ -10,6 +10,9 @@ export const useUserStore = defineStore("storeUser", {
       nickName: ref(""),
 
       likeList: ref([]),
+
+      topicOne: ref(true),
+      topicTwo: ref(false),
     };
   },
   actions: {
@@ -23,10 +26,16 @@ export const useUserStore = defineStore("storeUser", {
     setTempCode(value) {
       this.listCode = value;
     },
+    setTopicOne(value) {
+      this.topicOne = value;
+    },
+    setTopicTwo(value) {
+      this.topicTwo = value;
+    },
   },
   persist: {
     enabled: true,
     storage: localStorage,
-    paths: ["tempCode", "isLogin", "nickName"],
+    paths: ["tempCode", "isLogin", "nickName", "topicOne", "topicTwo"],
   },
 });

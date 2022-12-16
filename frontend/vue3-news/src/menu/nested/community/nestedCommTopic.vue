@@ -48,14 +48,17 @@
 
 <script>
 import { useStockStore } from "@/store/Stock.js";
+import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
 import { onMounted, ref } from "vue";
 export default {
   setup() {
     const store = useStockStore();
+    const userStore = useUserStore();
 
-    let { listCode, topicOne, topicTwo } = storeToRefs(store);
+    let { listCode } = storeToRefs(store);
+    let { nickName, isLogin, topicOne, topicTwo } = storeToRefs(userStore);
 
     let keywordRankList = ref(null);
 
@@ -91,6 +94,8 @@ export default {
       topicChangeEvent,
       topicKeywordRankAxios,
       keywordRankList,
+      nickName,
+      isLogin,
     };
   },
 };

@@ -50,7 +50,7 @@
         <div class="commentContent">
           <p>{{ item.content }}</p>
         </div>
-        <comChildren
+        <topicCloseChildren
           :childrenCount="item.subCount"
           :childrenId="item._id"
           :childrenNick="item.nickName"
@@ -115,10 +115,10 @@ import { storeToRefs } from "pinia";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { ref, onMounted, watch } from "vue";
-import comChildren from "@/menu/nested/community/nestedCommStockCom/commStockComChildren.vue";
+import topicCloseChildren from "@/menu/nested/community/nestedCommTopic/nestedTopicChildren/commTopicCloseChildren.vue";
 
 export default {
-  components: { comChildren },
+  components: { topicCloseChildren },
 
   emits: ["event1"],
 
@@ -133,7 +133,7 @@ export default {
     const route = useRoute();
     const userStore = useUserStore();
 
-    let { listCode, commSubCount, modalData } = storeToRefs(store);
+    let { listCode, topicName, commSubCount, modalData } = storeToRefs(store);
     let { nickName, isLogin } = storeToRefs(userStore);
 
     let commStatus = ref(false);
@@ -199,7 +199,7 @@ export default {
     const commStatEvent = (id) => {
       commStatus.value = !commStatus.value;
 
-      const url = "/api/community/comments/" + id;
+      const url = "/api/community/keyword-comments/" + id;
       let comData = {
         id: id,
       };
@@ -218,7 +218,7 @@ export default {
     };
 
     const commStatEventTwo = (id) => {
-      const url = "/api/community/comments/" + id;
+      const url = "/api/community/keyword-comments/" + id;
       let comData = {
         id: id,
       };
@@ -235,10 +235,10 @@ export default {
     };
 
     const comInputSubmit = (id) => {
-      listCode.value = route.query.code;
-      const url = "/api/community/addComment";
+      topicName.value = route.query.topic;
+      const url = "/api/community/addKeywordComment";
       let comData = {
-        code: listCode.value,
+        keyword: topicName.value,
         content: qlInput.value,
         parentId: id,
       };
@@ -258,7 +258,7 @@ export default {
     };
 
     const comDelSubit = (id) => {
-      const url = "/api/community/delComment";
+      const url = "/api/community/delKeywordComment";
       let comData = {
         id: id,
       };
@@ -302,6 +302,7 @@ export default {
       commClickEvent,
       modalOpen,
       modalCloseEvent,
+      topicName,
     };
   },
 };
@@ -489,10 +490,6 @@ export default {
   opacity: 0.5;
 }
 
-.modalBtnTwo:hover {
-  opacity: 0.5;
-}
-
 .modalBtnTwo {
   color: #fef6f6;
   background-color: #d01411;
@@ -502,6 +499,10 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   font-family: "Pretendard-Regular";
+}
+
+.modalBtnTwo:hover {
+  opacity: 0.5;
 }
 
 .menu-modal-Btn {

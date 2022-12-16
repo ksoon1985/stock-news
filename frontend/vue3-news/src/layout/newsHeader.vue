@@ -143,6 +143,10 @@
                 maxlength="16"
               />
               <label class="label">비밀번호</label>
+              <span class="loginFalseSpan" v-if="loginFalseSpan">
+                <br />로그인에 실패하였습니다. <br />
+                이메일과 비밀번호를 다시 확인해주세요.</span
+              >
             </div>
             <button
               type="submit"
@@ -429,6 +433,7 @@ export default {
     let joinComChk = ref(false);
     let routeTest = ref("");
     let modalUserIcon = ref(false);
+    let loginFalseSpan = ref(false);
 
     let { tempCode, isLogin, nickName, likeList } = storeToRefs(userStore);
     let setTimeoutHandler = ref(null);
@@ -505,7 +510,6 @@ export default {
       await router.isReady();
       routeTest.value = route.query.code;
       listCode.value = routeTest.value;
-      console.log("비포마운트", routeTest.value);
       itemTest(), itemStockGet(), contentStockPriceGet();
     });
 
@@ -556,9 +560,7 @@ export default {
 
     watch(modalJoinEmail, () => {
       axios
-        .get(
-          "http://192.168.0.36:8089/api/member/chkEmail/" + modalJoinEmail.value
-        )
+        .get("/api/member/chkEmail/" + modalJoinEmail.value)
         .then((emailchk) => {
           resEmailCheck.value = emailchk.data;
         })
@@ -588,9 +590,7 @@ export default {
 
     watch(nickInput, () => {
       axios
-        .get(
-          "http://192.168.0.36:8089/api/member/chkNickName/" + nickInput.value
-        )
+        .get("/api/member/chkNickName/" + nickInput.value)
         .then((nickchk) => {
           resNickCheck.value = nickchk.data;
         })
@@ -656,6 +656,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          loginFalseSpan.value = true;
         });
     };
 
@@ -809,6 +810,7 @@ export default {
       tempCode,
       router,
       modalUserIcon,
+      loginFalseSpan,
     };
   },
 };
@@ -1347,5 +1349,9 @@ input:not(:placeholder-shown) {
   height: 2rem;
   margin-right: 5px;
   font-family: "Pretendard-Regular";
+}
+
+.loginFalseSpan {
+  font-size: 0.8rem;
 }
 </style>

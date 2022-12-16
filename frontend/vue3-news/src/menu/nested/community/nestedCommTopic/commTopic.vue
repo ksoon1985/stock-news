@@ -52,7 +52,7 @@
           </div>
         </div>
         <div class="create-comments-header" v-if="topicClick">
-          <form @submit.prevent="comContentSubmit">
+          <form @submit.prevent="comTopicContentSubmit">
             <div class="create-post-header">
               <div class="heraderNickName">
                 <p class="nickname">{{ nickName }}</p>
@@ -87,6 +87,30 @@
         </div>
       </div>
     </div>
+
+    <div class="rank-comments-wrap">
+      <div class="stock-post">
+        <div
+          v-for="(item, index) in comments"
+          :key="index"
+          class="contentDivrank"
+        >
+          <div class="nickNameWrapRank">
+            <h3>{{ item.nickName }}</h3>
+          </div>
+          <p class="contentRegDateRank">{{ item.regDate }}</p>
+          <div class="postContentRank">
+            <p>{{ item.content }}</p>
+          </div>
+          <topicClose
+            :subCount="item.subCount"
+            :subId="item._id"
+            :subNickName="item.nickName"
+            @event1="commentData()"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,21 +120,27 @@ import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import axios from "@/utils/axios";
+import topicClose from "@/menu/nested/community/nestedCommTopic/nestedTopicChildren/commTopicClose.vue";
 
 export default {
+  components: { topicClose },
+
   setup() {
     const store = useStockStore();
     const userStore = useUserStore();
     const route = useRoute();
     const router = useRouter();
 
-    let { listCode, topicOne, topicTwo, modalData } = storeToRefs(store);
-    let { nickName, isLogin } = storeToRefs(userStore);
+    let { listCode, modalData } = storeToRefs(store);
+    let { nickName, isLogin, topicOne, topicTwo } = storeToRefs(userStore);
 
     let topicName = ref("");
     let totalCount = ref(0);
     let topicNoClick = ref(true);
     let topicClick = ref(false);
+    let comTextarea = ref("");
+    let comments = ref([]);
 
     const topicChangeClick = () => {
       topicOne.value = true;
@@ -129,12 +159,41 @@ export default {
     const topicCloseEvent = () => {
       topicNoClick.value = true;
       topicClick.value = false;
+      comTextarea.value = "";
     };
 
     onMounted(async () => {
       await router.isReady();
       topicName.value = route.query.topic;
+      commentData();
     });
+
+    const comTopicContentSubmit = () => {
+      topicName.value = route.query.topic;
+      const url = "/api/community/addKeywordComment";
+      let topicData = {
+        keyword: topicName.value,
+        content: comTextarea.value,
+      };
+      axios.post(url, topicData).then((res) => {
+        commentData();
+        topicClick.value = false;
+        topicNoClick.value = true;
+        comTextarea.value = "";
+        console.log(res);
+      });
+    };
+
+    const commentData = () => {
+      topicName.value = route.query.topic;
+      axios
+        .get("/api/community/keyword-comments/" + topicName.value)
+        .then((res) => {
+          comments.value = res.data.keywordComments;
+          totalCount.value = res.data.commentCount;
+          console.log("게시글 리스트", comments);
+        });
+    };
 
     return {
       listCode,
@@ -151,6 +210,12 @@ export default {
       isLogin,
       topicClickEvent,
       topicCloseEvent,
+      comTopicContentSubmit,
+      comTextarea,
+      commentData,
+      comments,
+      topicOne,
+      topicTwo,
     };
   },
 };
@@ -291,5 +356,29 @@ export default {
 
 .quillBtn:hover {
   color: #1c1c1c;
+}
+
+.contentRegDateRank {
+  position: relative;
+  top: -16px;
+  left: 12px;
+  color: #999999;
+  font-size: 0.9rem;
+  font-family: "Pretendard-Regular";
+}
+
+.contentDivrank {
+  height: auto;
+  border-bottom: 4px solid #f2f2f2;
+  font-family: "Pretendard-Regular";
+}
+
+.nickNameWrapRank {
+  margin-left: 10px;
+}
+
+.postContentRank {
+  margin-left: 10px;
+  margin-bottom: 1.6rem;
 }
 </style>
