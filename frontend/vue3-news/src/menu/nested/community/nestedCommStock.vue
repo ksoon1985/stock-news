@@ -132,6 +132,7 @@ export default {
           commentData();
           comNoClick.value = true;
           comClick.value = false;
+          comTextarea.value = "";
           console.log(res);
         })
         .catch((error) => {
@@ -155,6 +156,7 @@ export default {
     const comCloseEvent = () => {
       comNoClick.value = true;
       comClick.value = false;
+      comTextarea.value = "";
     };
 
     const commentData = () => {

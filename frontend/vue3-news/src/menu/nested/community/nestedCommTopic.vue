@@ -63,8 +63,8 @@ export default {
     const store = useStockStore();
     const userStore = useUserStore();
 
-    let { listCode, topicOne, topicTwo, modalData } = storeToRefs(store);
-    let { isLogin } = storeToRefs(userStore);
+    let { listCode, modalData } = storeToRefs(store);
+    let { nickName, isLogin, topicOne, topicTwo } = storeToRefs(userStore);
 
     let keywordRankList = ref(null);
     let likeKeywordList = ref([]);
@@ -127,6 +127,7 @@ export default {
       keywordRankList,
       likeKeyword,
       likeKeywordList,
+      nickName,
       isLogin,
     };
   },
