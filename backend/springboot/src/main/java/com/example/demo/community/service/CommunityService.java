@@ -1,6 +1,7 @@
 package com.example.demo.community.service;
 
 import com.example.demo.community.model.Comment;
+import com.example.demo.community.model.KeywordComment;
 import com.example.demo.community.repository.CommunityRepository;
 import com.example.demo.stock.model.KeywordLikeCount;
 import lombok.RequiredArgsConstructor;
@@ -105,5 +106,49 @@ public class CommunityService {
         return keywordLikeCounts;
     }
 
+    /**
+     * 키워드 관심 개수 가져오기
+     */
+    public int getKeywordLikeCount(String keyword){
+        KeywordLikeCount keywordLikeCount = mongoTemplate.findOne(Query.query(Criteria.where("keyword").is(keyword)), KeywordLikeCount.class);
+        return keywordLikeCount.getCount();
+    }
 
+    /**
+     * 키워드 글 작성
+     */
+    public KeywordComment insertKeywordComment(KeywordComment keywordComment){
+
+        return mongoTemplate.insert(keywordComment, "keyword_comment");
+    }
+
+    /**
+     * 키워드 글
+     * 대댓글 등록 요청시
+     * 부모 댓글 subCount 증가
+     */
+    public void increaseKeywordSubCount(String parentId){
+        KeywordComment keywordComment = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(parentId)), KeywordComment.class);
+        if(keywordComment != null){
+            keywordComment.setSubCount(keywordComment.getSubCount() + 1);
+            mongoTemplate.save(keywordComment,"keyword_comment");
+        }
+    }
+
+    /**
+     * 글 조회
+     * 종목에 맞는 커뮤니티 글 조회
+     * 먼저 최 상단 댓글 (대댓글 x) 목록 출력
+     */
+    public List<KeywordComment> getKeywordCommentsByKeyword(String keyword){
+
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("keyword").is(keyword))
+                .with(Sort.by(Sort.Direction.ASC, "regDate")).limit(100);
+
+        List<KeywordComment> keywordComments = mongoTemplate.find(query, KeywordComment.class, "keyword_comment");
+
+        return keywordComments;
+    }
 }

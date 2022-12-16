@@ -1,6 +1,8 @@
 package com.example.demo.community.controller;
 
+import com.example.demo.community.dto.StockKeywordResDTO;
 import com.example.demo.community.model.Comment;
+import com.example.demo.community.model.KeywordComment;
 import com.example.demo.community.service.CommunityService;
 import com.example.demo.security.jwt.SecurityUser;
 import com.example.demo.stock.model.KeywordLikeCount;
@@ -124,12 +126,27 @@ public class CommunityController {
     public ResponseEntity getKeywordsByRanking(){
         List<KeywordLikeCount> rankList = communityService.getKeywordsByRanking();
 
-        return ResponseEntity.ok().body(rankList);
+        ArrayList<StockKeywordResDTO> rankResDTO = new ArrayList<>();
+
+        for (KeywordLikeCount keywordLikeCount : rankList) {
+            StockKeywordResDTO stockKeywordResDTO = new StockKeywordResDTO();
+
+            List<KeywordComment> keywordComments =
+                    communityService.getKeywordCommentsByKeyword(keywordLikeCount.getKeyword());
+
+            stockKeywordResDTO.setKeyword(keywordLikeCount.getKeyword());
+            stockKeywordResDTO.setLikeCount(keywordLikeCount.getCount());
+            stockKeywordResDTO.setCommentCount(keywordComments.size());
+
+            rankResDTO.add(stockKeywordResDTO);
+        }
+
+        return ResponseEntity.ok().body(rankResDTO);
     }
 
-    @Operation(summary = "커뮤니티 글 등록 요청")
+    @Operation(summary = "커뮤니티 키워드 글 등록 요청")
     @PostMapping("/addKeywordComment")
-    public ResponseEntity addKeywordComment(@Valid @RequestBody Comment comment, BindingResult result,@ApiIgnore @AuthenticationPrincipal SecurityUser member) {
+    public ResponseEntity addKeywordComment(@Valid @RequestBody KeywordComment keywordComment, BindingResult result, @ApiIgnore @AuthenticationPrincipal SecurityUser member) {
 
         if(member == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
@@ -140,18 +157,43 @@ public class CommunityController {
         }
 
         // 대댓글 등록 요청 시 부모 댓글의 subCount 수 ++ (update)
-        // comment 에 parentId 값이 있을 때
-        if(!comment.getParentId().trim().equals("") ){
-            communityService.increaseSubCount(comment.getParentId());
+        // keyword comment 에 parentId 값이 있을 때
+        if(!keywordComment.getParentId().trim().equals("") ){
+            communityService.increaseKeywordSubCount(keywordComment.getParentId());
         }
 
-        comment.setEmail(member.getMember().getEmail());
-        comment.setNickName(member.getMember().getNickName());
-        comment.setRegDate(LocalDateTime.now()
+        keywordComment.setEmail(member.getMember().getEmail());
+        keywordComment.setNickName(member.getMember().getNickName());
+        keywordComment.setRegDate(LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-        communityService.insertComment(comment);
+        communityService.insertKeywordComment(keywordComment);
         return ResponseEntity.ok().body("저장 완료");
     }
 
+    @Operation(summary = "키워드에 맞는 커뮤니티 키워드 글 목록 요청")
+    @GetMapping("/keyword-comments/{keyword}")
+    public ResponseEntity keywordComments(@PathVariable String keyword){
+
+        if(keyword.trim().equals("") || keyword == null){
+            return ResponseEntity.badRequest().body("종목 키워드 값이 없습니다.");
+        }
+
+        // 응답해줄 결과 res dto
+        StockKeywordResDTO keywordCommentsResDTO = new StockKeywordResDTO();
+
+        // 키워드에 맞는 글 목록
+        List<KeywordComment> keywordComments = communityService.getKeywordCommentsByKeyword(keyword);
+        // 키워드 이름
+        keywordCommentsResDTO.setKeyword(keyword);
+        // 글 목록
+        keywordCommentsResDTO.setKeywordComments(keywordComments);
+        // 글 개수
+        keywordCommentsResDTO.setCommentCount(keywordComments.size());
+        // 키워드 관심 개수
+        keywordCommentsResDTO.setLikeCount(communityService.getKeywordLikeCount(keyword));
+
+        return ResponseEntity.ok().body(keywordCommentsResDTO);
+
+    }
 }
