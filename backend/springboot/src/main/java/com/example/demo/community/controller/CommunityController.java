@@ -196,4 +196,49 @@ public class CommunityController {
         return ResponseEntity.ok().body(keywordCommentsResDTO);
 
     }
+
+    @Operation(summary = "키워드 글 특정 코멘트에 대한 코멘트 목록 요청 (대댓글)")
+    @PostMapping("/keyword-comments/{keyword}")
+    public ResponseEntity keywordCommentsByParentId(@RequestBody Map<String, String> idMap){
+
+        List<KeywordComment> keywordComments = new ArrayList<>();
+
+        try{
+            String keywordCommentId = idMap.get("id");
+
+            if(keywordCommentId.trim().equals("") || keywordCommentId == null){
+                throw new NullPointerException();
+            }
+
+            keywordComments = communityService.getKeywordCommentsByParentId(keywordCommentId);
+
+        }catch (NullPointerException e){
+
+            return ResponseEntity.badRequest().body("id 값이 없습니다.");
+        }
+
+        return ResponseEntity.ok(keywordComments);
+
+    }
+
+    @Operation(summary = "고유 id 값으로 커뮤니티 키워드 글 삭제 요청")
+    @PostMapping("/delKeywordComment")
+    public ResponseEntity delKeywordComment(@RequestBody Map<String, String> idMap){
+
+        try{
+            String keywordCommentId = idMap.get("id");
+
+            if(keywordCommentId.trim().equals("") || keywordCommentId == null){
+                throw new NullPointerException();
+            }
+
+            communityService.delKeywordComment(keywordCommentId);
+
+        }catch (NullPointerException e){
+
+            return ResponseEntity.badRequest().body("id 값이 없습니다.");
+        }
+
+        return ResponseEntity.ok("글 삭제 완료");
+    }
 }

@@ -51,13 +51,13 @@ public class CommunityService {
      */
     public List<Comment> getCommentsByStockCode(String stockCode){
 
-        return communityRepository.findByCodeAndParentIdOrderByRegDateAsc(stockCode,"");
+        return communityRepository.findByCodeAndParentIdOrderByRegDateDesc(stockCode,"");
     }
 
     /**
      * 글 조회
      * 종목에 맞는 커뮤니티 글 조회
-     * 먼저 최 상단 댓글 (대댓글 x) 목록 출력
+     * 자식 댓글 (대댓글) 목록 출력
      */
     public List<Comment> getCommentsByParentId(String commentId){
 
@@ -65,9 +65,10 @@ public class CommunityService {
     }
 
 
+
     /**
      * 글 삭제
-     * 종목 고유 id
+     * 글 고유 id
      */
     public void delComment(String id){
         if(communityRepository.existsById(id)){
@@ -79,7 +80,6 @@ public class CommunityService {
             communityRepository.deleteById(id);
         }
     }
-
 
     /**
      * 댓글 삭제 요청시
@@ -136,19 +136,62 @@ public class CommunityService {
     }
 
     /**
-     * 글 조회
-     * 종목에 맞는 커뮤니티 글 조회
+     * 키워드 글 조회
+     * 키워드에 맞는 커뮤니티 글 조회
      * 먼저 최 상단 댓글 (대댓글 x) 목록 출력
      */
     public List<KeywordComment> getKeywordCommentsByKeyword(String keyword){
 
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("keyword").is(keyword))
+        query.addCriteria(Criteria.where("keyword").is(keyword).and("parentId").is(""))
+                .with(Sort.by(Sort.Direction.DESC, "regDate")).limit(100);
+
+        List<KeywordComment> keywordComments = mongoTemplate.find(query, KeywordComment.class, "keyword_comment");
+
+        return keywordComments;
+    }
+
+    /**
+     * 키워드 글 조회
+     * 부모 글에 해당하는 자식 글 조회 (대댓글)
+     */
+    public List<KeywordComment> getKeywordCommentsByParentId(String parentId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("parentId").is(parentId))
                 .with(Sort.by(Sort.Direction.ASC, "regDate")).limit(100);
 
         List<KeywordComment> keywordComments = mongoTemplate.find(query, KeywordComment.class, "keyword_comment");
 
         return keywordComments;
+    }
+
+    /**
+     * 키워드 글 삭제
+     * 키워드 글 고유 id
+     */
+    public void delKeywordComment(String id){
+        KeywordComment keywordComment = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), KeywordComment.class);
+        if(keywordComment != null){
+
+            // 대댓글일때 부모 댓글 subCount 감소
+            if(!keywordComment.getParentId().equals("")){
+                decreaseKeywordSubCount(keywordComment.getParentId());
+            }
+            mongoTemplate.remove(keywordComment,"keyword_comment");
+        }
+    }
+
+    /**
+     * 키워드 글
+     * 댓글 삭제 요청시
+     * 부모 댓글 subCount 감소 (대댓글일때)
+     */
+    public void decreaseKeywordSubCount(String parentId){
+        KeywordComment keywordComment = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(parentId)), KeywordComment.class);
+        if(keywordComment != null){
+            keywordComment.setSubCount(keywordComment.getSubCount() - 1);
+            mongoTemplate.save(keywordComment,"keyword_comment");
+        }
     }
 }

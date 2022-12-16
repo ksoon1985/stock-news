@@ -809,6 +809,7 @@ export default {
       tempCode,
       router,
       modalUserIcon,
+      setTimeoutHandler,
     };
   },
 };

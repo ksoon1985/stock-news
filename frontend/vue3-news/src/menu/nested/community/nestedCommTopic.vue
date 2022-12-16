@@ -19,8 +19,14 @@
             <span>게시물 {{ item.commentCount }}개</span>
           </div>
           <div class="forBtn">
-            <button class="fotBtnOne" @click="likeKeyword(item)">
-              <span class="forBtnSpanOne"> 관심중 </span>
+            <button class="fotBtnOne" @click="likeKeyword(item.keyword)">
+              <span
+                class="forBtnSpanOne"
+                v-if="likeKeywordList.indexOf(item.keyword) !== -1"
+              >
+                관심중
+              </span>
+              <span class="forBtnSpanTwo" v-else> 관심 </span>
             </button>
             <router-link
               class="forkeywordRouter"
@@ -48,20 +54,48 @@
 
 <script>
 import { useStockStore } from "@/store/Stock.js";
+import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
 import { onMounted, ref } from "vue";
 export default {
   setup() {
     const store = useStockStore();
+    const userStore = useUserStore();
 
-    let { listCode, topicOne, topicTwo } = storeToRefs(store);
+    let { listCode, topicOne, topicTwo, modalData } = storeToRefs(store);
+    let { isLogin } = storeToRefs(userStore);
 
     let keywordRankList = ref(null);
+    let likeKeywordList = ref([]);
 
     onMounted(() => {
+      if (isLogin.value) {
+        axios.get("/api/stock/keywords/likes").then((res) => {
+          likeKeywordList.value = res.data;
+        });
+      }
+
       topicKeywordRankAxios();
     });
+
+    const likeKeyword = (themeKeyword) => {
+      let apiPath = "keyword-like";
+
+      if (!isLogin.value) {
+        modalData.value = true;
+        return;
+      }
+
+      // 관심중이면
+      if (likeKeywordList.value.indexOf(themeKeyword) !== -1) {
+        apiPath = "keyword-dislike";
+      }
+
+      axios.get("/api/stock/" + apiPath + "/" + themeKeyword).then((res) => {
+        likeKeywordList.value = res.data;
+      });
+    };
 
     const topicChangeEvent = () => {
       topicOne.value = false;
@@ -91,6 +125,9 @@ export default {
       topicChangeEvent,
       topicKeywordRankAxios,
       keywordRankList,
+      likeKeyword,
+      likeKeywordList,
+      isLogin,
     };
   },
 };
