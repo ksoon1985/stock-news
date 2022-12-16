@@ -80,7 +80,7 @@ export default {
     const route = useRoute();
     const userStore = useUserStore();
 
-    let { listCode } = storeToRefs(store);
+    let { topicName, listCode } = storeToRefs(store);
     let { nickName, isLogin } = storeToRefs(userStore);
 
     let commChildrenStatus = ref(false);
@@ -113,7 +113,7 @@ export default {
     const comChEvent = (id) => {
       replayViewStatus.value = !replayViewStatus.value;
       console.log(id);
-      const url = "/api/community/comments/" + id;
+      const url = "/api/community/keyword-comments/" + id;
       let comData = {
         id: id,
       };
@@ -131,7 +131,7 @@ export default {
     };
 
     const comChEventTwo = (id) => {
-      const url = "/api/community/comments/" + id;
+      const url = "/api/community/keyword-comments/" + id;
       let comData = {
         id: id,
       };
@@ -147,10 +147,10 @@ export default {
     };
 
     const childrenInputSubmit = (id) => {
-      listCode.value = route.query.code;
-      const url = "/api/community/addComment";
+      topicName.value = route.query.topic;
+      const url = "/api/community/addKeywordComment";
       let comData = {
-        code: listCode.value,
+        keyword: topicName.value,
         content: rpInput.value,
         parentId: id,
       };
@@ -169,7 +169,7 @@ export default {
     };
 
     const commDelSubit = (id) => {
-      const url = "/api/community/delComment";
+      const url = "/api/community/delKeywordComment";
       let comData = {
         id: id,
       };
@@ -202,6 +202,7 @@ export default {
       isLogin,
       delBtnChange,
       modalOpen,
+      topicName,
     };
   },
 };
@@ -351,8 +352,8 @@ export default {
   height: 1.5rem;
   border-radius: 4px;
   margin-right: 5px;
-  font-family: "Pretendard-Regular";
   cursor: pointer;
+  font-family: "Pretendard-Regular";
 }
 
 .modalBtnOne:hover {
@@ -366,8 +367,8 @@ export default {
   width: 4.5rem;
   height: 1.5rem;
   border-radius: 4px;
-  font-family: "Pretendard-Regular";
   cursor: pointer;
+  font-family: "Pretendard-Regular";
 }
 
 .modalBtnTwo:hover {
