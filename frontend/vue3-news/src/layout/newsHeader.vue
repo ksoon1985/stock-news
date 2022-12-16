@@ -647,6 +647,8 @@ export default {
                 modalLogoutSubmit();
                 window.location.reload();
               }, 5 * 60 * 60 * 1000); //5 시간 후 jwt 만료시간에 맞게 로그아웃 처리
+
+              window.location.reload();
             });
           } else {
             console.log(res.status);
@@ -670,6 +672,8 @@ export default {
           likeList.value = [];
 
           clearTimeout(setTimeoutHandler.value);
+
+          window.location.reload();
         })
         .catch((err) => {
           console.log(err);

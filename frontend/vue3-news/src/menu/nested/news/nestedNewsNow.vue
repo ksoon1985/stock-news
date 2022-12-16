@@ -74,7 +74,7 @@ export default {
     };
 
     onMounted(() => {
-      if (isLogin) {
+      if (isLogin.value) {
         axios.get("/api/stock/keywords/likes").then((res) => {
           likeKeywordList.value = res.data;
         });
@@ -95,7 +95,8 @@ export default {
     const likeKeyword = (themeKeyword) => {
       let apiPath = "keyword-like";
 
-      if (!isLogin) {
+      if (!isLogin.value) {
+        modalData.value = true;
         return;
       }
 

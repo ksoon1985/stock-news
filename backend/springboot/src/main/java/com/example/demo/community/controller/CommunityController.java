@@ -3,6 +3,7 @@ package com.example.demo.community.controller;
 import com.example.demo.community.model.Comment;
 import com.example.demo.community.service.CommunityService;
 import com.example.demo.security.jwt.SecurityUser;
+import com.example.demo.stock.model.KeywordLikeCount;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,6 +118,40 @@ public class CommunityController {
         return ResponseEntity.ok("글 삭제 완료");
     }
 
+    //주제 토론 부분 ===================================================
+    @Operation(summary = "키워드 관심 많은 순으로 0~20개 목록 가져오기")
+    @GetMapping("/getKeywordsByRanking")
+    public ResponseEntity getKeywordsByRanking(){
+        List<KeywordLikeCount> rankList = communityService.getKeywordsByRanking();
 
+        return ResponseEntity.ok().body(rankList);
+    }
+
+    @Operation(summary = "커뮤니티 글 등록 요청")
+    @PostMapping("/addKeywordComment")
+    public ResponseEntity addKeywordComment(@Valid @RequestBody Comment comment, BindingResult result,@ApiIgnore @AuthenticationPrincipal SecurityUser member) {
+
+        if(member == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+        }
+
+        if(result.hasErrors()){
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        // 대댓글 등록 요청 시 부모 댓글의 subCount 수 ++ (update)
+        // comment 에 parentId 값이 있을 때
+        if(!comment.getParentId().trim().equals("") ){
+            communityService.increaseSubCount(comment.getParentId());
+        }
+
+        comment.setEmail(member.getMember().getEmail());
+        comment.setNickName(member.getMember().getNickName());
+        comment.setRegDate(LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        communityService.insertComment(comment);
+        return ResponseEntity.ok().body("저장 완료");
+    }
 
 }

@@ -2,13 +2,16 @@ package com.example.demo.community.service;
 
 import com.example.demo.community.model.Comment;
 import com.example.demo.community.repository.CommunityRepository;
+import com.example.demo.stock.model.KeywordLikeCount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -87,6 +90,19 @@ public class CommunityService {
             comment.setSubCount(comment.getSubCount() - 1);
             mongoTemplate.save(comment,"comment");
         }
+    }
+
+    //주제 토론 부분 ===================================================
+    /**
+     *  키워드 관심 많은 순으로 0~20개 목록 가져오기
+     */
+    public List<KeywordLikeCount> getKeywordsByRanking(){
+        Query query = new Query();
+        query.with(Sort.by(Sort.Direction.DESC, "count"));
+        query.limit(20);
+        List<KeywordLikeCount> keywordLikeCounts = mongoTemplate.find(query, KeywordLikeCount.class);
+
+        return keywordLikeCounts;
     }
 
 

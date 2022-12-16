@@ -80,14 +80,14 @@
 import axios from "axios";
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
-import { onMounted, onUpdated, ref, watch } from "vue-demi";
+import { onMounted, onUpdated, ref } from "vue-demi";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: { PulseLoader },
   setup() {
     const store = useStockStore();
 
-    let { searchNewsParams, listCode, stockName } = storeToRefs(store);
+    let { listCode, stockName } = storeToRefs(store);
 
     let clusteredNewsList = ref([]); // 클러스터링 된 뉴스 리스트
     let modalOpen = ref(false); // 모달 on/off 변수
@@ -96,41 +96,29 @@ export default {
     let isLoading = ref(false); // 뉴스 리스트 로딩 중 변수
 
     onMounted(() => {
-      console.log("news onMounted");
-      let today = new Date();
-      // yyyy-mm-dd
-      let year = today.getFullYear();
-      let month = today.getMonth() + 1;
-      let date = today.getDate() - 1;
-
-      today = year + "-" + month + "-" + date;
-
-      // stockName loading issue
-      // -> setTimeout 0.5s lazy loading
       setTimeout(() => {
-        searchNewsParams.value = {
-          searchTerm: stockName.value,
-          fromDate: "2020-01-01",
-          toDate: today,
-        };
-
-        console.log(searchNewsParams.value);
         getClusteredNews();
-      }, 500);
-    });
-
-    watch(searchNewsParams, () => {
-      console.log("news watched");
-      getClusteredNews();
+      }, 300);
     });
 
     onUpdated(() => {});
 
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
     const getClusteredNews = () => {
+      let dateEls = document.querySelectorAll(".highcharts-range-input text");
+      let fromDate = dateEls[0].innerHTML;
+      let toDate = dateEls[1].innerHTML;
+
+      let reqDto = {
+        searchTerm: stockName.value,
+        fromDate: fromDate,
+        toDate: toDate,
+      };
+      console.log(reqDto);
+
       isLoading.value = true;
       axios
-        .post("/api/news/getClusteredNews", searchNewsParams.value)
+        .post("/api/news/getClusteredNews", reqDto)
         .then((res) => {
           clusteredNewsList.value = res.data;
           console.log("클러스터뉴스리스트", clusteredNewsList);
@@ -162,7 +150,6 @@ export default {
       clusteredNewsList,
       modalOpen,
       modalNews,
-      searchNewsParams,
       isLoading,
       modalOpenFunc,
       getClusteredNews,

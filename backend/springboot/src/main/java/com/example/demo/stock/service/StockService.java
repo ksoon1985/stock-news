@@ -1,10 +1,8 @@
 package com.example.demo.stock.service;
 
+import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import com.example.demo.stock.dto.*;
-import com.example.demo.stock.model.StockInfoModel;
-import com.example.demo.stock.model.StockKeyword;
-import com.example.demo.stock.model.StockLikeModel;
-import com.example.demo.stock.model.StockPriceModel;
+import com.example.demo.stock.model.*;
 import com.example.demo.stock.repository.StockInfoRepository;
 import com.example.demo.stock.repository.StockKeywordRepository;
 import com.example.demo.stock.repository.StockLikeRepository;
@@ -176,6 +174,21 @@ public class StockService {
             stockKeyword = new StockKeyword(keyword,email);
             stockKeywordRepository.insert(stockKeyword);
         }
+
+        // 갯수 부분
+        KeywordLikeCount keywordLike = mongoTemplate.findOne(Query.query(Criteria.where("keyword").is(keyword)), KeywordLikeCount.class);
+        // db에 키워드가 없다면
+        if(keywordLike == null){
+            keywordLike = new KeywordLikeCount();
+            keywordLike.setKeyword(keyword);
+            keywordLike.setCount(1);
+            mongoTemplate.insert(keywordLike,"keyword_like_count");
+
+        //db에 키워드가 이미 있다면
+        }else{
+            keywordLike.setCount(keywordLike.getCount() + 1);
+            mongoTemplate.save(keywordLike,"keyword_like_count");
+        }
     }
 
     /**
@@ -190,6 +203,14 @@ public class StockService {
         if(stockKeyword != null){
             stockKeywordRepository.delete(stockKeyword);
         }
+
+        // 갯수 부분
+        KeywordLikeCount keywordLike = mongoTemplate.findOne(Query.query(Criteria.where("keyword").is(keyword)), KeywordLikeCount.class);
+        // db에 키워드가 있다면
+        if(keywordLike != null) {
+            keywordLike.setCount(keywordLike.getCount() - 1);
+            mongoTemplate.save(keywordLike,"keyword_like_count");
+        }
     }
 
     /**
@@ -198,4 +219,5 @@ public class StockService {
     public ArrayList<StockKeyword> keywordLikeList(String email){
         return stockKeywordRepository.findByEmail(email);
     }
+
 }
