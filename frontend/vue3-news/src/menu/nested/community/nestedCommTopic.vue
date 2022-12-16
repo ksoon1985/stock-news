@@ -1,18 +1,44 @@
 <template>
   <div class="sub-view-result">
-    <div v-if="topicOne">
-      <router-link
-        class="forTopicRouter"
-        :to="{
-          name: 'TopicChildren',
-          query: {
-            code: listCode,
-            topic: '스마트홈',
-          },
-        }"
-      >
-        <button class="forTopicBtn" @click="topicChangeEvent">토론하기</button>
-      </router-link>
+    <div class="keyword-rank" v-if="topicOne">
+      <div class="keyword-rank-name">
+        <h3 class="keyword-rank-h3">인기주제</h3>
+      </div>
+
+      <div class="keyword-rank-wrap">
+        <div
+          class="forkeywordRank"
+          v-for="(item, index) in keywordRankList"
+          :key="index"
+        >
+          <span class="forRankSapn">{{ index + 1 }}</span>
+          <h3 class="forRankH3">{{ item.keyword }}</h3>
+          <div class="forRankSpanDiv">
+            <span>관심 {{ item.likeCount }}명</span>
+            <span>ㆍ</span>
+            <span>게시물 {{ item.commentCount }}개</span>
+          </div>
+          <div class="forBtn">
+            <button class="fotBtnOne" @click="likeKeyword(item)">
+              <span class="forBtnSpanOne"> 관심중 </span>
+            </button>
+            <router-link
+              class="forkeywordRouter"
+              :to="{
+                name: 'TopicChildren',
+                query: {
+                  code: listCode,
+                  topic: item.keyword,
+                },
+              }"
+            >
+              <button class="forBtnTwo" @click="topicChangeEvent">
+                토론하기
+              </button>
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="" v-if="topicTwo">
       <Router-view class=""></Router-view>
@@ -31,9 +57,28 @@ export default {
 
     let { listCode, topicOne, topicTwo } = storeToRefs(store);
 
+    let keywordRankList = ref(null);
+
+    onMounted(() => {
+      topicKeywordRankAxios();
+    });
+
     const topicChangeEvent = () => {
       topicOne.value = false;
       topicTwo.value = true;
+    };
+
+    const topicKeywordRankAxios = () => {
+      const url = "/api/community/getKeywordsByRanking";
+      axios
+        .get(url)
+        .then((res) => {
+          keywordRankList.value = res.data;
+          console.log("키워드랭크리스트 값은?", keywordRankList);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     return {
@@ -44,9 +89,66 @@ export default {
       onMounted,
       ref,
       topicChangeEvent,
+      topicKeywordRankAxios,
+      keywordRankList,
     };
   },
 };
 </script>
 
-<style></style>
+<style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+.keyword-rank {
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+.keyword-rank-name {
+  font-family: "Pretendard-Regular";
+  margin-bottom: 30px;
+}
+
+.forkeywordRank {
+  display: flex;
+  font-family: "Pretendard-Regular";
+  border-bottom: 1px solid #e5e5e5;
+  width: 94%;
+  margin-bottom: 1.5rem;
+}
+
+.forRankSapn {
+  margin-left: 10px;
+  font-size: 1.1rem;
+  color: #d01411;
+  position: relative;
+  top: 14px;
+  left: 7px;
+  width: 22px;
+}
+
+.forRankH3 {
+  position: relative;
+  top: -13px;
+  left: 12px;
+  width: 170px;
+}
+
+.forRankSpanDiv {
+  font-size: 0.8rem;
+  color: #999999;
+  position: relative;
+  top: 25px;
+  left: -158px;
+}
+
+.forRankSapn {
+  width: 30px;
+}
+</style>
