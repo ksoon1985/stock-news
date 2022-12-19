@@ -46,14 +46,8 @@ export default {
   setup() {
     const store = useStockStore();
 
-    let {
-      listCode,
-      stockName,
-      stockInformationDataQyarter,
-      stockInformationDataQyarterTwo,
-      stockInformationDataQyarterThree,
-      stockInformationDataQyarterFour,
-    } = storeToRefs(store);
+    let { listCode, stockName, stockInformationDataQyarter } =
+      storeToRefs(store);
 
     onMounted(() => {
       informationTwoClick();
@@ -63,11 +57,7 @@ export default {
       axios
         .get("/api/stock/stock-finance/q/" + listCode.value)
         .then((QyarterData) => {
-          console.log(stockInformationDataQyarter);
-          stockInformationDataQyarter.value = QyarterData.data[0];
-          stockInformationDataQyarterTwo.value = QyarterData.data[1];
-          stockInformationDataQyarterThree.value = QyarterData.data[2];
-          stockInformationDataQyarterFour.value = QyarterData.data[3];
+          stockInformationDataQyarter.value = QyarterData.data;
         });
     };
 
@@ -76,9 +66,6 @@ export default {
       stockName,
       informationTwoClick,
       stockInformationDataQyarter,
-      stockInformationDataQyarterTwo,
-      stockInformationDataQyarterThree,
-      stockInformationDataQyarterFour,
     };
   },
 };

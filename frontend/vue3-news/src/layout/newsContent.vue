@@ -332,7 +332,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text",
+              ".highcharts-range-input text"
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;

@@ -21,14 +21,14 @@ public class SearchUtil {
         try {
             // query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()))// 삼성 전자
-                    .must(QueryBuilders.matchQuery("content",dto.getThemeKeyword())) // 반도체
+                    .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()))// 삼성 전자
+                    .must(QueryBuilders.matchQuery("content.mixed",dto.getThemeKeyword())) // 반도체
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
 
             // sorting
-            builder = builder.sort("registration_date",SortOrder.DESC);
+            // builder = builder.sort("registration_date",SortOrder.DESC);
 
             builder = builder.from(0).size(50);
 

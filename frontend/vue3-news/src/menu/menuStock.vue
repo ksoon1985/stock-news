@@ -43,25 +43,13 @@ export default {
   setup() {
     const store = useStockStore();
 
-    let {
-      stockCode,
-      listCode,
-      stockInformationData,
-      stockInformationDataTwo,
-      stockInformationDataThree,
-      stockInformationDataFour,
-    } = storeToRefs(store);
+    let { stockCode, listCode, stockInformationData } = storeToRefs(store);
 
     const informationClick = () => {
       axios
         .get("/api/stock/stock-finance/a/" + listCode.value)
         .then((informationData) => {
-          //console.log(informationData.data[0].keys);
-          console.log(stockInformationData);
-          stockInformationData.value = informationData.data[0];
-          stockInformationDataTwo.value = informationData.data[1];
-          stockInformationDataThree.value = informationData.data[2];
-          stockInformationDataFour.value = informationData.data[3];
+          stockInformationData.value = informationData.data;
         });
     };
 
@@ -69,6 +57,7 @@ export default {
       listCode,
       stockCode,
       informationClick,
+      stockInformationData,
     };
   },
 };

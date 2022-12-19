@@ -25,14 +25,8 @@ export const useStockStore = defineStore("stock", () => {
   let listLowYear = ref(null); // 종목요약 52주 최저
   let listHighYear = ref(null); // 종목요약 52주 최고
   let listSummaryInfo = ref(null); // 종목요약 기업개요
-  let stockInformationData = ref(null); //재무정보 연간 데이터[0]
-  let stockInformationDataTwo = ref(null); //재무정보 연간 데이터[1]
-  let stockInformationDataThree = ref(null); //재무정보 연간 데이터[2]
-  let stockInformationDataFour = ref(null); // 재무정보 연간 데이터[3]
-  let stockInformationDataQyarter = ref(null); //재무정보 분기 데이터[0]
-  let stockInformationDataQyarterTwo = ref(null); //재무정보 분기 데이터[1]
-  let stockInformationDataQyarterThree = ref(null); //재무정보 분기 데이터[2]
-  let stockInformationDataQyarterFour = ref(null); //재무정보 분기 데이터[3]
+  let stockInformationData = ref(null); //재무정보 연간 데이터 []
+  let stockInformationDataQyarter = ref(null); //재무정보 분기 데이터 []
   let modalData = ref(false); //모달창 전체
   let searchNewsParams = ref({}); // 뉴스 검색 조건
   let keyWordList = ref(null); // 키워드 리스트
@@ -67,13 +61,7 @@ export const useStockStore = defineStore("stock", () => {
     listHighYear,
     listSummaryInfo,
     stockInformationData,
-    stockInformationDataTwo,
-    stockInformationDataThree,
-    stockInformationDataFour,
     stockInformationDataQyarter,
-    stockInformationDataQyarterTwo,
-    stockInformationDataQyarterThree,
-    stockInformationDataQyarterFour,
     modalData,
     searchNewsParams,
     keyWordList,

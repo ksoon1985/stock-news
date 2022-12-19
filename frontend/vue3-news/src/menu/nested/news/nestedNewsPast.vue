@@ -30,13 +30,17 @@
       </div>
     </teleport>
 
-    <div v-if="clusteredNewsList.length > 0"></div>
-    <div v-else></div>
-
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
       </div>
+    </div>
+
+    <div v-else>
+      <div v-if="clusteredNewsList.length === 0">
+        클러스터링 된 뉴스가 없습니다...
+      </div>
+      <div v-else></div>
     </div>
 
     <div class="news-wrap">
@@ -98,7 +102,7 @@ export default {
     onMounted(() => {
       setTimeout(() => {
         getClusteredNews();
-      }, 300);
+      }, 500);
     });
 
     onUpdated(() => {});
