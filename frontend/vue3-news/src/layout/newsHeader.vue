@@ -922,6 +922,11 @@ export default {
   display: flex;
   list-style: none;
   margin-bottom: 7px;
+  width: 330px;
+}
+
+.results-list:hover {
+  border-bottom: 2px solid #d2d2d2;
 }
 
 /* 검색 결과창 Ul */
@@ -932,6 +937,9 @@ export default {
 /* 검색 결과창 종목이름 */
 .item-1 {
   font-size: 1.2rem;
+  width: 170px;
+  height: 5px;
+  display: block;
 }
 
 /* 검색 결과창 종목코드 마켓 */
@@ -940,7 +948,9 @@ export default {
   margin-left: 5px;
   margin-top: 5px;
   color: #999999;
-  text-align: right;
+  position: relative;
+  left: 230px;
+  top: -8px;
 }
 
 /* 검색 결과창 라우터 */
@@ -950,7 +960,6 @@ export default {
 }
 
 .results-list-router:hover {
-  background-color: #d2d2d2;
 }
 
 .header-logo-image {
