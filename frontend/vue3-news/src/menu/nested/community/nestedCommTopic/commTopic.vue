@@ -180,6 +180,7 @@ export default {
         topicClick.value = false;
         topicNoClick.value = true;
         comTextarea.value = "";
+        window.location.reload();
         console.log(res);
       });
     };
