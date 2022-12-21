@@ -6,13 +6,15 @@ export const useUserStore = defineStore("storeUser", {
     return {
       tempCode: ref(""),
 
-      isLogin: ref(false),
+      isLogin: ref(false), // 로그인 체크
       nickName: ref(""),
 
-      likeList: ref([]),
+      likeList: ref([]), // 좋아요 리스트
 
-      topicOne: ref(true),
-      topicTwo: ref(false),
+      topicOne: ref(true), // 커뮤니티 토픽 리스트
+      topicTwo: ref(false), // 커뮤니티 상세 화면
+      keywordOne: ref(true), // 키워드 화면 리스트
+      keywordTwo: ref(false), // 키워드 화면 뉴스조회 화면
     };
   },
   actions: {
@@ -32,10 +34,24 @@ export const useUserStore = defineStore("storeUser", {
     setTopicTwo(value) {
       this.topicTwo = value;
     },
+    setkeywordOne(value) {
+      this.keywordOne = value;
+    },
+    setkeywordTwo(value) {
+      this.keywordTwo = value;
+    },
   },
   persist: {
     enabled: true,
     storage: localStorage,
-    paths: ["tempCode", "isLogin", "nickName", "topicOne", "topicTwo"],
+    paths: [
+      "tempCode",
+      "isLogin",
+      "nickName",
+      "topicOne",
+      "topicTwo",
+      "keywordOne",
+      "keywordTwo",
+    ],
   },
 });

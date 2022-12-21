@@ -2,10 +2,7 @@
   <div class="sub-view-result">
     <div class="header-contents">
       <div class="header-logo">
-        <img
-          :src="require(`@/assets/stock_logo/${listCode}.png`)"
-          class="one-logo-image"
-        />
+        <img :src="noImage(listCode)" class="one-logo-image" />
       </div>
       <div class="stock-one-info-wrap">
         <h3>{{ stockName }}</h3>
@@ -99,6 +96,15 @@ export default {
       listSummaryInfo,
     } = storeToRefs(store);
 
+    const noImage = (code) => {
+      let defaultImage = require(`@/assets/stock_logo/000000.png`);
+      let path = require(`@/assets/stock_logo/${code}.png`);
+      try {
+        return path;
+      } catch (e) {
+        return defaultImage;
+      }
+    };
     // const logoChange = () => {
     //   if (listCode.value !== null) {
     //     logoOff.value = true;
@@ -119,6 +125,7 @@ export default {
       listHighYear,
       listSummaryInfo,
       logoOff,
+      noImage,
     };
   },
 };

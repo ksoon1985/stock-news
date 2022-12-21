@@ -86,6 +86,7 @@
 
 <script>
 import { useStockStore } from "@/store/Stock.js";
+import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
@@ -93,10 +94,12 @@ import axios from "axios";
 export default {
   setup() {
     const store = useStockStore();
+    const userStore = useUserStore();
     const route = useRoute();
     const router = useRouter();
 
-    let { listCode, keywordOne, keywordTwo, stockName } = storeToRefs(store);
+    let { listCode, stockName } = storeToRefs(store);
+    let { keywordOne, keywordTwo } = storeToRefs(userStore);
 
     let KeyWordName = ref("");
     let keyWordNewsList = ref([]);
@@ -191,11 +194,12 @@ export default {
 }
 
 .newsSubHeaderWrap {
-  margin-left: 1rem;
+  margin-left: 0.7rem;
   margin-top: 1rem;
   height: 5rem;
   border-bottom: 1px solid #e5e5e5;
   display: flex;
+  width: 94%;
 }
 
 .newsSubHeaderBtn {

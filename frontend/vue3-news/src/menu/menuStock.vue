@@ -38,10 +38,15 @@
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import axios from "axios";
+import { onMounted } from "vue-demi";
 
 export default {
   setup() {
     const store = useStockStore();
+
+    onMounted(() => {
+      informationClick();
+    });
 
     let { stockCode, listCode, stockInformationData } = storeToRefs(store);
 

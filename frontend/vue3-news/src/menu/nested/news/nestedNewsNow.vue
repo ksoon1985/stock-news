@@ -52,20 +52,21 @@ import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
+import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 
 export default {
   setup() {
     const store = useStockStore();
     const userStore = useUserStore();
+    const router = useRouter();
+
     const keyWordList = ref([]);
 
     let likeKeywordList = ref([]);
 
-    let keywordTwo = ref(false);
-
-    let { listCode, stockName, keywordOne, modalData } = storeToRefs(store);
-    let { nickName, isLogin } = storeToRefs(userStore);
+    let { listCode, stockName, modalData } = storeToRefs(store);
+    let { nickName, isLogin, keywordOne, keywordTwo } = storeToRefs(userStore);
 
     let likeStatus = ref(true);
 
@@ -95,6 +96,7 @@ export default {
           .then((res) => {
             keyWordList.value = res.data;
             keywordOne.value = true;
+            router.push({ name: "NewsNow", query: { code: listCode.value } });
           });
       }, 300);
     });
@@ -133,6 +135,7 @@ export default {
       likeKeywordList,
       likeKeyword,
       likeStatus,
+      router,
     };
   },
 };
