@@ -84,14 +84,14 @@
 import axios from "axios";
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
-import { onMounted, onUpdated, ref } from "vue-demi";
+import { onMounted, ref, watch } from "vue-demi";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: { PulseLoader },
   setup() {
     const store = useStockStore();
 
-    let { listCode, stockName } = storeToRefs(store);
+    let { listCode, stockName, searchNewsParams } = storeToRefs(store);
 
     let clusteredNewsList = ref([]); // 클러스터링 된 뉴스 리스트
     let modalOpen = ref(false); // 모달 on/off 변수
@@ -105,7 +105,9 @@ export default {
       }, 500);
     });
 
-    onUpdated(() => {});
+    watch(searchNewsParams, () => {
+      getClusteredNews();
+    });
 
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
     const getClusteredNews = () => {
@@ -158,6 +160,7 @@ export default {
       modalOpenFunc,
       getClusteredNews,
       color: "#d01411",
+      searchNewsParams,
     };
   },
 };

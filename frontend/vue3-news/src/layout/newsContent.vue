@@ -6,6 +6,7 @@
           <img
             :src="require(`@/assets/stock_logo/${listCode}.png`)"
             class="content-logo-image"
+            
           />
           <h2 class="stock-name">{{ stockName }}</h2>
         </div>
