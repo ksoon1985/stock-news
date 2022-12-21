@@ -3,10 +3,10 @@
     <div class="iframeHeader">
       <h3>기간 뉴스 키워드</h3>
       <div class="headerDate">
-        <input class="iframeDate" type="date" value="2019-12-30" />
+        <input class="iframeDate" type="date" v-model="fromDate" />
         <!-- <span class="data-span">{{ fromDate }}</span> -->
         <span class="data-span">~</span>
-        <input class="iframeDate" type="date" value="2022-12-06" />
+        <input class="iframeDate" type="date" v-model="toDate" />
         <!-- <span class="data-span">{{ toDate }}</span> -->
       </div>
     </div>
@@ -146,7 +146,7 @@
     <div class="iframeDiv">
       <iframe
         v-if="iframeAll"
-        :src="iframeAllEvent(fromDate, toDate)"
+        :src="iframeAllEvent()"
         height="400"
         width="610"
         class="word-cloud"
@@ -154,39 +154,42 @@
       ></iframe>
       <iframe
         v-if="iframeTwo"
-        :src="iframeTwoEvent(fromDate, toDate)"
+        :src="iframeTwoEvent()"
         height="400"
         width="610"
         frameborder="0"
       ></iframe>
       <iframe
         v-if="iframeThree"
-        :src="iframeThreeEvent(fromDate, toDate)"
+        :src="iframeThreeEvent()"
         height="400"
         width="610"
         frameborder="0"
       ></iframe>
       <iframe
         v-if="iframeFour"
-        :src="iframeFourEvent(fromDate, toDate)"
+        :src="iframeFourEvent()"
         height="400"
         width="610"
         frameborder="0"
       ></iframe>
       <iframe
         v-if="iframeFive"
-        :src="iframeFiveEvent(fromDate, toDate)"
+        :src="iframeFiveEvent()"
         height="400"
         width="610"
         frameborder="0"
       ></iframe>
       <iframe
         v-if="iframeSix"
-        :src="iframeSixEvent(fromDate, toDate)"
+        :src="iframeSixEvent()"
         height="400"
         width="610"
         frameborder="0"
       ></iframe>
+    </div>
+    <div class="iframedateBtn">
+      <button class="dateBtn" @click="btndateEvent">기간 조회</button>
     </div>
   </div>
 </template>
@@ -207,14 +210,14 @@ export default {
     let iframeFour = ref(false);
     let iframeFive = ref(false);
     let iframeSix = ref(false);
-    let fromDate = ref("");
-    let toDate = ref("");
+    let fromDate = ref("2019-12-30");
+    let toDate = ref("2022-12-06");
 
-    onMounted(() => {
-      setTimeout(() => {
-        rankByDate();
-      }, 500);
-    });
+    // onMounted(() => {
+    //   setTimeout(() => {
+    //     rankByDate();
+    //   }, 500);
+    // });
 
     const iframeBtnEventOne = () => {
       iframeAll.value = true;
@@ -270,39 +273,39 @@ export default {
       iframeSix.value = true;
     };
 
-    const rankByDate = () => {
-      let dateEls = document.querySelectorAll(".highcharts-range-input text");
-      fromDate.value = dateEls[0].innerHTML;
-      toDate.value = dateEls[1].innerHTML;
-    };
+    // const rankByDate = () => {
+    //   let dateEls = document.querySelectorAll(".highcharts-range-input text");
+    //   fromDate.value = dateEls[0].innerHTML;
+    //   toDate.value = dateEls[1].innerHTML;
+    // };
 
-    const iframeAllEvent = (from, to) => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/03c9ed90-7d34-11ed-b287-13ab45793f2b?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${from}T10%3A46%3A30.819Z'%2Cto%3A'${to}'))`;
+    const iframeAllEvent = () => {
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/03c9ed90-7d34-11ed-b287-13ab45793f2b?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T10%3A46%3A30.819Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
-    const iframeTwoEvent = (from, to) => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/f74f6c80-80ca-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${from}T00%3A59%3A40.460Z'%2Cto%3A'${to}'))`;
+    const iframeTwoEvent = () => {
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/f74f6c80-80ca-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
-    const iframeThreeEvent = (from, to) => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/15947280-80cb-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${from}T00%3A59%3A40.460Z'%2Cto%3A'${to}'))`;
+    const iframeThreeEvent = () => {
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/15947280-80cb-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
-    const iframeFourEvent = (from, to) => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/fefc4c50-80ca-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${from}T00%3A59%3A40.460Z'%2Cto%3A'${to}'))`;
+    const iframeFourEvent = () => {
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/fefc4c50-80ca-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
-    const iframeFiveEvent = (from, to) => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/2c0365d0-80cb-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${from}T00%3A59%3A40.460Z'%2Cto%3A'${to}'))`;
+    const iframeFiveEvent = () => {
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/2c0365d0-80cb-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
-    const iframeSixEvent = (from, to) => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/c20127a0-80cd-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${from}T00%3A59%3A40.460Z'%2Cto%3A'${to}'))`;
+    const iframeSixEvent = () => {
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/c20127a0-80cd-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
@@ -320,7 +323,6 @@ export default {
       iframeBtnEventFour,
       iframeBtnEventFive,
       iframeBtnEventSix,
-      rankByDate,
       fromDate,
       toDate,
       onMounted,
@@ -330,6 +332,7 @@ export default {
       iframeFourEvent,
       iframeFiveEvent,
       iframeSixEvent,
+      // btndateEvent,
     };
   },
 };
@@ -387,7 +390,7 @@ export default {
 
 .headerDate {
   position: relative;
-  left: 15rem;
+  left: 14rem;
   top: 1.7rem;
 }
 
@@ -401,5 +404,22 @@ export default {
 .iframeDate {
   border: none;
   color: #2679ed;
+}
+
+.iframedateBtn {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.dateBtn {
+  width: 6rem;
+  height: 1.8rem;
+  border-radius: 6px;
+  background-color: #d01411;
+  color: #fef6f6;
+  border: none;
+  margin-top: 6px;
+  font-family: "Pretendard-Regular";
+  cursor: pointer;
 }
 </style>
