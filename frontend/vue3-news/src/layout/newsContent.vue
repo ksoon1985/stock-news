@@ -3,10 +3,7 @@
     <div class="stock-nav-info">
       <div class="logo-name-wrap">
         <div class="stock-logo">
-          <img
-            :src="require(`@/assets/stock_logo/${listCode}.png`)"
-            class="content-logo-image"
-          />
+          <img :src="noImage(listCode)" class="content-logo-image" />
           <h2 class="stock-name">{{ stockName }}</h2>
         </div>
         <p class="stock-code">{{ listCode }}</p>
@@ -122,6 +119,16 @@ export default {
       changeStarColor(likeList.value);
     });
 
+    const noImage = (code) => {
+      let defaultImage = require(`@/assets/stock_logo/000000.png`);
+      let path = require(`@/assets/stock_logo/${code}.png`);
+      try {
+        return path;
+      } catch (e) {
+        return defaultImage;
+      }
+    };
+
     const changeStarColor = (likelist) => {
       let tmp = false;
 
@@ -191,6 +198,7 @@ export default {
       isActive,
       changeStarColor,
       searchNewsParams,
+      noImage,
     };
   },
 
@@ -332,7 +340,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text"
+              ".highcharts-range-input text",
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;

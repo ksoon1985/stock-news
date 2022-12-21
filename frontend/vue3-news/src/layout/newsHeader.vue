@@ -486,6 +486,7 @@ export default {
 
     const modalChange = () => {
       modalData.value = true;
+      joinComChk.value = false;
     };
 
     const modalChanges = () => {
@@ -721,7 +722,7 @@ export default {
         stockNameMarket.value = itemDataStock.data;
         stockName.value = stockNameMarket.value[0].name;
         stockMarket.value = stockNameMarket.value[0].market;
-        console.log(stockNameMarket);
+        console.log("스토크네임을 알아보자", stockNameMarket);
       });
     };
 
@@ -937,7 +938,7 @@ export default {
 /* 검색 결과창 종목이름 */
 .item-1 {
   font-size: 1.2rem;
-  width: 170px;
+  width: 200px;
   height: 5px;
   display: block;
 }
@@ -1067,6 +1068,7 @@ export default {
   color: #ffffff;
   margin-left: 1.6rem;
   cursor: pointer;
+  font-family: "Pretendard-Regular";
 }
 
 .modalJoinBtn:disabled {
@@ -1090,6 +1092,7 @@ export default {
   color: #ffffff;
   margin-left: 1.6rem;
   cursor: pointer;
+  font-family: "Pretendard-Regular";
 }
 
 /* 모달 로그인 버튼 disabled  */
@@ -1146,6 +1149,7 @@ label {
   -webkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
+  font-family: "Pretendard-Regular";
 }
 
 /* 모달창 input focus  */
@@ -1186,7 +1190,8 @@ input:not(:placeholder-shown) {
 /* 회원가입 완료 문단 */
 .comSpan {
   margin-top: 23px;
-  margin-left: 38px;
+  margin-left: 63px;
+  font-family: "Pretendard-Regular";
 }
 
 .complateBtn {
@@ -1200,6 +1205,7 @@ input:not(:placeholder-shown) {
   margin-top: 30px;
   margin-left: 154px;
   font-size: 1.1rem;
+  font-family: "Pretendard-Regular";
 }
 
 .modalLogo {

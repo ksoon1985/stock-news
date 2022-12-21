@@ -37,8 +37,8 @@
     </div>
 
     <div v-else>
-      <div v-if="clusteredNewsList.length === 0">
-        클러스터링 된 뉴스가 없습니다...
+      <div class="clusteringDiv" v-if="clusteredNewsList.length === 0">
+        <p>클러스터링 된 뉴스가 없습니다.</p>
       </div>
       <div v-else></div>
     </div>
@@ -164,6 +164,14 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 .news-title:hover {
   cursor: pointer;
   text-decoration: underline;
@@ -263,5 +271,10 @@ export default {
   word-wrap: break-word;
   line-height: 1.2em;
   height: 2.4em;
+}
+
+.clusteringDiv {
+  text-align: center;
+  font-family: "Pretendard-Regular";
 }
 </style>
