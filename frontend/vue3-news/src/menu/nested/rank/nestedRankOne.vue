@@ -3,9 +3,11 @@
     <div class="iframeHeader">
       <h3>기간 뉴스 키워드</h3>
       <div class="headerDate">
-        <span class="data-span">{{ fromDate }}</span>
+        <input class="iframeDate" type="date" value="2019-12-30" />
+        <!-- <span class="data-span">{{ fromDate }}</span> -->
         <span class="data-span">~</span>
-        <span class="data-span">{{ toDate }}</span>
+        <input class="iframeDate" type="date" value="2022-12-06" />
+        <!-- <span class="data-span">{{ toDate }}</span> -->
       </div>
     </div>
     <div class="iframeBtnDiv">
@@ -346,6 +348,8 @@ export default {
   margin-left: 15px;
   margin-bottom: 30px;
   display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  width: 93%;
 }
 
 .iframeDiv {
@@ -383,7 +387,7 @@ export default {
 
 .headerDate {
   position: relative;
-  left: 18rem;
+  left: 15rem;
   top: 1.7rem;
 }
 
@@ -392,5 +396,10 @@ export default {
   margin-right: px;
   margin-left: 3px;
   font-size: 0.8rem;
+}
+
+.iframeDate {
+  border: none;
+  color: #2679ed;
 }
 </style>
