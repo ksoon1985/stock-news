@@ -13,7 +13,7 @@
             <h3>{{ modalNews.title }}</h3>
           </div>
           <div class="news-modal-journalist">
-            {{ modalNews.regdate }} {{ modalNews.journalist }}
+            {{ modalNews.regdate }} {{ modalNews.journalist }} {{ modalNews }}
           </div>
           <div class="news-modal-content">
             <p

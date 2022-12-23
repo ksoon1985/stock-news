@@ -51,9 +51,18 @@
       >
         <!-- 토픽 뉴스 버전-->
         <div class="news-title" @click="modalOpenFunc(clusteredNews.news)">
-          <span class="news-title-span">{{
-            clusteredNews.news.registration_date
-          }}</span>
+          <div class="news-title-header">
+            <span class="news-title-span">{{
+              clusteredNews.news.registration_date
+            }}</span>
+
+            <span class="news-title-label"
+              >군집화 키워드 : {{ clusteredNews.label }}</span
+            >
+            <span class="news-title-count"
+              >군집화 된 기사 : {{ clusteredNews.count }}건</span
+            >
+          </div>
           <h3>{{ clusteredNews.news.title }}</h3>
           <div class="news-title-div-p">
             <p class="news-title-p">{{ clusteredNews.news.content }}</p>
@@ -279,5 +288,20 @@ export default {
 .clusteringDiv {
   text-align: center;
   font-family: "Pretendard-Regular";
+}
+
+.news-title-label {
+  font-size: 0.7rem;
+  color: #999999;
+}
+
+.news-title-count {
+  font-size: 0.7rem;
+  color: #999999;
+}
+
+.news-title-header {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

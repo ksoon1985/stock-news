@@ -11,7 +11,7 @@
         <p class="stock-market">{{ stockMarket }}</p>
         <span class="middle-point">·</span>
         <div class="stockPriceWrap" :class="[stockChange ? 'doneTwo' : '']">
-          <h2 class="price-close">{{ stockPrice }}</h2>
+          <h2 class="price-close">{{ stockPrice.toLocaleString() }}</h2>
           <p class="price-percent">
             <span v-if="!stockChange" class="plus-percent">+</span
             >{{ stockPercentTwo }}%
@@ -24,7 +24,7 @@
 
         <span class="middle-point">·</span>
         <p class="stockVolume">거래량</p>
-        <p class="stock-volume">{{ stockVolume }}</p>
+        <p class="stock-volume">{{ stockVolume.toLocaleString() }}</p>
       </div>
     </div>
 
@@ -341,7 +341,7 @@ export default {
         .finally(() => {
           this.searchByDate = () => {
             let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text"
+              ".highcharts-range-input text",
             );
             let fromDate = dateEls[0].innerHTML;
             let toDate = dateEls[1].innerHTML;
