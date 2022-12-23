@@ -17,6 +17,19 @@
       class="router-tab"
       exact-active-class="exact-active-link"
       :to="{
+        name: 'NewsTime',
+        query: {
+          code: listCode,
+        },
+      }"
+      ><button class="btn-close">
+        <span class="sub-title" id="sub-title">실시간뉴스</span>
+      </button></router-link
+    >
+    <router-link
+      class="router-tab"
+      exact-active-class="exact-active-link"
+      :to="{
         name: 'NewsNow',
         query: {
           code: listCode,
@@ -44,7 +57,7 @@ export default {
     const route = useRoute();
     const stockData = ref(null);
 
-    let { listCode, keyWordList } = storeToRefs(store);
+    let { listCode, keyWordList, realTimeData, stockName } = storeToRefs(store);
 
     const keyWordClickEvent = () => {
       listCode.value = route.query.code;
@@ -54,8 +67,26 @@ export default {
       });
     };
 
+    const realTimeAllEvent = () => {
+      let reqDto = {
+        searchTerm: stockName.value,
+      };
+      axios
+        .post("/api/news/getRealTimeNews", reqDto)
+        .then((res) => {
+          realTimeData.value = res.data;
+          console.log("res데이터를 알아보자", realTimeData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     onMounted(() => {
       keyWordClickEvent();
+      setTimeout(() => {
+        realTimeAllEvent();
+      }, 500);
     });
 
     return {
@@ -65,6 +96,7 @@ export default {
       keyWordList,
       stockData,
       watch,
+      realTimeAllEvent,
     };
   },
 };

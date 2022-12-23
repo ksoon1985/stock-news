@@ -8,6 +8,14 @@ import NestedCommStock from "@/menu/nested/community/nestedCommStock.vue";
 import NestedCommTopic from "@/menu/nested/community/nestedCommTopic.vue";
 import NestedNewsNow from "@/menu/nested/news/nestedNewsNow.vue";
 import NestedNewsPast from "@/menu/nested/news/nestedNewsPast.vue";
+import NestedNewsRealTime from "@/menu/nested/news/nestedNewsRealTime.vue";
+import realTimeAll from "@/menu/nested/news/realTimeCartegory/realTimeAll.vue";
+import realTimeOne from "@/menu/nested/news/realTimeCartegory/realTimeOne.vue";
+import realTimeTwo from "@/menu/nested/news/realTimeCartegory/realTimeTwo.vue";
+import realTimeThree from "@/menu/nested/news/realTimeCartegory/realTimeThree.vue";
+import realTimeFour from "@/menu/nested/news/realTimeCartegory/realTimeFour.vue";
+import realTimeFive from "@/menu/nested/news/realTimeCartegory/realTimeFive.vue";
+import realTimeSix from "@/menu/nested/news/realTimeCartegory/realTimeSix.vue";
 import NestedRankOne from "@/menu/nested/rank/nestedRankOne.vue";
 import NestedRankTwo from "@/menu/nested/rank/nestedRankTwo.vue";
 import NestedStockOne from "@/menu/nested/stock/nestedStockOne.vue";
@@ -16,6 +24,7 @@ import stockTwoYear from "@/menu/nested/stock/stockTwoNested/stockTwoYear.vue";
 import stockTwoQyarter from "@/menu/nested/stock/stockTwoNested/stockTwoQyarter.vue";
 import newsNow from "@/menu/nested/news/nestedNewsnow/newsNow.vue";
 import commTopicChildren from "@/menu/nested/community/nestedCommTopic/commTopic.vue";
+
 // import MenuSns from "@/menu/menuSns.vue";
 // import NestedSnsNow from "@/menu/nested/sns/nestedSnsNow.vue";
 // import NestedSnsPast from "@/menu/nested/sns/nestedSnsPast.vue";
@@ -42,6 +51,49 @@ const routes = [
             path: "keyword",
             name: "newsNowkeyword",
             component: newsNow,
+          },
+        ],
+      },
+      {
+        path: "time",
+        name: "NewsTime",
+        component: NestedNewsRealTime,
+        redirect: "/news/time/all",
+        children: [
+          {
+            path: "all",
+            name: "realTimeAll",
+            component: realTimeAll,
+          },
+          {
+            path: "one",
+            name: "realTimeOne",
+            component: realTimeOne,
+          },
+          {
+            path: "two",
+            name: "realTimeTwo",
+            component: realTimeTwo,
+          },
+          {
+            path: "three",
+            name: "realTimeThree",
+            component: realTimeThree,
+          },
+          {
+            path: "four",
+            name: "realTimeFour",
+            component: realTimeFour,
+          },
+          {
+            path: "five",
+            name: "realTimeFive",
+            component: realTimeFive,
+          },
+          {
+            path: "six",
+            name: "realTimeSix",
+            component: realTimeSix,
           },
         ],
       },

@@ -1,7 +1,7 @@
 <template>
   <div class="sub-view-result">
     <div class="iframeHeader">
-      <h3>기간 뉴스 키워드</h3>
+      <h3>기간별 뉴스 키워드</h3>
       <div class="headerDate">
         <input class="iframeDate" type="date" v-model="fromDate" />
         <!-- <span class="data-span">{{ fromDate }}</span> -->
@@ -188,9 +188,6 @@
         frameborder="0"
       ></iframe>
     </div>
-    <div class="iframedateBtn">
-      <button class="dateBtn" @click="btndateEvent">기간 조회</button>
-    </div>
   </div>
 </template>
 
@@ -212,12 +209,6 @@ export default {
     let iframeSix = ref(false);
     let fromDate = ref("2019-12-30");
     let toDate = ref("2022-12-06");
-
-    // onMounted(() => {
-    //   setTimeout(() => {
-    //     rankByDate();
-    //   }, 500);
-    // });
 
     const iframeBtnEventOne = () => {
       iframeAll.value = true;
@@ -273,12 +264,6 @@ export default {
       iframeSix.value = true;
     };
 
-    // const rankByDate = () => {
-    //   let dateEls = document.querySelectorAll(".highcharts-range-input text");
-    //   fromDate.value = dateEls[0].innerHTML;
-    //   toDate.value = dateEls[1].innerHTML;
-    // };
-
     const iframeAllEvent = () => {
       let path = `http://192.168.0.47:5601/app/visualize#/edit/03c9ed90-7d34-11ed-b287-13ab45793f2b?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T10%3A46%3A30.819Z'%2Cto%3A'${toDate.value}'))`;
       return path;
@@ -305,7 +290,7 @@ export default {
     };
 
     const iframeSixEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/c20127a0-80cd-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://192.168.0.47:5601/app/visualize#/edit/c20127a0-80cd-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
@@ -332,7 +317,6 @@ export default {
       iframeFourEvent,
       iframeFiveEvent,
       iframeSixEvent,
-      // btndateEvent,
     };
   },
 };
@@ -366,6 +350,7 @@ export default {
 .alignBtn {
   border: none;
   background-color: #ffffff;
+  cursor: pointer;
 }
 
 .ifraneSpan {
@@ -390,20 +375,20 @@ export default {
 
 .headerDate {
   position: relative;
-  left: 14rem;
+  left: 13rem;
   top: 1.7rem;
 }
 
 .data-span {
   font-family: "Pretendard-Regular";
-  margin-right: px;
+  margin-right: 3px;
   margin-left: 3px;
   font-size: 0.8rem;
 }
 
 .iframeDate {
   border: none;
-  color: #2679ed;
+  color: #335cad;
 }
 
 .iframedateBtn {

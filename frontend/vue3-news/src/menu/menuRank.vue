@@ -10,7 +10,7 @@
         },
       }"
       ><button class="btn-close">
-        <span class="sub-title" id="sub-title">검색어</span>
+        <span class="sub-title" id="sub-title">키워드</span>
       </button></router-link
     >
     <!-- <router-link
