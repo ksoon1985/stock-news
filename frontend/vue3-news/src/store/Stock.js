@@ -4,7 +4,7 @@ import { ref } from "vue";
 export const useStockStore = defineStore("stock", () => {
   let stockCode = ref(null); //종목요약 api 배열
   let stockNameMarket = ref(null); //종목 이름 마켓 api 배열
-  let stockName = ref(null); //종목 이름
+  let stockName = ref("삼성전자"); //종목 이름
   let stockMarket = ref(null); //종목 마켓
   let listCode = ref("005930"); //쿼리스트링 종목코드
   let contentStockPrice = ref(null); //컨텐츠 종목 일일 가격 배열
@@ -15,7 +15,7 @@ export const useStockStore = defineStore("stock", () => {
   let stockAddPrice = ref([]); // 종목 추가 금일 종가 가격
   let stockAddPriceTwo = ref([]); // 종목 추가 전일 종가 가격
   let stockAddMinus = ref([]);
-  let stockVolume = ref(null); // 종목 종가 거래량
+  let stockVolume = ref(0); // 종목 종가 거래량
   let listStockMarketCap = ref(null); //종목요약 마켓금액
   let listStockMarketRanking = ref(null); // 종목요약 기업순위
   let listStockNumberOfStocks = ref(null); // 종목요약 주식수
@@ -36,6 +36,12 @@ export const useStockStore = defineStore("stock", () => {
   // let topicTwo = ref(false); // 주제토론 토론 채팅 화면
   let topicName = ref(null); // 토픽이름 pinia
   let realTimeData = ref(null); // 실시간뉴스 데이터들
+  let realTimeData1 = ref([]); // 실시간뉴스 정치카테고리
+  let realTimeData2 = ref([]); // 실시간뉴스 경제카테고리
+  let realTimeData3 = ref([]); // 실시간뉴스 사회카테고리
+  let realTimeData4 = ref([]); // 실시간뉴스 문화카테고리
+  let realTimeData5 = ref([]); // 실시간뉴스 세계카테고리
+  let realTimeData6 = ref([]); // 실시간뉴스 IT/과학
 
   return {
     stockCode,
@@ -66,11 +72,13 @@ export const useStockStore = defineStore("stock", () => {
     modalData,
     searchNewsParams,
     keyWordList,
-    // keywordOne,
-    // keywordTwo,
-    // topicOne,
-    // topicTwo,
     topicName,
     realTimeData,
+    realTimeData2,
+    realTimeData1,
+    realTimeData3,
+    realTimeData4,
+    realTimeData5,
+    realTimeData6,
   };
 });

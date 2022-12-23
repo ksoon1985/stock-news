@@ -694,7 +694,9 @@ export default {
       searchInput.value = e.target.value;
       if (searchInput.value !== "") {
         resultSearch.value = true;
-        getKeyWord();
+        setTimeout(() => {
+          getKeyWord();
+        }, 500);
       } else resultSearch.value = false;
     };
 

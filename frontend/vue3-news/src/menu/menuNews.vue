@@ -57,7 +57,18 @@ export default {
     const route = useRoute();
     const stockData = ref(null);
 
-    let { listCode, keyWordList, realTimeData, stockName } = storeToRefs(store);
+    let {
+      listCode,
+      keyWordList,
+      realTimeData,
+      stockName,
+      realTimeData2,
+      realTimeData1,
+      realTimeData3,
+      realTimeData4,
+      realTimeData5,
+      realTimeData6,
+    } = storeToRefs(store);
 
     const keyWordClickEvent = () => {
       listCode.value = route.query.code;
@@ -76,6 +87,25 @@ export default {
         .then((res) => {
           realTimeData.value = res.data;
           console.log("res데이터를 알아보자", realTimeData);
+          realTimeData1.value = realTimeData.value.filter(
+            (realTime) => realTime.category_id === "100",
+          );
+          console.log("정치데이터", realTimeData1);
+          realTimeData2.value = realTimeData.value.filter(
+            (realTime) => realTime.category_id === "101",
+          );
+          realTimeData3.value = realTimeData.value.filter(
+            (realTime) => realTime.category_id === "102",
+          );
+          realTimeData4.value = realTimeData.value.filter(
+            (realTime) => realTime.category_id === "103",
+          );
+          realTimeData5.value = realTimeData.value.filter(
+            (realTime) => realTime.category_id === "104",
+          );
+          realTimeData6.value = realTimeData.value.filter(
+            (realTime) => realTime.category_id === "105",
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -97,6 +127,7 @@ export default {
       stockData,
       watch,
       realTimeAllEvent,
+      realTimeData2,
     };
   },
 };
