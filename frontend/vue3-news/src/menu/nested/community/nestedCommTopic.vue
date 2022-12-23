@@ -79,7 +79,7 @@ export default {
       topicKeywordRankAxios();
     });
 
-    const likeKeyword = (themeKeyword) => {
+    const likeKeyword = async (themeKeyword) => {
       let apiPath = "keyword-like";
 
       if (!isLogin.value) {
@@ -92,9 +92,13 @@ export default {
         apiPath = "keyword-dislike";
       }
 
-      axios.get("/api/stock/" + apiPath + "/" + themeKeyword).then((res) => {
-        likeKeywordList.value = res.data;
-      });
+      await axios
+        .get("/api/stock/" + apiPath + "/" + themeKeyword)
+        .then((res) => {
+          likeKeywordList.value = res.data;
+        });
+
+      topicKeywordRankAxios();
     };
 
     const topicChangeEvent = () => {

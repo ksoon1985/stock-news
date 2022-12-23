@@ -59,7 +59,11 @@
             :key="index"
             ref="listData"
             @click="
-              itemTest(), itemStockGet(), contentStockPriceGet(), onFalse()
+              itemTest(),
+                itemStockGet(),
+                contentStockPriceGet(),
+                onFalse(),
+                addStockLog()
             "
           >
             <router-link
@@ -600,6 +604,19 @@ export default {
         });
     });
 
+    const addStockLog = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      axios
+        .get("/api/stock/set-stock-log/" + listCode.value)
+        .then()
+        .catch(() => {
+          console.log("stock log add error");
+        });
+    };
+
     const modalJoinSubmit = () => {
       const url = "/api/member/signUp";
       let joinData = {
@@ -813,6 +830,7 @@ export default {
       modalUserIcon,
       setTimeoutHandler,
       loginFalseSpan,
+      addStockLog,
     };
   },
 };

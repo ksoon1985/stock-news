@@ -50,7 +50,7 @@ public class Member {
 
     // 생년월일
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthDay;
+    private String birthDay;
 
     // 사용 여부(사용 중 : Y , 삭제 시 : N)
     @Field

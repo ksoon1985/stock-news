@@ -71,31 +71,30 @@ public class SecurityConfig {
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // url pattern 에 맞게 인증, 권한 필요 여부
-        // 배포시 새로고침 할 때 인증오류 때문에 일단 다 열어둠
         httpSecurity.authorizeRequests()
                         .antMatchers(
-                                "/**"
+//                                "/**"
 
-//                                "/","/index.html", "/favicon.ico" ,"/webjars/**", "/css/**", "/js/**", "/img/**",
-//                                "/member/**",
-//                                "/stock/**",
-//                                "/news/**",
-//                                "/community/**",
-//
-//                                "/api/member/**",
-//                                "/api/stock/**",
-//                                "/api/news/**",
-//                                "/api/community/**",
-//
-//                                "/api/swagger/**",
-//                                "/v3/api-docs",
-//                                "/swagger-ui/**",
-//                                "/swagger-resources",
-//                                "/swagger-resources/configuration/ui",
-//                                "/swagger-resources/configuration/security"
+                                "/","/index.html", "/favicon.ico" ,"/webjars/**", "/css/**", "/js/**", "/img/**",
+                                "/member/**",
+                                "/stock/**",
+                                "/news/**",
+                                "/community/**",
+
+                                "/api/member/**",
+                                "/api/stock/**",
+                                "/api/news/**",
+                                "/api/community/**",
+
+                                "/api/swagger/**",
+                                "/v3/api-docs",
+                                "/swagger-ui/**",
+                                "/swagger-resources",
+                                "/swagger-resources/configuration/ui",
+                                "/swagger-resources/configuration/security"
                         ).permitAll()
-                        .antMatchers("/api/admin/**").hasRole("ADMIN");
-//                        .anyRequest().authenticated();
+                        .antMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated();
 
         // api server 기 때문에 login form 해제
         httpSecurity.formLogin().disable();

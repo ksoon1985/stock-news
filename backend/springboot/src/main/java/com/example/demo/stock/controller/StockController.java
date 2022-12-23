@@ -45,8 +45,6 @@ public class StockController {
             return ResponseEntity.badRequest().body("종목 코드 값이 없습니다.");
         }
 
-
-
         return ResponseEntity.ok().body(stockService.selectStockPrice(stockCode));
     }
 
@@ -200,4 +198,19 @@ public class StockController {
         }
         return keywordArr;
     }
+
+    // ==================================================통계용=================================================
+    @Operation(summary = "종목 통계 ")
+    @GetMapping("/set-stock-log/{stockCode}")
+    public void addStockLog(@PathVariable String stockCode, @ApiIgnore @AuthenticationPrincipal SecurityUser member){
+
+        String userEmail = "";
+
+        if (member != null){
+            userEmail = member.getUsername();
+        }
+
+        stockService.addStockLog(stockCode,userEmail);
+    }
+
 }

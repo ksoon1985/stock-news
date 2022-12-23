@@ -5,6 +5,9 @@ import com.example.demo.elasticsearch.dto.SearchReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.*;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.SignificantTermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.util.CollectionUtils;
@@ -15,7 +18,10 @@ import java.util.List;
 
 public class SearchUtil {
 
-    // 종목, 대표 키워드, 기간에 맞는 뉴스 쿼리 빌더
+    /**
+     * 종목, 대표 키워드, 기간에 맞는 뉴스 쿼리 빌더
+     * 종목 키워드 뉴스
+     */
     public static SearchRequest buildNewsSearchRequest(String indexName, SearchNewsReqDTO dto){
 
         try {
@@ -41,8 +47,40 @@ public class SearchUtil {
         }
     }
 
-    // 종목에 맞는 뉴스 쿼리 빌더
-    public static SearchRequest buildNewsSearchRequest2(String indexName, SearchNewsReqDTO dto){
+    /**
+     * 종목과 기간별 대표 키워드 얻는 쿼리 빌더
+     */
+    public static SearchRequest buildKeywordSearchRequest(String indexName, SearchNewsReqDTO dto){
+
+        try{
+            //query
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.matchQuery("content",dto.getSearchTerm()))
+                    .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
+
+            SignificantTermsAggregationBuilder significantTermsBuilder = AggregationBuilders.significantTerms("agg_content")
+                    .field("content");
+
+            SearchSourceBuilder builder = new SearchSourceBuilder()
+                    .query(boolQueryBuilder)
+                    .aggregation(significantTermsBuilder)
+                    .size(0);
+
+            SearchRequest request = new SearchRequest(indexName);
+            request.source(builder);
+
+            return request;
+
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    /**
+     * 종목에 맞는 뉴스 쿼리 빌더
+     * 실시간 뉴스
+     */
+    public static SearchRequest buildNewsSearchRequestOnlyStockName(String indexName, SearchNewsReqDTO dto){
         try{
 
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
@@ -53,7 +91,7 @@ public class SearchUtil {
             // sorting
             builder = builder.sort("registration_date",SortOrder.DESC);
 
-            builder = builder.from(0).size(50);
+            builder = builder.from(0).size(100);
 
             SearchRequest request = new SearchRequest(indexName);
             request.source(builder);

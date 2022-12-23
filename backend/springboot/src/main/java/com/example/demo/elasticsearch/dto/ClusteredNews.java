@@ -11,6 +11,7 @@ public class ClusteredNews {
     private double score;
     private String label;
     private News news;
+    private int count;
 
     //private ArrayList<News> news;
 }

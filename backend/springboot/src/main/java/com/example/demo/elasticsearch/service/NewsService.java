@@ -2,7 +2,6 @@ package com.example.demo.elasticsearch.service;
 
 import com.example.demo.elasticsearch.dto.ClusteredNews;
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
-import com.example.demo.elasticsearch.dto.SearchReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredResDTO;
 import com.example.demo.elasticsearch.model.News;
@@ -20,6 +19,9 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.bucket.terms.SignificantTerms;
+import org.elasticsearch.xcontent.ParseField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,11 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -75,8 +73,30 @@ public class NewsService {
 
     // 종목에 맞는 실시간 뉴스 가져오기
     public List<News> getRealTimeNews(SearchNewsReqDTO dto){
-        SearchRequest request = SearchUtil.buildNewsSearchRequest2(Indices.NEWS_INDEX, dto);
+        SearchRequest request = SearchUtil.buildNewsSearchRequestOnlyStockName(Indices.NEWS_INDEX, dto);
         return searchInternal(request);
+    }
+
+    // 대표 키워드 가져오기
+    public ArrayList<String> getTopicKeywords(SearchNewsReqDTO dto){
+
+        ArrayList<String> bucketList = new ArrayList<>();
+
+        SearchRequest request = SearchUtil.buildKeywordSearchRequest(Indices.NEWS_INDEX, dto);
+        try{
+            SearchResponse response = client.search(request, RequestOptions.DEFAULT);
+            SignificantTerms significantTerms = response.getAggregations().get("agg_content");
+
+            for (SignificantTerms.Bucket bucket : significantTerms.getBuckets()) {
+                bucketList.add(bucket.getKeyAsString() );
+            }
+
+            return bucketList;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return bucketList;
+        }
     }
 
     // 종목, 기간에 일치하는 클러스터링 된 뉴스 가져오기
@@ -96,36 +116,44 @@ public class NewsService {
 
         // 엘라스틱 서치 요청 url
         String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
-
-        // 요청 실행 !!!
-        HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
-
-        // 엘라스틱서치에서 준 응답 데이터
-        // json String -> json dto 로 변환 ===================================================================
-        NewsClusteredResDTO resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO.class);
-
-        // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
-        List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
 
+        // 요청 실행 !!!
+        try{
+            HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
 
-        // 클러스터링된 뉴스 결과 리스트 - 토픽 뉴스 버전
-        for (NewsClusteredResDTO.Clusters cluster : clusters) {
-            ClusteredNews clusteredNews = new ClusteredNews();
+            // 엘라스틱서치에서 준 응답 데이터
+            // json String -> json dto 로 변환 ===================================================================
+            NewsClusteredResDTO resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO.class);
 
-            clusteredNews.setScore(cluster.getScore());
-            clusteredNews.setLabel(cluster.getLabel());
+            // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
+            List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
 
-            // 군집화된 뉴스중에서 첫번째를 토픽뉴스로 선정
-            String documentId = cluster.getDocuments().get(0);
+            // 클러스터링된 뉴스 결과 리스트 - 토픽 뉴스 버전
+            for (NewsClusteredResDTO.Clusters cluster : clusters) {
+                ClusteredNews clusteredNews = new ClusteredNews();
 
-            News news = getNewsById(documentId);
-            if(news != null){
-                clusteredNews.setNews(news);
+                clusteredNews.setScore(cluster.getScore());
+                clusteredNews.setLabel(cluster.getLabel());
+
+                // 군집화된 뉴스중에서 첫번째를 토픽뉴스로 선정
+                String documentId = cluster.getDocuments().get(0);
+
+                // 군집화된(중복된) 뉴스 갯수
+                clusteredNews.setCount(cluster.getDocuments().size());
+
+                News news = getNewsById(documentId);
+                if(news != null){
+                    clusteredNews.setNews(news);
+                }
+
+                clusteredNewsList.add(clusteredNews);
             }
 
-            clusteredNewsList.add(clusteredNews);
+        }catch (Exception e){
+            return clusteredNewsList;
         }
+
 
         // 클러스터링된 뉴스 결과 리스트 - 헤드라인 뉴스 버전
         /*

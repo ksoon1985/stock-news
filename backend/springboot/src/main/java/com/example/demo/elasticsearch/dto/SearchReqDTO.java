@@ -6,6 +6,7 @@ import org.elasticsearch.search.sort.SortOrder;
 
 import java.util.List;
 
+// 본 서비스에선 사용안함
 @Getter @Setter
 public class SearchReqDTO extends PagedReqDTO{
     private List<String> fields; // 검색할 field

@@ -31,7 +31,7 @@ public class Comment {
 
     // 커뮤니티 글 내용
     @NotBlank
-    @Size(min = 5, max = 100)
+    @Size(min = 1, max = 100)
     private String content;
 
     // 등록일

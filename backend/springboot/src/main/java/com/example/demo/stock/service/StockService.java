@@ -1,12 +1,11 @@
 package com.example.demo.stock.service;
 
 import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
+import com.example.demo.member.model.Member;
+import com.example.demo.member.repository.MemberRepository;
 import com.example.demo.stock.dto.*;
 import com.example.demo.stock.model.*;
-import com.example.demo.stock.repository.StockInfoRepository;
-import com.example.demo.stock.repository.StockKeywordRepository;
-import com.example.demo.stock.repository.StockLikeRepository;
-import com.example.demo.stock.repository.StockPriceRepository;
+import com.example.demo.stock.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.json.JsonObject;
@@ -17,10 +16,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +31,8 @@ public class StockService {
     private final StockInfoRepository stockInfoRepository;
     private final StockLikeRepository stockLikeRepository;
     private final StockKeywordRepository stockKeywordRepository;
+    private final StockStatisticsRepository stockStatisticsRepository;
+    private final MemberRepository memberRepository;
     private final MongoTemplate mongoTemplate;
 
     /**
@@ -218,6 +218,40 @@ public class StockService {
      */
     public ArrayList<StockKeyword> keywordLikeList(String email){
         return stockKeywordRepository.findByEmail(email);
+    }
+
+
+    // ==================================================통계용=================================================
+
+    /**
+     * 종목 클릭할 때
+     * 종목 통계 로그 추가
+     */
+    public void addStockLog(String stockCode,String email){
+
+        StockPriceModel stockModel = stockPriceRepository.findByCode(stockCode);
+        String stockName = stockModel.getName();
+
+        StockStatistics stockStatistics = new StockStatistics();
+        stockStatistics.setStockCode(stockCode); // 주식 종목
+        stockStatistics.setStockName(stockName); // 주식 이름
+
+        // 로그인한 사용자
+        if(!email.equals("")){
+            Member member = memberRepository.findByEmail(email);
+            String gender = member.getGender();
+            String birthDay = member.getBirthDay();
+            stockStatistics.setEmail(email); // 유저 이메일
+            stockStatistics.setGender(gender); // 유저 성별
+            stockStatistics.setBirthDay(birthDay); // 유저 생년월일
+        }
+
+        // 현재 날짜/시간
+        LocalDateTime now = LocalDateTime.now().plusHours(9);
+        stockStatistics.setSearchDate(now);
+
+        stockStatisticsRepository.insert(stockStatistics);
+
     }
 
 }

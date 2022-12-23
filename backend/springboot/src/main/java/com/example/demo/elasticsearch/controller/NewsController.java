@@ -40,6 +40,11 @@ public class NewsController {
         return ResponseEntity.ok().body(newsService.getRealTimeNews(newsReqDTO));
     }
 
+    @PostMapping("/getTopicKeywords")
+    public ResponseEntity getTopicKeywords(@RequestBody SearchNewsReqDTO reqDTO){
+        return ResponseEntity.ok().body(newsService.getTopicKeywords(reqDTO));
+    }
+
     @Operation(summary = "종목이름, 날짜를 조건으로 엘라스틱 서치에서 클러스터링 된 뉴스 데이터 요청")
     @PostMapping("/getClusteredNews")
     public ResponseEntity getClusteredNews(@RequestBody SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {

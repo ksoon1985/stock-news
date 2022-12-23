@@ -5,9 +5,9 @@ import axios from "axios";
 // add a request interceptor
 axios.interceptors.request.use(
   (config) => {
-    console.log("request interceptor");
+    //console.log("request interceptor");
 
-    config.headers.Authorazation = localStorage.getItem("jwt");
+    //config.headers.Authorazation = localStorage.getItem("jwt");
     return config;
   },
   (error) => {
@@ -18,7 +18,7 @@ axios.interceptors.request.use(
 // add a response interceptor
 axios.interceptors.response.use(
   (response) => {
-    console.log("response  interceptor");
+    //console.log("response  interceptor");
     return response;
   },
   (error) => {
