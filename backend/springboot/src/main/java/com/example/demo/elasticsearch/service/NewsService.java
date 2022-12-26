@@ -1,6 +1,7 @@
 package com.example.demo.elasticsearch.service;
 
 import com.example.demo.elasticsearch.dto.ClusteredNews;
+import com.example.demo.elasticsearch.dto.CustomBucket;
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredResDTO;
@@ -8,6 +9,8 @@ import com.example.demo.elasticsearch.model.News;
 import com.example.demo.elasticsearch.repository.NewsSearchRepository;
 import com.example.demo.elasticsearch.utils.Indices;
 import com.example.demo.elasticsearch.utils.SearchUtil;
+import com.example.demo.stock.service.StockService;
+import com.example.demo.util.CustomDateFormatter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +22,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.bucket.terms.SignificantTerms;
-import org.elasticsearch.xcontent.ParseField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +40,8 @@ public class NewsService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
+
+    private final StockService stockService;
     private final RestHighLevelClient client;
     private final NewsSearchRepository newsSearchRepository;
 
@@ -67,20 +70,30 @@ public class NewsService {
 
     // 종목,대표 키워드, 기간에 맞는 모든 뉴스 가져오기
     public List<News> getNews(SearchNewsReqDTO dto){
+
+        String stockName = stockService.getStockNameByStockCode(dto.getSearchTerm());
+        dto.setSearchTerm(stockName);
+
         SearchRequest request = SearchUtil.buildNewsSearchRequest(Indices.NEWS_INDEX, dto);
         return searchInternal(request);
     }
 
     // 종목에 맞는 실시간 뉴스 가져오기
     public List<News> getRealTimeNews(SearchNewsReqDTO dto){
+        String stockName = stockService.getStockNameByStockCode(dto.getSearchTerm());
+        dto.setSearchTerm(stockName);
+
         SearchRequest request = SearchUtil.buildNewsSearchRequestOnlyStockName(Indices.NEWS_INDEX, dto);
         return searchInternal(request);
     }
 
     // 대표 키워드 가져오기
-    public ArrayList<String> getTopicKeywords(SearchNewsReqDTO dto){
+    public ArrayList<CustomBucket> getTopicKeywords(SearchNewsReqDTO dto){
 
-        ArrayList<String> bucketList = new ArrayList<>();
+        String stockName = stockService.getStockNameByStockCode(dto.getSearchTerm());
+        dto.setSearchTerm(stockName);
+
+        ArrayList<CustomBucket> bucketList = new ArrayList<>();
 
         SearchRequest request = SearchUtil.buildKeywordSearchRequest(Indices.NEWS_INDEX, dto);
         try{
@@ -88,7 +101,13 @@ public class NewsService {
             SignificantTerms significantTerms = response.getAggregations().get("agg_content");
 
             for (SignificantTerms.Bucket bucket : significantTerms.getBuckets()) {
-                bucketList.add(bucket.getKeyAsString() );
+
+                CustomBucket customBucket = new CustomBucket();
+                customBucket.setKeyword(bucket.getKeyAsString());
+                customBucket.setScore(bucket.getSignificanceScore());
+                customBucket.setDocCount(bucket.getDocCount());
+                customBucket.setBgCount(bucket.getSupersetDf());
+                bucketList.add(customBucket);
             }
 
             return bucketList;
@@ -101,6 +120,9 @@ public class NewsService {
 
     // 종목, 기간에 일치하는 클러스터링 된 뉴스 가져오기
     public  ArrayList<ClusteredNews> getClusteredNews(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
+
+        String stockName = stockService.getStockNameByStockCode(newsReqDTO.getSearchTerm());
+        newsReqDTO.setSearchTerm(stockName);
 
         // 엘라스틱 서치에 요청할 carrot2 전용 json dto 생성 ====================================================
         NewsClusteredReqDTO newsDto = SearchUtil.buildRequestJsonQuery(newsReqDTO);
@@ -143,6 +165,8 @@ public class NewsService {
                 clusteredNews.setCount(cluster.getDocuments().size());
 
                 News news = getNewsById(documentId);
+                news.setRegistration_date(CustomDateFormatter.UTCToCustomDateTime(news.getRegistration_date()));
+
                 if(news != null){
                     clusteredNews.setNews(news);
                 }
@@ -193,9 +217,11 @@ public class NewsService {
             SearchHit[] searchHits = response.getHits().getHits();
             List<News> news = new ArrayList<>(searchHits.length);
             for (SearchHit hit : searchHits) {
-                news.add(
-                        objectMapper.readValue(hit.getSourceAsString(), News.class)
-                );
+
+                News newsTmp = objectMapper.readValue(hit.getSourceAsString(), News.class);
+                newsTmp.setRegistration_date(CustomDateFormatter.UTCToCustomDateTime(newsTmp.getRegistration_date()));
+
+                news.add(newsTmp);
             }
 
             return news;
@@ -204,4 +230,5 @@ public class NewsService {
             return Collections.emptyList();
         }
     }
+
 }

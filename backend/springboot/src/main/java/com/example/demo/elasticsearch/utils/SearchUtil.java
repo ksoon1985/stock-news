@@ -55,11 +55,11 @@ public class SearchUtil {
         try{
             //query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("content",dto.getSearchTerm()))
+                    .must(QueryBuilders.matchPhraseQuery("title",dto.getSearchTerm()))
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SignificantTermsAggregationBuilder significantTermsBuilder = AggregationBuilders.significantTerms("agg_content")
-                    .field("content");
+                    .field("content").size(30);
 
             SearchSourceBuilder builder = new SearchSourceBuilder()
                     .query(boolQueryBuilder)
@@ -84,14 +84,14 @@ public class SearchUtil {
         try{
 
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()));// 삼성 전자;
+                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()));// 삼성전자;
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
 
             // sorting
             builder = builder.sort("registration_date",SortOrder.DESC);
 
-            builder = builder.from(0).size(100);
+            builder = builder.from(0).size(1000);
 
             SearchRequest request = new SearchRequest(indexName);
             request.source(builder);

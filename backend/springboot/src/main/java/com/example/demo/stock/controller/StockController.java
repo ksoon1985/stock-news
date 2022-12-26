@@ -68,7 +68,7 @@ public class StockController {
         return ResponseEntity.ok().body(stockService.selectStockSummary(stockCode));
     }
 
-    @Operation(summary = "종목 요약정보 - 대표키워드 요청")
+    @Operation(summary = "종목 요약정보 - 대표키워드 요청 (알파스퀘어에서 제공해주는 대표 키워드)")
     @GetMapping("/stock-themeKeyword/{stockCode}")
     public ResponseEntity getStockThemeKeyword(@PathVariable String stockCode){
         if(stockCode.equals("") || stockCode == null){

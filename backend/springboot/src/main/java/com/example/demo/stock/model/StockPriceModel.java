@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 
 // mongodb collection
-@Document("test")
+@Document("stock_price")
 @Getter
 @Setter
 public class StockPriceModel {

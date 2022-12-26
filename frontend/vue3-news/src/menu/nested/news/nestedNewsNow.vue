@@ -12,12 +12,12 @@
           :key="index"
         >
           <span class="forKeyWordSpan">{{ index + 1 }}</span>
-          <h3 class="themeKeywords">{{ item }}</h3>
+          <h3 class="themeKeywords">{{ item.keyword }}</h3>
           <div class="forBtn">
-            <button class="fotBtnOne" @click="likeKeyword(item)">
+            <button class="fotBtnOne" @click="likeKeyword(item.keyword)">
               <span
                 class="forBtnSpanOne"
-                v-if="likeKeywordList.indexOf(item) !== -1"
+                v-if="likeKeywordList.indexOf(item.keyword) !== -1"
               >
                 관심중
               </span>
@@ -29,7 +29,7 @@
                 name: 'newsNowkeyword',
                 query: {
                   code: listCode,
-                  keyword: item,
+                  keyword: item.keyword,
                 },
               }"
             >
@@ -52,15 +52,16 @@ import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 
 export default {
   setup() {
     const store = useStockStore();
     const userStore = useUserStore();
+    const route = useRoute();
     const router = useRouter();
-
+    let routeTest = ref("");
     const keyWordList = ref([]);
 
     let likeKeywordList = ref([]);
@@ -81,24 +82,40 @@ export default {
       keywordTwo.value = true;
     };
 
-    onMounted(() => {
+    onMounted(async () => {
       if (isLogin.value) {
-        axios.get("/api/stock/keywords/likes").then((res) => {
+        await axios.get("/api/stock/keywords/likes").then((res) => {
           likeKeywordList.value = res.data;
         });
       }
 
-      // stockName loading issue
-      // -> setTimeout 0.3s lazy loading
-      setTimeout(() => {
-        axios
-          .get("/api/stock/stock-themeKeyword/" + listCode.value)
-          .then((res) => {
-            keyWordList.value = res.data;
-            keywordOne.value = true;
-            router.push({ name: "NewsNow", query: { code: listCode.value } });
-          });
-      }, 300);
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      let dateEls = document.querySelectorAll(".highcharts-range-input text");
+      let fromDate = dateEls[0].innerHTML;
+      let toDate = dateEls[1].innerHTML;
+
+      let today = new Date();
+
+      let year = today.getFullYear();
+      let month = ("0" + (today.getMonth() + 1)).slice(-2);
+      let day = ("0" + today.getDate()).slice(-2);
+
+      // 처음이나 새로고침할 때 차트의 date를 불러오지 못할 경우
+      // fromDate = 2020-01-01 , toDate = 현재날짜 로 셋팅
+      let reqDto = {
+        searchTerm: listCode.value,
+        fromDate: fromDate == "" ? "2020-01-01" : fromDate,
+        toDate: toDate == "" ? year + "-" + month + "-" + day : toDate,
+      };
+
+      axios.post("/api/news/getTopicKeywords", reqDto).then((res) => {
+        keyWordList.value = res.data;
+        keywordOne.value = true;
+        router.push({ name: "NewsNow", query: { code: listCode.value } });
+      });
     });
 
     const likeKeyword = (themeKeyword) => {
@@ -136,6 +153,7 @@ export default {
       likeKeyword,
       likeStatus,
       router,
+      routeTest,
     };
   },
 };

@@ -35,7 +35,8 @@
           code: listCode,
         },
       }"
-      ><button class="btn-close" @click="keyWordClickEvent">
+      ><button class="btn-close">
+        <!-- @click="keyWordClickEvent"> -->
         <span class="sub-title" id="sub-title">키워드뉴스</span>
       </button></router-link
     >
@@ -56,12 +57,13 @@ export default {
     const store = useStockStore();
     const route = useRoute();
     const stockData = ref(null);
+    const router = useRouter();
+    let routeTest = ref("");
 
     let {
       listCode,
       keyWordList,
       realTimeData,
-      stockName,
       realTimeData2,
       realTimeData1,
       realTimeData3,
@@ -70,17 +72,21 @@ export default {
       realTimeData6,
     } = storeToRefs(store);
 
-    const keyWordClickEvent = () => {
-      listCode.value = route.query.code;
-      axios.get("/api/stock/stock-summary/" + listCode.value).then((res) => {
-        stockData.value = res.data;
-        keyWordList.value = stockData.value.themeKeywords;
-      });
-    };
+    // const keyWordClickEvent = () => {
+    //   listCode.value = route.query.code;
+    //   axios.get("/api/stock/stock-summary/" + listCode.value).then((res) => {
+    //     stockData.value = res.data;
+    //     keyWordList.value = stockData.value.themeKeywords;
+    //   });
+    // };
 
-    const realTimeAllEvent = () => {
+    const realTimeAllEvent = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
       let reqDto = {
-        searchTerm: stockName.value,
+        searchTerm: listCode.value,
       };
       axios
         .post("/api/news/getRealTimeNews", reqDto)
@@ -88,23 +94,23 @@ export default {
           realTimeData.value = res.data;
           console.log("res데이터를 알아보자", realTimeData);
           realTimeData1.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "100",
+            (realTime) => realTime.category_id === "100"
           );
           console.log("정치데이터", realTimeData1);
           realTimeData2.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "101",
+            (realTime) => realTime.category_id === "101"
           );
           realTimeData3.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "102",
+            (realTime) => realTime.category_id === "102"
           );
           realTimeData4.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "103",
+            (realTime) => realTime.category_id === "103"
           );
           realTimeData5.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "104",
+            (realTime) => realTime.category_id === "104"
           );
           realTimeData6.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "105",
+            (realTime) => realTime.category_id === "105"
           );
         })
         .catch((err) => {
@@ -113,16 +119,14 @@ export default {
     };
 
     onMounted(() => {
-      keyWordClickEvent();
-      setTimeout(() => {
-        realTimeAllEvent();
-      }, 500);
+      //keyWordClickEvent();
+      realTimeAllEvent();
     });
 
     return {
       listCode,
       useRouter,
-      keyWordClickEvent,
+      //keyWordClickEvent,
       keyWordList,
       stockData,
       watch,

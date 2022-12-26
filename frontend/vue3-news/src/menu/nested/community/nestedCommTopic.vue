@@ -92,6 +92,7 @@ export default {
         apiPath = "keyword-dislike";
       }
 
+      // 관심 on/off 요청 후 관심 리스트 반환하여 likeKeywordList 에 다시 셋팅
       await axios
         .get("/api/stock/" + apiPath + "/" + themeKeyword)
         .then((res) => {
@@ -106,6 +107,7 @@ export default {
       topicTwo.value = true;
     };
 
+    // 키워드 랭킹 받아오는 함수
     const topicKeywordRankAxios = () => {
       const url = "/api/community/getKeywordsByRanking";
       axios

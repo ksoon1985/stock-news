@@ -95,12 +95,17 @@ import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue-demi";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import { useRoute, useRouter } from "vue-router";
 export default {
   components: { PulseLoader },
   setup() {
     const store = useStockStore();
 
-    let { listCode, stockName, searchNewsParams } = storeToRefs(store);
+    const route = useRoute();
+    const router = useRouter();
+    let routeTest = ref("");
+
+    let { listCode, searchNewsParams } = storeToRefs(store);
 
     let clusteredNewsList = ref([]); // 클러스터링 된 뉴스 리스트
     let modalOpen = ref(false); // 모달 on/off 변수
@@ -109,9 +114,7 @@ export default {
     let isLoading = ref(false); // 뉴스 리스트 로딩 중 변수
 
     onMounted(() => {
-      setTimeout(() => {
-        getClusteredNews();
-      }, 500);
+      getClusteredNews();
     });
 
     watch(searchNewsParams, () => {
@@ -119,15 +122,29 @@ export default {
     });
 
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
-    const getClusteredNews = () => {
+    const getClusteredNews = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      clusteredNewsList.value = [];
+
       let dateEls = document.querySelectorAll(".highcharts-range-input text");
       let fromDate = dateEls[0].innerHTML;
       let toDate = dateEls[1].innerHTML;
 
+      let today = new Date();
+
+      let year = today.getFullYear();
+      let month = ("0" + (today.getMonth() + 1)).slice(-2);
+      let day = ("0" + today.getDate()).slice(-2);
+
+      // 처음이나 새로고침할 때 차트의 date를 불러오지 못할 경우
+      // fromDate = 2020-01-01 , toDate = 현재날짜 로 셋팅
       let reqDto = {
-        searchTerm: stockName.value,
-        fromDate: fromDate,
-        toDate: toDate,
+        searchTerm: listCode.value,
+        fromDate: fromDate == "" ? "2020-01-01" : fromDate,
+        toDate: toDate == "" ? year + "-" + month + "-" + day : toDate,
       };
       console.log(reqDto);
 

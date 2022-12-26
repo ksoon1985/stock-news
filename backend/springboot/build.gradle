@@ -54,6 +54,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.carrot2.lang/carrot2-lang-lucene-korean
 	// implementation group: 'org.carrot2.lang', name: 'carrot2-lang-lucene-korean', version: '4.5.0'
 
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.3'
+
 }
 
 tasks.named('test') {

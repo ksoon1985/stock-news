@@ -15,12 +15,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -72,6 +69,16 @@ public class StockService {
         List<SearchResDTO> searchResult = mongoTemplate.find(query,SearchResDTO.class,"stock_price");
 
         return searchResult;
+    }
+
+    /**
+     * 종목코드로 종목 이름 검색
+     */
+    public String getStockNameByStockCode(String stockCode){
+
+        StockPriceModel stockPriceModel = stockPriceRepository.findByCode(stockCode);
+
+        return stockPriceModel.getName();
     }
 
     /**

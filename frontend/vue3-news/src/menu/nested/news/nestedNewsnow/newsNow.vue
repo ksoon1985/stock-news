@@ -97,8 +97,9 @@ export default {
     const userStore = useUserStore();
     const route = useRoute();
     const router = useRouter();
+    let routeTest = ref("");
 
-    let { listCode, stockName } = storeToRefs(store);
+    let { listCode } = storeToRefs(store);
     let { keywordOne, keywordTwo } = storeToRefs(userStore);
 
     let KeyWordName = ref("");
@@ -113,30 +114,31 @@ export default {
     };
 
     onMounted(async () => {
-      await router.isReady();
-      KeyWordName.value = route.query.keyword;
-      // stockName loading issue
-      // -> setTimeout 0.3s lazy loading
       keywordNewsSearch();
     });
 
-    const keywordNewsSearch = () => {
+    const keywordNewsSearch = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      KeyWordName.value = route.query.keyword;
+
       let dateEls = document.querySelectorAll(".highcharts-range-input text");
       let fromDate = dateEls[0].innerHTML;
       let toDate = dateEls[1].innerHTML;
 
-      //let today = new Date();
-      // yyyy-mm-dd
-      //let year = today.getFullYear();
-      //let month = today.getMonth() + 1;
-      //let date = today.getDate() - 1;
-      //today = year + "-" + month + "-" + date;
+      let today = new Date();
+
+      let year = today.getFullYear();
+      let month = ("0" + (today.getMonth() + 1)).slice(-2);
+      let day = ("0" + today.getDate()).slice(-2);
 
       let reqDto = {
-        searchTerm: stockName.value,
+        searchTerm: listCode.value,
         themeKeyword: KeyWordName.value,
-        fromDate: fromDate,
-        toDate: toDate,
+        fromDate: fromDate == "" ? "2020-01-01" : fromDate,
+        toDate: toDate == "" ? year + "-" + month + "-" + day : toDate,
       };
       console.log(reqDto);
       axios
@@ -172,6 +174,7 @@ export default {
       keywordClick,
       useRoute,
       route,
+      routeTest,
       keywordNewsSearch,
       KeyWordName,
       keyWordNewsList,

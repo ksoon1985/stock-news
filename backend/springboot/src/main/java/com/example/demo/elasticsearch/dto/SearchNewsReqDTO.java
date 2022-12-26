@@ -17,5 +17,6 @@ public class SearchNewsReqDTO extends PagedReqDTO{
     private String themeKeyword; // 검색 키워드 ex) 반도체
     private String fromDate; // 검색 시작 날짜
     private String toDate; // 검색 종료 날짜
+    private String categoryId; // 카테고리 번호
 
 }
