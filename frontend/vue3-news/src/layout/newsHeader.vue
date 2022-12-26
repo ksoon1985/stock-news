@@ -28,7 +28,9 @@
             placeholder="                    종목명 또는 코드를 입력해주세요"
             :value="searchInput"
             @input="resultChange"
-            @keyup.enter="resultChange"
+            @keyup.enter="
+              resultChange(), itemTest(), itemStockGet(), contentStockPriceGet()
+            "
           />
         </div>
         <button type="button" class="btn-close" @click="onClean">
@@ -75,9 +77,13 @@
                 },
               }"
             >
-              <span class="item-1">{{ item.name }}</span>
-              <span class="item-2">{{ item.code }}</span>
-              <span class="item-2">{{ item.market }}</span>
+              <div class="result-stock-logo">
+                <img :src="noImage(item.code)" class="result-logo-image" />
+
+                <span class="item-1">{{ item.name }}</span>
+                <span class="item-2">{{ item.code }}</span>
+                <span class="item-2">{{ item.market }}</span>
+              </div>
             </router-link>
           </li>
         </ul>
@@ -477,6 +483,16 @@ export default {
 
     // listCode.value = route.query.code;
 
+    const noImage = (code) => {
+      let defaultImage = require(`@/assets/stock_logo/000000.png`);
+      let path = require(`@/assets/stock_logo/${code}.png`);
+      try {
+        return path;
+      } catch (e) {
+        return defaultImage;
+      }
+    };
+
     let sendEventBus = () => {
       sendEventBus.$emit("name", resultData);
     };
@@ -833,6 +849,7 @@ export default {
       setTimeoutHandler,
       loginFalseSpan,
       addStockLog,
+      noImage,
     };
   },
 };
@@ -960,6 +977,7 @@ export default {
   font-size: 1.2rem;
   width: 200px;
   height: 5px;
+  margin-top: 2px;
   display: block;
 }
 
@@ -970,8 +988,6 @@ export default {
   margin-top: 5px;
   color: #999999;
   position: relative;
-  left: 230px;
-  top: -8px;
 }
 
 /* 검색 결과창 라우터 */
@@ -1389,5 +1405,17 @@ input:not(:placeholder-shown) {
 
 .loginFalseSpan {
   font-size: 0.8rem;
+}
+
+.result-stock-logo {
+  display: flex;
+}
+
+.result-logo-image {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-bottom: 5px;
 }
 </style>

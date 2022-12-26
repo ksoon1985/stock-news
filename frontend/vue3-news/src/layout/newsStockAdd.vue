@@ -123,22 +123,22 @@
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
-                <img class="noLoginImg" src="@/assets/stock_logo/011200.png" />
+                <img class="noLoginImg" src="@/assets/stock_logo/068270.png" />
               </div>
               <router-link
                 class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
-                  query: { code: '011200' },
+                  query: { code: '068270' },
                 }"
               >
                 <div class="noLogWrap">
-                  <div class="cnameWrapThree">
-                    <p>HMM</p>
+                  <div class="cnameWrap">
+                    <p>셀트리온</p>
                   </div>
                   <div class="cstockMark"><p>KOSPI</p></div>
                 </div>
-                <div class="noLogCode"><p>011200</p></div>
+                <div class="noLogCode"><p>068270</p></div>
               </router-link>
             </div>
           </button>
@@ -205,22 +205,22 @@
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
-                <img class="noLoginImg" src="@/assets/stock_logo/079940.png" />
+                <img class="noLoginImg" src="@/assets/stock_logo/043610.png" />
               </div>
               <router-link
                 class="noresults-list-router"
                 :to="{
                   name: 'StockOne',
-                  query: { code: '079940' },
+                  query: { code: '043610' },
                 }"
               >
                 <div class="noLogWrap">
-                  <div class="cnameWrapSix">
-                    <p>가비아</p>
+                  <div class="cnameWrapFour">
+                    <p>지니뮤직</p>
                   </div>
                   <div class="cstockMark"><p class="daqColor">KOSDAQ</p></div>
                 </div>
-                <div class="noLogCode"><p>079940</p></div>
+                <div class="noLogCode"><p>043610</p></div>
               </router-link>
             </div>
           </button>
@@ -591,16 +591,13 @@ export default {
   justify-content: space-between;
 }
 
-.cstockMark {
-  margin-left: 1rem;
-}
-
 .cnameWrap {
   display: flex;
   font-size: 1rem;
   margin-right: 41px;
   position: relative;
   top: -10px;
+  left: -2px;
   color: #1c1c1c;
   font-family: "Pretendard-Regular";
 }
@@ -609,16 +606,6 @@ export default {
   display: flex;
   font-size: 1rem;
   margin-right: 77px;
-  position: relative;
-  top: -10px;
-  color: #1c1c1c;
-  font-family: "Pretendard-Regular";
-}
-
-.cnameWrapThree {
-  display: flex;
-  font-size: 1rem;
-  margin-right: 58px;
   position: relative;
   top: -10px;
   color: #1c1c1c;
@@ -645,21 +632,12 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
-.cnameWrapSix {
-  display: flex;
-  font-size: 1rem;
-  margin-right: 41px;
-  position: relative;
-  top: -10px;
-  color: #1c1c1c;
-  font-family: "Pretendard-Regular";
-}
-
 .cstockMark {
   display: flex;
   align-items: center;
   color: #ed2926;
   font-family: "Pretendard-Regular";
+  margin-left: 1rem;
 }
 
 .noLogCode {

@@ -188,6 +188,10 @@
         frameborder="0"
       ></iframe>
     </div>
+    <div class="stockKeyWordHeader">
+      <h3>종목별 키워드 통계</h3>
+      <div></div>
+    </div>
   </div>
 </template>
 
@@ -406,5 +410,13 @@ export default {
   margin-top: 6px;
   font-family: "Pretendard-Regular";
   cursor: pointer;
+}
+
+.stockKeyWordHeader {
+  margin-left: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  width: 93%;
 }
 </style>
