@@ -12,7 +12,7 @@
           <h3>{{ modalNews.title }}</h3>
         </div>
         <div class="news-modal-journalist">
-          {{ modalNews.regdate }} {{ modalNews.journalist }} {{ modalNews }}
+          {{ modalNews.regdate }} {{ modalNews.journalist }}
         </div>
         <div class="news-modal-content">
           <p
@@ -45,7 +45,7 @@
 <script>
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue-demi";
+import { ref } from "vue-demi";
 export default {
   setup() {
     const store = useStockStore();
@@ -53,16 +53,19 @@ export default {
     let { listCode, stockName, realTimeData, realTimeData2 } =
       storeToRefs(store);
 
-    onMounted(() => {
-      realTimeNoEvent();
-    });
+    let modalOpen = ref(false);
+    let modalNews = ref({});
 
-    let realTimeNoData = ref(false);
+    const modalOpenFunc = (news) => {
+      modalNews.value = {
+        title: news.title,
+        office: news.office_id,
+        content: news.content,
+        journalist: news.journalist_name,
+        regdate: news.registration_date,
+      };
 
-    const realTimeNoEvent = () => {
-      if (realTimeData2.value == []) {
-        realTimeNoData.value = true;
-      }
+      modalOpen.value = true;
     };
 
     return {
@@ -70,8 +73,9 @@ export default {
       stockName,
       realTimeData,
       realTimeData2,
-      realTimeNoData,
-      realTimeNoEvent,
+      modalOpenFunc,
+      modalNews,
+      modalOpen,
     };
   },
 };

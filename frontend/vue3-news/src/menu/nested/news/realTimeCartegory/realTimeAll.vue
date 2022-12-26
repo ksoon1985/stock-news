@@ -13,7 +13,7 @@
             <h3>{{ modalNews.title }}</h3>
           </div>
           <div class="news-modal-journalist">
-            {{ modalNews.regdate }} {{ modalNews.journalist }} {{ modalNews }}
+            {{ modalNews.regdate }} {{ modalNews.journalist }}
           </div>
           <div class="news-modal-content">
             <p
@@ -31,7 +31,7 @@
     </teleport>
 
     <div class="news-wrap">
-      <div v-for="(item, index) in realTimeData" :key="index">
+      <div v-for="(item, index) in comments" :key="index">
         <div class="news-title" @click="modalOpenFunc(item)">
           <span class="news-title-span">{{ item.registration_date }}</span>
           <h3>{{ item.title }}</h3>
@@ -40,6 +40,7 @@
           </div>
         </div>
       </div>
+      <InfiniteLoading @infinite="load" />
     </div>
   </div>
 </template>
@@ -49,6 +50,7 @@ import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import axios from "axios";
+import InfiniteLoading from "v3-infinite-loading";
 export default {
   setup() {
     const store = useStockStore();
@@ -57,6 +59,21 @@ export default {
 
     let modalOpen = ref(false);
     let modalNews = ref({});
+
+    let comments = ref([]);
+    const load = async ($state) => {
+      console.log("loading...");
+
+      try {
+        if (realTimeData.length < 10) $state.complete();
+        else {
+          comments.value.push(...realTimeData);
+          $state.loaded();
+        }
+      } catch (error) {
+        $state.error();
+      }
+    };
 
     const modalOpenFunc = (news) => {
       modalNews.value = {
@@ -80,6 +97,8 @@ export default {
       modalOpenFunc,
       modalOpen,
       modalNews,
+      load,
+      InfiniteLoading,
     };
   },
 };

@@ -6,6 +6,7 @@ import router from "@/router";
 
 import HighchartsVue from "highcharts-vue";
 import Highcharts from "highcharts";
+import VueHighcharts from "vue3-highcharts";
 import stockInit from "highcharts/modules/stock";
 
 const pinia = createPinia();
@@ -13,4 +14,9 @@ pinia.use(piniaPersist);
 
 stockInit(Highcharts);
 
-createApp(App).use(pinia).use(HighchartsVue).use(router).mount("#app");
+createApp(App)
+  .use(pinia)
+  .use(HighchartsVue)
+  .use(router)
+  .use(VueHighcharts)
+  .mount("#app");
