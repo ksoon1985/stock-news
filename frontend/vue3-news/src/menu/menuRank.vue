@@ -1,7 +1,7 @@
 <template>
   <div class="sub-tab">
     <router-link
-      class="router-tab-rank"
+      class="router-tab"
       exact-active-class="exact-active-link"
       :to="{
         name: 'RankOne',
@@ -13,7 +13,7 @@
         <span class="sub-title" id="sub-title">키워드</span>
       </button></router-link
     >
-    <!-- <router-link
+    <router-link
       class="router-tab"
       exact-active-class="exact-active-link"
       :to="{
@@ -23,9 +23,9 @@
         },
       }"
       ><button class="btn-close">
-        <span class="sub-title" id="sub-title">연령별</span>
+        <span class="sub-title" id="sub-title">종목통계</span>
       </button></router-link
-    > -->
+    >
   </div>
   <div class="main-view">
     <Router-view class="router-view"></Router-view>
@@ -48,9 +48,4 @@ export default {
 };
 </script>
 
-<style>
-.router-tab-rank {
-  margin-top: 0.5rem;
-  margin-left: 31rem;
-}
-</style>
+<style></style>
