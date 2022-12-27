@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -258,6 +260,23 @@ public class StockService {
         stockStatistics.setSearchDate(now);
 
         stockStatisticsRepository.insert(stockStatistics);
+    }
+
+    /**
+     * 종목 최근 1주
+     * 클릭량 추이 통계
+     */
+    public void getClickCountProgress(String stockCode){
+
+        ArrayList<String> recent1WeekDateList = new ArrayList<>();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(Calendar.DATE,-7);
+
+        System.out.println(cal.getTime());
+
 
     }
 

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PagedReqDTO {
-    private static final int DEFAULT_SIZE = 100;
+    public static final int DEFAULT_SIZE = 20;
 
     private int page;
     private int size;

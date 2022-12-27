@@ -268,33 +268,38 @@ export default {
       iframeSix.value = true;
     };
 
+    // 전체
     const iframeAllEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/03c9ed90-7d34-11ed-b287-13ab45793f2b?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T10%3A46%3A30.819Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://49.247.22.59:5601/app/visualize#/edit/2365b890-8127-11ed-b5fe-a56a6524cc97?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
+    // 정치
     const iframeTwoEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/f74f6c80-80ca-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://49.247.22.59:5601/app/visualize#/edit/987d75a0-8127-11ed-b5fe-a56a6524cc97?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
+    // 경제
     const iframeThreeEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/15947280-80cb-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://49.247.22.59:5601/app/visualize#/edit/61a22f80-8127-11ed-b5fe-a56a6524cc97?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
+    // 사회
     const iframeFourEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/fefc4c50-80ca-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://49.247.22.59:5601/app/visualize#/edit/87ec2060-8127-11ed-b5fe-a56a6524cc97?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
+    // 국제
     const iframeFiveEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/2c0365d0-80cb-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://49.247.22.59:5601/app/visualize#/edit/6a8cbf70-8127-11ed-b5fe-a56a6524cc97?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 
     const iframeSixEvent = () => {
-      let path = `http://192.168.0.47:5601/app/visualize#/edit/c20127a0-80cd-11ed-ad1a-e9bf0b3c1a35?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
+      let path = `http://49.247.22.59:5601/app/visualize#/edit/7118c5f0-8127-11ed-b5fe-a56a6524cc97?embed=true&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3A'${fromDate.value}T00%3A59%3A40.460Z'%2Cto%3A'${toDate.value}'))`;
       return path;
     };
 

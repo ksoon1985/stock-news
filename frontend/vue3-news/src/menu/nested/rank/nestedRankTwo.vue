@@ -43,9 +43,6 @@
           </div>
         </div>
       </div>
-      <div class="rightRankWrap">
-        <div class="rightRankHeader"><h4>인기검색어</h4></div>
-      </div>
     </div>
   </div>
 </template>
@@ -68,8 +65,16 @@ export default {
 
     let { listCode } = storeToRefs(store);
 
-    const seriesData = ref([25, 39, 30, 15]);
-    const categories = ref(["Jun", "Jul", "Aug", "Sept"]);
+    const seriesData = ref([25, 39, 30, 15, 10, 25, 50]);
+    const categories = ref([
+      "2022-12-21",
+      "2022-12-22",
+      "2022-12-23",
+      "2022-12-24",
+      "2022-12-25",
+      "2022-12-26",
+      "2022-12-27",
+    ]);
 
     const chartOptions = computed(() => ({
       chart: {
@@ -161,24 +166,16 @@ export default {
 }
 
 .leftRankWrap {
-  width: 70%;
-  height: 100%;
-}
-
-.rightRankWrap {
-  width: 30%;
+  width: 100%;
   height: 100%;
 }
 
 .leftRankChart {
+  width: 90%;
 }
 
 .leftRankHeader {
   margin-left: 5px;
-}
-
-.rightRankHeader {
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .leftRankBottom {
@@ -187,14 +184,15 @@ export default {
 }
 
 .leftRankChartWrap {
+  width: 90%;
   display: flex;
 }
 
 .leftRankPieChart {
-  width: 13rem;
+  width: 50%;
 }
 
 .leftRankColumnChart {
-  width: 13rem;
+  width: 50%;
 }
 </style>

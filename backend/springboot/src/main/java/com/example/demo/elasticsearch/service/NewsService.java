@@ -79,11 +79,12 @@ public class NewsService {
     }
 
     // 종목에 맞는 실시간 뉴스 가져오기
+    // 조건 추가 - category_id 별로
     public List<News> getRealTimeNews(SearchNewsReqDTO dto){
         String stockName = stockService.getStockNameByStockCode(dto.getSearchTerm());
         dto.setSearchTerm(stockName);
 
-        SearchRequest request = SearchUtil.buildNewsSearchRequestOnlyStockName(Indices.NEWS_INDEX, dto);
+        SearchRequest request = SearchUtil.buildNewsSearchRequestStockNameAndCategoryId(Indices.NEWS_INDEX, dto);
         return searchInternal(request);
     }
 

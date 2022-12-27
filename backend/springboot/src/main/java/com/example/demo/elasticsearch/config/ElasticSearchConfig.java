@@ -22,11 +22,19 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
     @Value("${elasticsearch.port}")
     private String port;
+
+    @Value("${elasticsearch.username}")
+    private String username;
+
+    @Value("${elasticsearch.password}")
+    private String password;
+
     @Override
     @Bean
     public RestHighLevelClient elasticsearchClient() {
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
             .connectedTo(host+":" + port)
+                .withBasicAuth(username,password)
                 .build();
 
         return RestClients.create(clientConfiguration).rest();

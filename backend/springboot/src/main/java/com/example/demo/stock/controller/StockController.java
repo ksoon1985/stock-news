@@ -7,6 +7,7 @@ import com.example.demo.stock.model.StockKeyword;
 import com.example.demo.stock.service.StockService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -200,7 +201,7 @@ public class StockController {
     }
 
     // ==================================================통계용=================================================
-    @Operation(summary = "종목 통계 ")
+    @Operation(summary = "종목-통계 로그 데이터 추가 API")
     @GetMapping("/set-stock-log/{stockCode}")
     public void addStockLog(@PathVariable String stockCode, @ApiIgnore @AuthenticationPrincipal SecurityUser member){
 
@@ -211,6 +212,15 @@ public class StockController {
         }
 
         stockService.addStockLog(stockCode,userEmail);
+    }
+
+    @Operation(summary = "종목별 최근 1주일간 클릭량 추이 통계 데이터")
+    @GetMapping("/getClickCountProgress/{stockCode}")
+    public ResponseEntity getClickCountProgress(@PathVariable String stockCode){
+
+        stockService.getClickCountProgress(stockCode);
+
+        return ResponseEntity.ok().body("");
     }
 
 }
