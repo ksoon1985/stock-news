@@ -17,19 +17,6 @@
       class="router-tab"
       exact-active-class="exact-active-link"
       :to="{
-        name: 'NewsTime',
-        query: {
-          code: listCode,
-        },
-      }"
-      ><button class="btn-close">
-        <span class="sub-title" id="sub-title">실시간뉴스</span>
-      </button></router-link
-    >
-    <router-link
-      class="router-tab"
-      exact-active-class="exact-active-link"
-      :to="{
         name: 'NewsNow',
         query: {
           code: listCode,
@@ -38,6 +25,19 @@
       ><button class="btn-close">
         <!-- @click="keyWordClickEvent"> -->
         <span class="sub-title" id="sub-title">키워드뉴스</span>
+      </button></router-link
+    >
+    <router-link
+      class="router-tab"
+      exact-active-class="exact-active-link"
+      :to="{
+        name: 'NewsTime',
+        query: {
+          code: listCode,
+        },
+      }"
+      ><button class="btn-close">
+        <span class="sub-title" id="sub-title">최신뉴스</span>
       </button></router-link
     >
   </div>
@@ -60,17 +60,7 @@ export default {
     const router = useRouter();
     let routeTest = ref("");
 
-    let {
-      listCode,
-      keyWordList,
-      realTimeData,
-      realTimeData2,
-      realTimeData1,
-      realTimeData3,
-      realTimeData4,
-      realTimeData5,
-      realTimeData6,
-    } = storeToRefs(store);
+    let { listCode, keyWordList, realTimeData } = storeToRefs(store);
 
     // const keyWordClickEvent = () => {
     //   listCode.value = route.query.code;
@@ -80,48 +70,29 @@ export default {
     //   });
     // };
 
-    const realTimeAllEvent = async () => {
-      await router.isReady();
-      routeTest.value = route.query.code;
-      listCode.value = routeTest.value;
+    // const realTimeAllEvent = async () => {
+    //   await router.isReady();
+    //   routeTest.value = route.query.code;
+    //   listCode.value = routeTest.value;
 
-      let reqDto = {
-        searchTerm: listCode.value,
-      };
-      axios
-        .post("/api/news/getRealTimeNews", reqDto)
-        .then((res) => {
-          realTimeData.value = res.data;
-          console.log("res데이터를 알아보자", realTimeData);
-          realTimeData1.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "100"
-          );
-          console.log("정치데이터", realTimeData1);
-          realTimeData2.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "101"
-          );
-          realTimeData3.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "102"
-          );
-          realTimeData4.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "103"
-          );
-          realTimeData5.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "104"
-          );
-          realTimeData6.value = realTimeData.value.filter(
-            (realTime) => realTime.category_id === "105"
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+    //   let reqDto = {
+    //     searchTerm: listCode.value,
+    //   };
+    //   axios
+    //     .post("/api/news/getRealTimeNews", reqDto)
+    //     .then((res) => {
+    //       realTimeData.value = res.data;
+    //       console.log("res데이터를 알아보자", realTimeData);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // };
 
-    onMounted(() => {
-      //keyWordClickEvent();
-      realTimeAllEvent();
-    });
+    // onMounted(() => {
+    //   //keyWordClickEvent();
+    //   realTimeAllEvent();
+    // });
 
     return {
       listCode,
@@ -130,8 +101,13 @@ export default {
       keyWordList,
       stockData,
       watch,
-      realTimeAllEvent,
-      realTimeData2,
+      // realTimeAllEvent,
+      axios,
+      onMounted,
+      route,
+      router,
+      routeTest,
+      realTimeData,
     };
   },
 };

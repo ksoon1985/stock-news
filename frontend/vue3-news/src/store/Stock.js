@@ -32,12 +32,6 @@ export const useStockStore = defineStore("stock", () => {
   let keyWordList = ref(null); // 키워드 리스트
   let topicName = ref(null); // 토픽이름 pinia
   let realTimeData = ref(null); // 실시간뉴스 데이터들
-  let realTimeData1 = ref([]); // 실시간뉴스 정치카테고리
-  let realTimeData2 = ref([]); // 실시간뉴스 경제카테고리
-  let realTimeData3 = ref([]); // 실시간뉴스 사회카테고리
-  let realTimeData4 = ref([]); // 실시간뉴스 문화카테고리
-  let realTimeData5 = ref([]); // 실시간뉴스 세계카테고리
-  let realTimeData6 = ref([]); // 실시간뉴스 IT/과학
 
   return {
     stockCode,
@@ -70,11 +64,5 @@ export const useStockStore = defineStore("stock", () => {
     keyWordList,
     topicName,
     realTimeData,
-    realTimeData2,
-    realTimeData1,
-    realTimeData3,
-    realTimeData4,
-    realTimeData5,
-    realTimeData6,
   };
 });

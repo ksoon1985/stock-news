@@ -172,6 +172,7 @@ export default {
   height: 90%;
   width: 100%;
   -ms-overflow-style: none;
+  position: relative;
 }
 
 .sub-view-result::-webkit-scrollbar {
