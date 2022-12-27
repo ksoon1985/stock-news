@@ -8,6 +8,8 @@ import HighchartsVue from "highcharts-vue";
 import Highcharts from "highcharts";
 import VueHighcharts from "vue3-highcharts";
 import stockInit from "highcharts/modules/stock";
+import VueAwesomePaginate from "vue-awesome-paginate";
+import InfiniteLoading from "v3-infinite-loading";
 
 const pinia = createPinia();
 pinia.use(piniaPersist);
@@ -19,4 +21,6 @@ createApp(App)
   .use(HighchartsVue)
   .use(router)
   .use(VueHighcharts)
+  .use(VueAwesomePaginate)
+  .use(InfiniteLoading)
   .mount("#app");

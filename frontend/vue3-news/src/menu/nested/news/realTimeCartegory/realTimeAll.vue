@@ -50,8 +50,13 @@ import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
 import InfiniteLoading from "v3-infinite-loading";
 export default {
+  components: {
+    InfiniteLoading,
+  },
+
   setup() {
     const store = useStockStore();
 
@@ -59,17 +64,32 @@ export default {
 
     let modalOpen = ref(false);
     let modalNews = ref({});
-
     let comments = ref([]);
-    const load = async ($state) => {
-      console.log("loading...");
+    const route = useRoute();
+    const router = useRouter();
+    let page = 1;
 
+    const load = async ($state) => {
+      console.log("Loading... ");
+      await router.isReady();
+      listCode.value = route.query.code;
+
+      let reqDto = {
+        page: page,
+        searchTerm: listCode.value,
+      };
+      const response = [];
       try {
-        if (realTimeData.length < 10) $state.complete();
-        else {
-          comments.value.push(...realTimeData);
-          $state.loaded();
-        }
+        axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
+          response.value = res.data;
+          console.log("res데이터를 알아보자", response);
+          if (response.value.length < 10) $state.complete();
+          else {
+            comments.value.push(...response.value);
+            $state.loaded();
+          }
+          page++;
+        });
       } catch (error) {
         $state.error();
       }
@@ -97,8 +117,9 @@ export default {
       modalOpenFunc,
       modalOpen,
       modalNews,
+      comments,
       load,
-      InfiniteLoading,
+      page,
     };
   },
 };
@@ -196,4 +217,36 @@ export default {
   height: auto;
   border-radius: 0px;
 }
+
+.pagination-container {
+  display: flex;
+  column-gap: 10px;
+}
+.paginate-buttons {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid rgb(217, 217, 217);
+  color: black;
+}
+.paginate-buttons:hover {
+  background-color: #d8d8d8;
+}
+.active-page {
+  background-color: #3498db;
+  border: 1px solid #3498db;
+  color: white;
+}
+.active-page:hover {
+  background-color: #2988c8;
+}
+
+/* .sub-view-resultAll {
+  height: 90%;
+  width: 100%;
+  -ms-overflow-style: none;
+  overflow: hidden;
+} */
 </style>
