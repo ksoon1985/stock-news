@@ -30,8 +30,10 @@
       </div>
     </teleport>
 
-    <div class="realTimeDiv" v-if="comments.length === 0">
-      <p>뉴스가 없습니다.</p>
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading">
+        <pulse-loader :color="color" />
+      </div>
     </div>
 
     <div class="news-wrap">
@@ -56,8 +58,10 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import InfiniteLoading from "v3-infinite-loading";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: {
+    PulseLoader,
     InfiniteLoading,
   },
 
@@ -72,6 +76,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
     let page = 0;
+    let isLoading = ref(false);
 
     const load = async ($state) => {
       console.log("Loading... ");
@@ -83,20 +88,29 @@ export default {
         searchTerm: listCode.value,
       };
       const response = [];
-
+      isLoading.value = true;
       try {
-        axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
-          response.value = res.data;
-          console.log("res데이터를 알아보자", response.value);
-          if (response.value.length < 50) {
-            comments.value.push(...response.value);
-            $state.complete();
-          } else {
-            comments.value.push(...response.value);
-            $state.loaded();
-          }
-          page++;
-        });
+        axios
+          .post("/api/news/getRealTimeNews", reqDto)
+          .then((res) => {
+            response.value = res.data;
+            console.log("res데이터를 알아보자", response);
+            if (response.value.length < 50) {
+              comments.value.push(...response.value);
+              $state.complete();
+            } else {
+              comments.value.push(...response.value);
+              $state.loaded();
+            }
+            page++;
+          })
+          .catch((err) => {
+            isLoading.value = false;
+            console.log(err);
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       } catch (error) {
         $state.error();
       }
@@ -127,6 +141,8 @@ export default {
       comments,
       load,
       page,
+      isLoading,
+      color: "#d01411",
     };
   },
 };
@@ -271,5 +287,14 @@ export default {
 .realTimeDiv {
   text-align: center;
   font-family: "Pretendard-Regular";
+}
+
+.loading {
+  z-index: 2;
+  position: fixed;
+  top: 50%;
+  left: 83%;
+  transform: translate(-50%, -50%);
+  box-shadow: rgba(0, 0, 0, 0) 0 0 0 9999px;
 }
 </style>

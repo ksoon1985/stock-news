@@ -31,11 +31,7 @@
     </teleport>
 
     <div class="newsSelectBtn">
-      <button
-        class="news-btn"
-        @click="searchByDate"
-        :disabled="btnOn === false"
-      >
+      <button class="news-btn" @click="load()" :disabled="btnOn === false">
         기간별 뉴스 조회
       </button>
     </div>
@@ -165,6 +161,7 @@ export default {
           .then((res) => {
             response.value = res.data;
             console.log("클러스터뉴스리스트", response);
+
             if (response.value.length < 50) {
               comments.value.push(...response.value);
               $state.complete();

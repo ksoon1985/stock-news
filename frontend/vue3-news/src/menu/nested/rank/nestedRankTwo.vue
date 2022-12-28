@@ -197,6 +197,7 @@ export default {
 <style>
 .rankWrap {
   display: flex;
+  margin-left: 25px;
 }
 
 .leftRankWrap {

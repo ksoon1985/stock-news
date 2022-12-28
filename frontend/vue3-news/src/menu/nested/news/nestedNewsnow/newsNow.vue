@@ -37,7 +37,7 @@
           class="newsSubHeaderBtn"
           @click="$router.go(-1), keywordClick()"
         >
-          <div>
+          <div class="svgGoBack">
             <svg
               width="24"
               height="24"
@@ -57,6 +57,13 @@
           <h3>{{ KeyWordName }}</h3>
         </div>
       </div>
+
+      <div v-if="isLoading" class="loading-container">
+        <div class="loading">
+          <pulse-loader :color="color" />
+        </div>
+      </div>
+
       <div class="news-wrap">
         <div class="" v-for="(keywordNews, index) in comments" :key="index">
           <div
@@ -89,9 +96,11 @@ import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import axios from "axios";
 import InfiniteLoading from "v3-infinite-loading";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: {
     InfiniteLoading,
+    PulseLoader,
   },
   setup() {
     const store = useStockStore();
@@ -110,6 +119,7 @@ export default {
     let modalNews = ref({});
     let modalOpen = ref(false);
     let noNews = ref(false);
+    let isLoading = ref(false);
 
     const keywordClick = () => {
       keywordOne.value = true;
@@ -144,17 +154,27 @@ export default {
         page: page,
       };
       const response = [];
+      isLoading.value = true;
       try {
-        axios.post("/api/news/getSearchNews", reqDto).then((res) => {
-          response.value = res.data;
-          console.log("res 데이터 넘어오나", response);
-          if (response.value.length < 50) $state.complete();
-          else {
-            comments.value.push(...response.value);
-            $state.loaded();
-          }
-          page++;
-        });
+        axios
+          .post("/api/news/getSearchNews", reqDto)
+          .then((res) => {
+            response.value = res.data;
+            console.log("res 데이터 넘어오나", response);
+            if (response.value.length < 50) $state.complete();
+            else {
+              comments.value.push(...response.value);
+              $state.loaded();
+            }
+            page++;
+          })
+          .catch((err) => {
+            isLoading.value = false;
+            console.log(err);
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       } catch (error) {
         $state.error();
       }
@@ -189,6 +209,8 @@ export default {
       page,
       comments,
       load,
+      isLoading,
+      color: "#d01411",
     };
   },
 };
@@ -204,12 +226,14 @@ export default {
 }
 
 .newsSubHeaderWrap {
-  margin-left: 0.7rem;
   margin-top: 1rem;
   height: 5rem;
   border-bottom: 1px solid #e5e5e5;
   display: flex;
-  width: 94%;
+  position: sticky;
+  top: 0px;
+  z-index: 5px;
+  background-color: #ffffff;
 }
 
 .newsSubHeaderBtn {
@@ -321,5 +345,9 @@ export default {
   position: relative;
   top: 10px;
   left: 14rem;
+}
+
+.svgGoBack {
+  margin-left: 10px;
 }
 </style>
