@@ -10,7 +10,7 @@ import com.example.demo.elasticsearch.repository.NewsSearchRepository;
 import com.example.demo.elasticsearch.utils.Indices;
 import com.example.demo.elasticsearch.utils.SearchUtil;
 import com.example.demo.stock.service.StockService;
-import com.example.demo.util.CustomDateFormatter;
+import com.example.demo.util.CustomDateUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -139,12 +139,14 @@ public class NewsService {
         // HTTP Header set
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBasicAuth("ZWxhc3RpYzoxMjM0NTY=");
 
         // HTTP Message set
         HttpEntity<?> requestMessage = new HttpEntity<>(newsDto, httpHeaders);
 
         // 엘라스틱 서치 요청 url
-        String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        //String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
 
         // 요청 실행 !!!
@@ -172,7 +174,7 @@ public class NewsService {
                 clusteredNews.setCount(cluster.getDocuments().size());
 
                 News news = getNewsById(documentId);
-                news.setRegistration_date(CustomDateFormatter.UTCToCustomDateTime(news.getRegistration_date()));
+                news.setRegistration_date(CustomDateUtil.UTCToCustomDateTime(news.getRegistration_date()));
 
                 if(news != null){
                     clusteredNews.setNews(news);
@@ -227,7 +229,7 @@ public class NewsService {
             for (SearchHit hit : searchHits) {
 
                 News newsTmp = objectMapper.readValue(hit.getSourceAsString(), News.class);
-                newsTmp.setRegistration_date(CustomDateFormatter.UTCToCustomDateTime(newsTmp.getRegistration_date()));
+                newsTmp.setRegistration_date(CustomDateUtil.UTCToCustomDateTime(newsTmp.getRegistration_date()));
 
                 news.add(newsTmp);
             }

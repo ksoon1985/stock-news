@@ -218,9 +218,14 @@ public class StockController {
     @GetMapping("/getClickCountProgress/{stockCode}")
     public ResponseEntity getClickCountProgress(@PathVariable String stockCode){
 
-        stockService.getClickCountProgress(stockCode);
+        return ResponseEntity.ok().body(stockService.getClickCountProgress(stockCode));
+    }
 
-        return ResponseEntity.ok().body("");
+    @Operation(summary = "종목별 성별 통계 데이터")
+    @GetMapping("/getClickCountGender/{stockCode}")
+    public ResponseEntity getClickCountGender(@PathVariable String stockCode){
+
+        return ResponseEntity.ok().body(stockService.getClickCountGender(stockCode));
     }
 
 }

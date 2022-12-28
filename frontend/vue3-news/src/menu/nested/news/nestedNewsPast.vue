@@ -165,8 +165,10 @@ export default {
           .then((res) => {
             response.value = res.data;
             console.log("클러스터뉴스리스트", response);
-            if (response.value.length < 50) $state.complete();
-            else {
+            if (response.value.length < 50) {
+              comments.value.push(...response.value);
+              $state.complete();
+            } else {
               comments.value.push(...response.value);
               $state.loaded();
             }

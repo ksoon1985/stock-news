@@ -51,7 +51,9 @@
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
 import VueHighcharts from "vue3-highcharts";
-import { computed, ref } from "vue-demi";
+import { onMounted, ref } from "vue-demi";
+import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   name: "SimpleChart",
@@ -65,18 +67,49 @@ export default {
 
     let { listCode } = storeToRefs(store);
 
-    const seriesData = ref([25, 39, 30, 15, 10, 25, 50]);
-    const categories = ref([
-      "2022-12-21",
-      "2022-12-22",
-      "2022-12-23",
-      "2022-12-24",
-      "2022-12-25",
-      "2022-12-26",
-      "2022-12-27",
-    ]);
+    const route = useRoute();
+    const router = useRouter();
+    let routeTest = ref("");
 
-    const chartOptions = computed(() => ({
+    onMounted(() => {
+      chartOptionsDraw(); // 클릭량 추이
+      chartOptionsPieDraw(); // 성별 통계
+    });
+
+    const chartOptionsDraw = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      axios
+        .get("/api/stock/getClickCountProgress/" + listCode.value)
+        .then((res) => {
+          console.log(res);
+          chartOptions.value.xAxis.categories = res.data.dateList;
+          chartOptions.value.series[0].data = res.data.countList;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const chartOptionsPieDraw = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      axios
+        .get("/api/stock/getClickCountGender/" + listCode.value)
+        .then((res) => {
+          console.log(res);
+          chartOptionsPie.value.series[0].data = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    let chartOptions = ref({
       chart: {
         type: "line",
       },
@@ -84,45 +117,44 @@ export default {
         text: "",
       },
       xAxis: {
-        categories: categories.value,
+        categories: [],
       },
       yAxis: {
         title: {
-          text: "Number of stars",
+          text: "Number of Interest",
         },
       },
       series: [
         {
-          name: "클릭량 추이",
-          data: seriesData.value,
+          name: "Count",
+          data: [],
         },
       ],
-    }));
+    });
 
-    const chartOptionsPie = computed(() => ({
+    let chartOptionsPie = ref({
       chart: {
         type: "pie",
       },
       title: {
         text: "",
       },
-      xAxis: {
-        categories: categories.value,
-      },
-      yAxis: {
-        title: {
-          text: "Number of stars",
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: "pointer",
+          colors: ["#64AAFF", "#FF6EED"],
         },
       },
       series: [
         {
           name: "클릭량 추이",
-          data: seriesData.value,
+          data: [],
         },
       ],
-    }));
+    });
 
-    const chartOptionsColumn = computed(() => ({
+    let chartOptionsColumn = ref({
       chart: {
         type: "column",
       },
@@ -130,7 +162,7 @@ export default {
         text: "",
       },
       xAxis: {
-        categories: categories.value,
+        categories: [],
       },
       yAxis: {
         title: {
@@ -139,11 +171,11 @@ export default {
       },
       series: [
         {
-          name: "클릭량 추이",
-          data: seriesData.value,
+          name: "",
+          data: [],
         },
       ],
-    }));
+    });
 
     const onRender = () => {
       console.log("Chart rendered");
@@ -155,6 +187,8 @@ export default {
       chartOptionsPie,
       chartOptionsColumn,
       onRender,
+      router,
+      routeTest,
     };
   },
 };
@@ -189,10 +223,10 @@ export default {
 }
 
 .leftRankPieChart {
-  width: 50%;
+  width: 45%;
 }
 
 .leftRankColumnChart {
-  width: 50%;
+  width: 45%;
 }
 </style>

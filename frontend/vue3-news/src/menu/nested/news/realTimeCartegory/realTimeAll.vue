@@ -79,7 +79,7 @@ export default {
       listCode.value = route.query.code;
 
       let reqDto = {
-        page: page.value,
+        page: page,
         searchTerm: listCode.value,
       };
       const response = [];
@@ -87,13 +87,15 @@ export default {
       try {
         axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
           response.value = res.data;
-          console.log("res데이터를 알아보자", response);
-          if (response.value.length < 50) $state.complete();
-          else {
+          console.log("res데이터를 알아보자", response.value);
+          if (response.value.length < 50) {
+            comments.value.push(...response.value);
+            $state.complete();
+          } else {
             comments.value.push(...response.value);
             $state.loaded();
           }
-          page.value++;
+          page++;
         });
       } catch (error) {
         $state.error();

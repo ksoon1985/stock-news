@@ -6,6 +6,7 @@ import com.example.demo.member.repository.MemberRepository;
 import com.example.demo.stock.dto.*;
 import com.example.demo.stock.model.*;
 import com.example.demo.stock.repository.*;
+import com.example.demo.util.CustomDateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.json.JsonObject;
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -266,18 +268,84 @@ public class StockService {
      * 종목 최근 1주
      * 클릭량 추이 통계
      */
-    public void getClickCountProgress(String stockCode){
+    public ClickCountProgressResDTO getClickCountProgress(String stockCode){
 
-        ArrayList<String> recent1WeekDateList = new ArrayList<>();
+        // 1주 전 ~ 현재 날짜 리스트
+        //ArrayList<String> recent1WeekDateList = CustomDateUtil.getRecent1WeekDateList();
+        ClickCountProgressResDTO clickCountProgressResDTO = new ClickCountProgressResDTO();
+        ArrayList<String> dateList = new ArrayList<>();
+        ArrayList<Integer> countList = new ArrayList<>();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
 
-        cal.set(Calendar.DATE,-7);
+        for(int i=6; i>=0;i--){
 
-        System.out.println(cal.getTime());
+            Calendar calFrom = Calendar.getInstance();
+            calFrom.add(Calendar.DATE,-i);
 
+            Calendar calTo = Calendar.getInstance();
+            calTo.add(Calendar.DATE,-i+1);
 
+            Query query = new Query(
+                    Criteria.where("stockCode").is(stockCode)
+                            .andOperator(
+                                    Criteria.where("searchDate").gte(calFrom.getTime()),
+                                    Criteria.where("searchDate").lt((calTo.getTime()))));
+
+            List<StockStatistics> stockStatistics = mongoTemplate.find(query, StockStatistics.class);
+
+            // date setting
+            dateList.add(format.format(calFrom.getTime()));
+            // count setting
+            countList.add(stockStatistics.size());
+        }
+
+        clickCountProgressResDTO.setDateList(dateList);
+        clickCountProgressResDTO.setCountList(countList);
+
+        return clickCountProgressResDTO;
     }
+
+    /**
+     * 종목 성별 통계
+     */
+    public ArrayList<ArrayList<Object>> getClickCountGender(String stockCode){
+
+        ArrayList<ArrayList<Object>> resultList = new ArrayList<>();
+
+        Query maleQuery = new Query(
+                Criteria.where("stockCode").is(stockCode)
+                        .andOperator(Criteria.where("gender").is("M")));
+
+        Query femaleQuery = new Query(
+                Criteria.where("stockCode").is(stockCode)
+                        .andOperator(Criteria.where("gender").is("F")));
+
+
+        List<StockStatistics> maleStatistics = mongoTemplate.find(maleQuery, StockStatistics.class);
+        List<StockStatistics> femaleStatistics = mongoTemplate.find(femaleQuery, StockStatistics.class);
+
+        double maleSize = maleStatistics.size();
+        double femaleSize = femaleStatistics.size();
+
+        double sumSize = maleSize + femaleSize;
+
+        double malePer = Double.parseDouble(String.format("%.2f",(maleSize/sumSize) * 100));
+        double femalePer = Double.parseDouble(String.format("%.2f",(femaleSize/sumSize) * 100)) ;
+
+        ArrayList<Object> maleData = new ArrayList<>();
+        maleData.add("남성");
+        maleData.add(malePer);
+
+        ArrayList<Object> femaleData = new ArrayList<>();
+        femaleData.add("여성");
+        femaleData.add(femalePer);
+
+        resultList.add(maleData);
+        resultList.add(femaleData);
+
+        return resultList;
+    }
+
 
 }
