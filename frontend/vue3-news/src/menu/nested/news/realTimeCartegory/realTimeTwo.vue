@@ -30,8 +30,10 @@
       </div>
     </teleport>
 
-    <div class="realTimeDiv" v-if="comments.length === 0">
-      <p>뉴스가 없습니다.</p>
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading">
+        <pulse-loader :color="color" />
+      </div>
     </div>
 
     <div class="news-wrap">
@@ -55,8 +57,10 @@ import { ref } from "vue-demi";
 import axios from "@/utils/axios";
 import { useRoute, useRouter } from "vue-router";
 import InfiniteLoading from "v3-infinite-loading";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: {
+    PulseLoader,
     InfiniteLoading,
   },
 
@@ -73,6 +77,7 @@ export default {
     let seq = ref("");
     let comments = ref([]);
     let page = 0;
+    let isLoading = ref(false);
 
     // onMounted(() => {
     //   realTimeOneEvent();
@@ -90,18 +95,27 @@ export default {
         page: page,
       };
       const response = [];
-
+      isLoading.value = true;
       try {
-        axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
-          response.value = res.data;
-          console.log("res데이터를 알아보자", response);
-          if (response.value.length < 50) $state.complete();
-          else {
-            comments.value.push(...response.value);
-            $state.loaded();
-          }
-          page++;
-        });
+        axios
+          .post("/api/news/getRealTimeNews", reqDto)
+          .then((res) => {
+            response.value = res.data;
+            console.log("res데이터를 알아보자", response);
+            if (response.value.length < 50) $state.complete();
+            else {
+              comments.value.push(...response.value);
+              $state.loaded();
+            }
+            page++;
+          })
+          .catch((err) => {
+            isLoading.value = false;
+            console.log(err);
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       } catch (error) {
         $state.error();
       }
@@ -131,6 +145,8 @@ export default {
       comments,
       page,
       load,
+      isLoading,
+      color: "#d01411",
     };
   },
 };

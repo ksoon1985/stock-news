@@ -3,11 +3,17 @@
     <div class="newsSelectBtn">
       <button
         class="news-btn"
-        @click="searchByDate"
+        @click="keywordMounted"
         :disabled="btnOn === false"
       >
         기간에 일치하는 키워드 조회
       </button>
+    </div>
+
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading">
+        <pulse-loader :color="color" />
+      </div>
     </div>
 
     <div class="topic-news" v-if="keywordOne">
@@ -64,8 +70,12 @@ import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
 import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 
 export default {
+  components: {
+    PulseLoader,
+  },
   setup() {
     const store = useStockStore();
     const userStore = useUserStore();
@@ -80,6 +90,7 @@ export default {
     let { nickName, isLogin, keywordOne, keywordTwo } = storeToRefs(userStore);
 
     let likeStatus = ref(true);
+    let isLoading = ref(false);
 
     const interestClickEvent = () => {
       if (isLogin.value == false) {
@@ -98,7 +109,9 @@ export default {
           likeKeywordList.value = res.data;
         });
       }
-
+      keywordMounted();
+    });
+    const keywordMounted = async () => {
       await router.isReady();
       routeTest.value = route.query.code;
       listCode.value = routeTest.value;
@@ -115,6 +128,7 @@ export default {
 
       // 처음이나 새로고침할 때 차트의 date를 불러오지 못할 경우
       // fromDate = 2020-01-01 , toDate = 현재날짜 로 셋팅
+      isLoading.value = true;
       let reqDto = {
         searchTerm: listCode.value,
         fromDate: fromDate == "" ? "2020-01-01" : fromDate,
@@ -124,9 +138,17 @@ export default {
       axios.post("/api/news/getTopicKeywords", reqDto).then((res) => {
         keyWordList.value = res.data;
         keywordOne.value = true;
-        router.push({ name: "NewsNow", query: { code: listCode.value } });
+        router
+          .push({ name: "NewsNow", query: { code: listCode.value } })
+          .catch((err) => {
+            isLoading.value = false;
+            console.log(err);
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       });
-    });
+    };
 
     const likeKeyword = (themeKeyword) => {
       let apiPath = "keyword-like";
@@ -164,6 +186,9 @@ export default {
       likeStatus,
       router,
       routeTest,
+      keywordMounted,
+      isLoading,
+      color: "#d01411",
     };
   },
 };

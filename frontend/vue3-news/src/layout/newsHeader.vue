@@ -28,9 +28,7 @@
             placeholder="                    종목명 또는 코드를 입력해주세요"
             :value="searchInput"
             @input="resultChange"
-            @keyup.enter="
-              resultChange(), itemTest(), itemStockGet(), contentStockPriceGet()
-            "
+            @keyup.enter="resultChange()"
           />
         </div>
         <button type="button" class="btn-close" @click="onClean">
@@ -278,6 +276,7 @@
               </div>
             </div>
             <div class="genderBirthday">
+              <span class="genderBirthSpan">성별</span>
               <div class="gender">
                 남성
                 <input
@@ -294,8 +293,14 @@
                   v-model="modalJoinGender"
                 />
               </div>
+              <span class="genderBirthSpan">생년/월/일</span>
               <div class="birthday">
-                <input type="date" id="birthDay" v-model="modalJoinbirthDay" />
+                <input
+                  class="modalBirtDate"
+                  type="date"
+                  id="birthDay"
+                  v-model="modalJoinbirthDay"
+                />
               </div>
             </div>
             <button
@@ -427,7 +432,7 @@ export default {
     let modalJoinNickName = ref("");
     let modalJoinPassword = ref("");
     let modalJoinGender = ref("");
-    let modalJoinbirthDay = ref("");
+    let modalJoinbirthDay = ref("1995-01-01");
     let modalLoginEmail = ref("");
     let modalLoginPassword = ref("");
     let modalJoinPasswordTwo = ref("");
@@ -1417,5 +1422,18 @@ input:not(:placeholder-shown) {
   border-radius: 50%;
   margin-right: 10px;
   margin-bottom: 5px;
+}
+
+.genderBirthSpan {
+  color: #8aa1a1;
+  font-size: 0.8rem;
+  display: block;
+  position: relative;
+  top: -20px;
+  left: -5px;
+}
+
+.genderBirthday {
+  margin-right: 8px;
 }
 </style>
