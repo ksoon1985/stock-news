@@ -1,5 +1,15 @@
 <template>
   <div class="sub-view-result">
+    <div class="newsSelectBtn">
+      <button
+        class="news-btn"
+        @click="searchByDate"
+        :disabled="btnOn === false"
+      >
+        기간에 일치하는 키워드 조회
+      </button>
+    </div>
+
     <div class="topic-news" v-if="keywordOne">
       <div class="keyWordStockName">
         <span class="keyword-stock-name">{{ stockName }}</span>
@@ -172,7 +182,6 @@ export default {
   height: 90%;
   width: 100%;
   -ms-overflow-style: none;
-  position: relative;
 }
 
 .sub-view-result::-webkit-scrollbar {

@@ -59,11 +59,11 @@
       :animateOnUpdate="false"
     ></highcharts>
   </div>
-  <div class="newsSelectBtn">
+  <!-- <div class="newsSelectBtn">
     <button class="news-btn" @click="searchByDate" :disabled="btnOn === false">
       뉴스조회
     </button>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -471,7 +471,7 @@ export default {
 /* 종목 하이차트 */
 .stock_charts {
   width: 100%;
-  height: 50rem;
+  height: 52rem;
   margin-top: 0.1rem;
 }
 
@@ -528,16 +528,18 @@ export default {
 .newsSelectBtn {
   width: 100%;
   text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  height: 5rem;
 }
 
 .news-btn {
-  width: 6rem;
-  height: 1.8rem;
+  width: 80%;
+  height: 2rem;
   border-radius: 6px;
-  background-color: #d01411;
+  background-color: #2679ed;
   color: #fef6f6;
   border: none;
-  margin-top: 6px;
+  margin-top: 1.5rem;
   font-family: "Pretendard-Regular";
   cursor: pointer;
 }

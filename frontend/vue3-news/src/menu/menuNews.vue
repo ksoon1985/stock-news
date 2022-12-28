@@ -125,7 +125,7 @@ export default {
 }
 
 .router-view {
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   max-height: 80vh;
 }

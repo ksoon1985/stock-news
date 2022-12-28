@@ -30,6 +30,10 @@
       </div>
     </teleport>
 
+    <div class="realTimeDiv" v-if="comments.length === 0">
+      <p>뉴스가 없습니다.</p>
+    </div>
+
     <div class="news-wrap">
       <div v-for="(item, index) in comments" :key="index">
         <div class="news-title" @click="modalOpenFunc(item)">
@@ -67,7 +71,7 @@ export default {
     let modalNews = ref({});
     let realTimeData1 = ref({});
     let seq = ref("");
-    let page = 1;
+    let page = 0;
     let comments = ref([]);
 
     // onMounted(() => {
@@ -91,7 +95,7 @@ export default {
         axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
           response.value = res.data;
           console.log("res데이터를 알아보자", response);
-          if (response.value.length < 10) $state.complete();
+          if (response.value.length < 50) $state.complete();
           else {
             comments.value.push(...response.value);
             $state.loaded();

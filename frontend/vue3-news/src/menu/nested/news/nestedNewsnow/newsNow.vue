@@ -58,11 +58,7 @@
         </div>
       </div>
       <div class="news-wrap">
-        <div
-          class=""
-          v-for="(keywordNews, index) in keyWordNewsList"
-          :key="index"
-        >
+        <div class="" v-for="(keywordNews, index) in comments" :key="index">
           <div
             class="keyword-news-title"
             @click="modalOpenKeyword(keywordNews)"
@@ -78,6 +74,7 @@
             </div>
           </div>
         </div>
+        <InfiniteLoading @infinite="load" />
       </div>
       <div class="noNewsDiv" v-if="noNews"><h3>키워드기사가 없습니다.</h3></div>
     </div>
@@ -89,18 +86,24 @@ import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
+import InfiniteLoading from "v3-infinite-loading";
 export default {
+  components: {
+    InfiniteLoading,
+  },
   setup() {
     const store = useStockStore();
     const userStore = useUserStore();
-    const route = useRoute();
-    const router = useRouter();
-    let routeTest = ref("");
 
     let { listCode } = storeToRefs(store);
     let { keywordOne, keywordTwo } = storeToRefs(userStore);
+
+    const route = useRoute();
+    const router = useRouter();
+    let page = 1;
+    let comments = ref([]);
 
     let KeyWordName = ref("");
     let keyWordNewsList = ref([]);
@@ -113,15 +116,14 @@ export default {
       keywordTwo.value = false;
     };
 
-    onMounted(async () => {
-      keywordNewsSearch();
-    });
+    // onMounted(async () => {
+    //   keywordNewsSearch();
+    // });
 
-    const keywordNewsSearch = async () => {
+    const load = async ($state) => {
+      console.log("Loading... ");
       await router.isReady();
-      routeTest.value = route.query.code;
-      listCode.value = routeTest.value;
-
+      listCode.value = route.query.code;
       KeyWordName.value = route.query.keyword;
 
       let dateEls = document.querySelectorAll(".highcharts-range-input text");
@@ -139,20 +141,23 @@ export default {
         themeKeyword: KeyWordName.value,
         fromDate: fromDate == "" ? "2020-01-01" : fromDate,
         toDate: toDate == "" ? year + "-" + month + "-" + day : toDate,
+        page: page,
       };
-      console.log(reqDto);
-      axios
-        .post("/api/news/getSearchNews", reqDto)
-        .then((res) => {
-          console.log("res 데이터 넘어오나", res.data);
-          keyWordNewsList.value = res.data;
-          if (keyWordNewsList.value == 0) {
-            noNews.value = true;
+      const response = [];
+      try {
+        axios.post("/api/news/getSearchNews", reqDto).then((res) => {
+          response.value = res.data;
+          console.log("res 데이터 넘어오나", response);
+          if (response.value.length < 50) $state.complete();
+          else {
+            comments.value.push(...response.value);
+            $state.loaded();
           }
-        })
-        .catch((error) => {
-          console.log(error);
+          page++;
         });
+      } catch (error) {
+        $state.error();
+      }
     };
 
     const modalOpenKeyword = (news) => {
@@ -174,14 +179,16 @@ export default {
       keywordClick,
       useRoute,
       route,
-      routeTest,
-      keywordNewsSearch,
+      // keywordNewsSearch,
       KeyWordName,
       keyWordNewsList,
       modalOpenKeyword,
       modalOpen,
       modalNews,
       noNews,
+      page,
+      comments,
+      load,
     };
   },
 };
