@@ -30,6 +30,15 @@
       </div>
     </teleport>
 
+    <div class="newsSelectBtn">
+      <button
+        class="news-btn"
+        @click="searchByDate"
+        :disabled="btnOn === false"
+      >
+        기간별 뉴스 조회
+      </button>
+    </div>
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
@@ -37,18 +46,14 @@
     </div>
 
     <div v-else>
-      <div class="clusteringDiv" v-if="clusteredNewsList.length === 0">
+      <div class="clusteringDiv" v-if="comments.length === 0">
         <p>클러스터링 된 뉴스가 없습니다.</p>
       </div>
       <div v-else></div>
     </div>
 
     <div class="news-wrap">
-      <div
-        class=""
-        v-for="(clusteredNews, cIndex) in clusteredNewsList"
-        :key="cIndex"
-      >
+      <div class="" v-for="(clusteredNews, cIndex) in comments" :key="cIndex">
         <!-- 토픽 뉴스 버전-->
         <div class="news-title" @click="modalOpenFunc(clusteredNews.news)">
           <div class="news-title-header">
@@ -85,6 +90,7 @@
           {{ news.title }}
         </div> -->
       </div>
+      <InfiniteLoading @infinite="load" />
     </div>
   </div>
 </template>
@@ -93,17 +99,20 @@
 import axios from "axios";
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue-demi";
+import { ref } from "vue-demi";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useRoute, useRouter } from "vue-router";
+import InfiniteLoading from "v3-infinite-loading";
 export default {
-  components: { PulseLoader },
+  components: {
+    PulseLoader,
+    InfiniteLoading,
+  },
   setup() {
     const store = useStockStore();
 
     const route = useRoute();
     const router = useRouter();
-    let routeTest = ref("");
 
     let { listCode, searchNewsParams } = storeToRefs(store);
 
@@ -112,20 +121,22 @@ export default {
     let modalNews = ref({}); // 모달 상세 뉴스 정보 변수
 
     let isLoading = ref(false); // 뉴스 리스트 로딩 중 변수
+    let page = 0;
+    let comments = ref([]);
 
-    onMounted(() => {
-      getClusteredNews();
-    });
+    // onMounted(() => {
+    //   getClusteredNews();
+    // });
 
-    watch(searchNewsParams, () => {
-      getClusteredNews();
-    });
+    // watch(searchNewsParams, () => {
+    //   getClusteredNews();
+    // });
 
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
-    const getClusteredNews = async () => {
+    const load = async ($state) => {
+      console.log("Loading... ");
       await router.isReady();
-      routeTest.value = route.query.code;
-      listCode.value = routeTest.value;
+      listCode.value = route.query.code;
 
       clusteredNewsList.value = [];
 
@@ -146,22 +157,31 @@ export default {
         fromDate: fromDate == "" ? "2020-01-01" : fromDate,
         toDate: toDate == "" ? year + "-" + month + "-" + day : toDate,
       };
-      console.log(reqDto);
-
+      const response = [];
       isLoading.value = true;
-      axios
-        .post("/api/news/getClusteredNews", reqDto)
-        .then((res) => {
-          clusteredNewsList.value = res.data;
-          console.log("클러스터뉴스리스트", clusteredNewsList);
-        })
-        .catch((err) => {
-          isLoading.value = false;
-          console.log(err);
-        })
-        .finally(() => {
-          isLoading.value = false;
-        });
+      try {
+        axios
+          .post("/api/news/getClusteredNews", reqDto)
+          .then((res) => {
+            response.value = res.data;
+            console.log("클러스터뉴스리스트", response);
+            if (response.value.length < 50) $state.complete();
+            else {
+              comments.value.push(...response.value);
+              $state.loaded();
+            }
+            page++;
+          })
+          .catch((err) => {
+            isLoading.value = false;
+            console.log(err);
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
+      } catch (error) {
+        $state.error();
+      }
     };
 
     // 뉴스 제목 클릭 시 상세 뉴스 정보 모달 팝업 함수
@@ -184,9 +204,11 @@ export default {
       modalNews,
       isLoading,
       modalOpenFunc,
-      getClusteredNews,
       color: "#d01411",
       searchNewsParams,
+      load,
+      page,
+      comments,
     };
   },
 };

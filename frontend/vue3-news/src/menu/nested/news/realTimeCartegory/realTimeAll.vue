@@ -30,6 +30,10 @@
       </div>
     </teleport>
 
+    <div class="realTimeDiv" v-if="comments.length === 0">
+      <p>뉴스가 없습니다.</p>
+    </div>
+
     <div class="news-wrap">
       <div v-for="(item, index) in comments" :key="index">
         <div class="news-title" @click="modalOpenFunc(item)">
@@ -67,7 +71,7 @@ export default {
     let comments = ref([]);
     const route = useRoute();
     const router = useRouter();
-    let page = ref(0);
+    let page = 0;
 
     const load = async ($state) => {
       console.log("Loading... ");
@@ -78,17 +82,15 @@ export default {
         page: page.value,
         searchTerm: listCode.value,
       };
+      const response = [];
 
       try {
         axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
-          console.log("res데이터를 알아보자", res.data);
-
-          comments.value.push(...res.data);
-
-          if (res.data.length < 50) {
-            $state.complete();
-          } else {
-            comments.value.push(...res.data);
+          response.value = res.data;
+          console.log("res데이터를 알아보자", response);
+          if (response.value.length < 50) $state.complete();
+          else {
+            comments.value.push(...response.value);
             $state.loaded();
           }
           page.value++;
@@ -129,6 +131,13 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
 .news-title {
   width: 95%;
   border-bottom: 1px solid #e0e0e0;
@@ -252,4 +261,13 @@ export default {
   -ms-overflow-style: none;
   overflow: hidden;
 } */
+
+.news-wrap {
+  margin-bottom: 5px;
+}
+
+.realTimeDiv {
+  text-align: center;
+  font-family: "Pretendard-Regular";
+}
 </style>
