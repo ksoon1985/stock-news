@@ -67,7 +67,7 @@ export default {
     let comments = ref([]);
     const route = useRoute();
     const router = useRouter();
-    let page = 1;
+    let page = ref(0);
 
     const load = async ($state) => {
       console.log("Loading... ");
@@ -75,20 +75,23 @@ export default {
       listCode.value = route.query.code;
 
       let reqDto = {
-        page: page,
+        page: page.value,
         searchTerm: listCode.value,
       };
-      const response = [];
+
       try {
         axios.post("/api/news/getRealTimeNews", reqDto).then((res) => {
-          response.value = res.data;
-          console.log("res데이터를 알아보자", response);
-          if (response.value.length < 10) $state.complete();
-          else {
-            comments.value.push(...response.value);
+          console.log("res데이터를 알아보자", res.data);
+
+          comments.value.push(...res.data);
+
+          if (res.data.length < 50) {
+            $state.complete();
+          } else {
+            comments.value.push(...res.data);
             $state.loaded();
           }
-          page++;
+          page.value++;
         });
       } catch (error) {
         $state.error();

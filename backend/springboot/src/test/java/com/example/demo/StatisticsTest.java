@@ -33,8 +33,5 @@ public class StatisticsTest {
             cal.add(Calendar.DATE,1);
         }
 
-
-
-
     }
 }

@@ -30,16 +30,23 @@ public class SearchUtil {
             // query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                     .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()))// 삼성 전자
-                    .must(QueryBuilders.matchQuery("content.mixed",dto.getThemeKeyword())) // 반도체
+                    .must(QueryBuilders.matchQuery("title.wordcloud",dto.getThemeKeyword())) // 반도체
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
 
-            //builder.collapse(new CollapseBuilder(""));
+            // 중복되는 기사 제거
+            //builder.collapse(new CollapseBuilder("title"));
+
             // sorting
             // builder = builder.sort("registration_date",SortOrder.DESC);
 
-            builder = builder.from(0).size(50);
+            // paging
+            final int page = dto.getPage();
+            final int size = PagedReqDTO.DEFAULT_SIZE;
+            final int from = page <= 0 ? 0 : page * size;
+
+            builder = builder.from(from).size(size);
 
             SearchRequest request = new SearchRequest(indexName);
             request.source(builder);
@@ -58,7 +65,7 @@ public class SearchUtil {
         try{
             //query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title",dto.getSearchTerm()))
+                    .must(QueryBuilders.matchQuery("title.wordcloud",dto.getSearchTerm()))
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SignificantTermsAggregationBuilder significantTermsBuilder = AggregationBuilders.significantTerms("agg_content")
@@ -81,13 +88,13 @@ public class SearchUtil {
 
     /**
      * 종목에 맞는 뉴스 쿼리 빌더
-     * 실시간 뉴스
+     * 최신 뉴스
      */
     public static SearchRequest buildNewsSearchRequestStockNameAndCategoryId(String indexName, SearchNewsReqDTO dto){
         try{
 
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()));// 삼성전자
+                    .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()));// 삼성전자
 
             /**
              * category_id
@@ -103,13 +110,16 @@ public class SearchUtil {
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
 
+            // 중복되는 기사 제거
+            // builder.collapse(new CollapseBuilder("title"));
+
             // sorting
             builder = builder.sort("registration_date",SortOrder.DESC);
 
             // paging
             final int page = dto.getPage();
-            final int size = PagedReqDTO.DEFAULT_SIZE;
-            final int from = page <= 1 ? 0 : page * size;
+            final int size = 50;
+            final int from = page <= 0 ? 0 : page * size;
 
             builder = builder.from(from).size(size);
 

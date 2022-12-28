@@ -35,6 +35,7 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
             .connectedTo(host+":" + port)
                 .withBasicAuth(username,password)
+                .withSocketTimeout(60 * 1000) // es socket timeout 60s
                 .build();
 
         return RestClients.create(clientConfiguration).rest();

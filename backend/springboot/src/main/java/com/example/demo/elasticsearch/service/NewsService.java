@@ -51,6 +51,12 @@ public class NewsService {
     @Value("${elasticsearch.port}")
     private String port;
 
+    @Value("${elasticsearch.username}")
+    private String username;
+
+    @Value("${elasticsearch.password}")
+    private String password;
+
     // elasticsearch news id 로 news 정보 받아오기
     public News getNewsById(String newsId) {
         try {
@@ -78,7 +84,7 @@ public class NewsService {
         return searchInternal(request);
     }
 
-    // 종목에 맞는 실시간 뉴스 가져오기
+    // 종목에 맞는 최신 뉴스 가져오기
     // 조건 추가 - category_id 별로
     public List<News> getRealTimeNews(SearchNewsReqDTO dto){
         String stockName = stockService.getStockNameByStockCode(dto.getSearchTerm());
@@ -138,7 +144,7 @@ public class NewsService {
         HttpEntity<?> requestMessage = new HttpEntity<>(newsDto, httpHeaders);
 
         // 엘라스틱 서치 요청 url
-        String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
 
         // 요청 실행 !!!
@@ -176,6 +182,7 @@ public class NewsService {
             }
 
         }catch (Exception e){
+            System.out.println(e);
             return clusteredNewsList;
         }
 
