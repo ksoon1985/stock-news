@@ -31,9 +31,7 @@
     </teleport>
 
     <div class="newsSelectBtn">
-      <button class="news-btn" @click="load()" :disabled="btnOn === false">
-        기간별 뉴스 조회
-      </button>
+      <button class="news-btn" @click="load()">기간별 뉴스 조회</button>
     </div>
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
@@ -58,7 +56,8 @@
             }}</span>
 
             <span class="news-title-label"
-              >군집화 키워드 : {{ clusteredNews.label }}</span
+              >군집화 키워드 :
+              {{ clusteredNews.phrases.slice(0, 6).join(", ") }}</span
             >
             <span class="news-title-count"
               >군집화 된 기사 : {{ clusteredNews.count }}건</span
@@ -162,7 +161,7 @@ export default {
             response.value = res.data;
             console.log("클러스터뉴스리스트", response);
 
-            if (response.value.length < 50) {
+            if (response.value.length < 1) {
               comments.value.push(...response.value);
               $state.complete();
             } else {
@@ -222,11 +221,13 @@ export default {
   font-style: normal;
 }
 
+/* 토픽 뉴스 호버 */
 .news-title:hover {
   cursor: pointer;
   text-decoration: underline;
 }
 
+/* 토픽 뉴스 모달 div */
 .news-modal-wrap {
   overflow: scroll;
   width: 100%;
@@ -243,6 +244,7 @@ export default {
   z-index: 990;
 }
 
+/* 토픽 뉴스 상세보기 */
 .news-modal-detail {
   width: 37%;
   background: white;
@@ -252,6 +254,7 @@ export default {
   max-height: 90%;
 }
 
+/* 토픽 뉴스 기자/날짜  */
 .news-modal-journalist {
   color: #999999;
   font-size: 0.9rem;
@@ -260,21 +263,25 @@ export default {
   height: 2rem;
 }
 
+/* 토픽 뉴스 제목 */
 .news-modal-title {
   margin: 0px;
   padding: 0px;
 }
 
+/* 토픽 뉴스 콘텐트  */
 .news-modal-content {
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
 
+/* 토픽 뉴스 모달창 닫기 */
 .new-modal-Btn {
   text-align: right;
 }
 
+/* 토픽 뉴스 모달창 닫기 버튼 */
 .newsModalBtn {
   width: 3rem;
   height: 1.8rem;
@@ -285,12 +292,14 @@ export default {
   margin-top: 6px;
 }
 
+/* 토픽 뉴스 모달창 언론사 로고 */
 .news-modal-logo {
   width: auto;
   height: auto;
   border-radius: 0px;
 }
 
+/* 토픽 뉴스 로딩 */
 .loading {
   z-index: 2;
   position: fixed;
@@ -300,6 +309,7 @@ export default {
   box-shadow: rgba(0, 0, 0, 0) 0 0 0 9999px;
 }
 
+/* 토픽 뉴스 타이틀 */
 .news-title {
   width: 95%;
   border-bottom: 1px solid #e0e0e0;
@@ -307,11 +317,13 @@ export default {
   margin-top: 15px;
 }
 
+/* 토픽 뉴스 span */
 .news-title-span {
   font-size: 0.7rem;
   color: #999999;
 }
 
+/* 토픽 뉴스 p */
 .news-title-p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -323,21 +335,25 @@ export default {
   height: 2.4em;
 }
 
+/* no clustering div */
 .clusteringDiv {
   text-align: center;
   font-family: "Pretendard-Regular";
 }
 
+/* 군집화 키워드 */
 .news-title-label {
   font-size: 0.7rem;
   color: #999999;
 }
 
+/* 군집화 된 기사 숫자 */
 .news-title-count {
   font-size: 0.7rem;
   color: #999999;
 }
 
+/* 군집화 헤더 div */
 .news-title-header {
   display: flex;
   justify-content: space-between;

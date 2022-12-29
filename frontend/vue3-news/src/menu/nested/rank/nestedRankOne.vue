@@ -340,6 +340,7 @@ export default {
   font-style: normal;
 }
 
+/* 워드클라우드 헤더 */
 .iframeHeader {
   margin-left: 15px;
   margin-bottom: 30px;
@@ -348,29 +349,35 @@ export default {
   width: 93%;
 }
 
+/* 워드클라우드 div */
 .iframeDiv {
   margin-left: 7px;
 }
 
+/* 워드클라우드 메뉴 div */
 .iframeBtnDiv {
   margin-bottom: 15px;
 }
 
+/* 워드클라우드 메뉴 버튼 */
 .alignBtn {
   border: none;
   background-color: #ffffff;
   cursor: pointer;
 }
 
+/* 워드 클라우드 메뉴 span */
 .ifraneSpan {
   font-family: "Pretendard-Regular";
 }
 
+/* 워드 클라우드 버튼 div */
 .iframeBtnDiv {
   display: flex;
   justify-content: space-around;
 }
 
+/* 워드 클라우드 활성화 */
 .doneAlign {
   border: none;
   background-color: #ffffff;
@@ -378,16 +385,19 @@ export default {
     brightness(97%) contrast(113%);
 }
 
+/* 워드 클라우드 활성화 span */
 .doneSpan {
   color: red;
 }
 
+/* 워드 클라우드 기간 div */
 .headerDate {
   position: relative;
   left: 13rem;
   top: 1.7rem;
 }
 
+/* 워드 클라우드 기간 span */
 .data-span {
   font-family: "Pretendard-Regular";
   margin-right: 3px;
@@ -395,17 +405,19 @@ export default {
   font-size: 0.8rem;
 }
 
+/* 워드 클라우드 기간  */
 .iframeDate {
   border: none;
   color: #335cad;
 }
 
+/* 워드 클라우드 기간 버튼 */
 .iframedateBtn {
   margin-top: 10px;
   text-align: center;
 }
 
-.dateBtn {
+/* .dateBtn {
   width: 6rem;
   height: 1.8rem;
   border-radius: 6px;
@@ -415,8 +427,9 @@ export default {
   margin-top: 6px;
   font-family: "Pretendard-Regular";
   cursor: pointer;
-}
+} */
 
+/* 종목별 키워드 통계 헤더 */
 .stockKeyWordHeader {
   margin-left: 15px;
   margin-bottom: 30px;

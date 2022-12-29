@@ -211,19 +211,23 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 52주 최저 */
 .one-contents-blue {
   color: #2679ed;
 }
 
+/* 52주 최고 */
 .one-contents-red {
   color: #ed2926;
 }
 
+/* 재무정보 데이터 */
 .description-li {
   list-style: none;
   margin-right: 50px;
 }
 
+/* 부제목 */
 .one-title {
   color: #999999;
 }
