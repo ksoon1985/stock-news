@@ -127,6 +127,7 @@ export default {
   font-style: normal;
 }
 
+/* 실시간 뉴스 헤더 */
 .realTimeHeader {
   display: flex;
   font-family: "Pretendard-Regular";
@@ -134,17 +135,20 @@ export default {
   margin-bottom: 10px;
 }
 
+/* 실시간 뉴스 종목 이름 */
 .realtime-stock-name {
   font-size: 1.2rem;
   margin-top: 10px;
 }
 
+/* 실시간 뉴스 span */
 .realtime-keyword {
   margin-left: 5px;
   margin-top: 15px;
   color: #999999;
 }
 
+/* 실시간 뉴스 카테고리 버튼 */
 .realTimeBtn {
   border: none;
   background-color: #ffffff;
@@ -153,12 +157,14 @@ export default {
   cursor: pointer;
 }
 
+/* 실시간 뉴스 카테고리 div */
 .realTimeBtnDiv {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
 }
 
+/* 실시간 뉴스 전체  */
 .realTimeWrap {
   position: sticky;
   top: 0px;

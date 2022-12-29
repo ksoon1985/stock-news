@@ -154,6 +154,8 @@ export default {
   font-weight: 500;
   font-style: normal;
 }
+
+/* 실시간 뉴스 for div */
 .news-title {
   width: 95%;
   border-bottom: 1px solid #e0e0e0;
@@ -161,16 +163,19 @@ export default {
   margin-top: 15px;
 }
 
+/* 실시간 뉴스 호버 */
 .news-title:hover {
   cursor: pointer;
   text-decoration: underline;
 }
 
+/* 실시간 뉴스 span  */
 .news-title-span {
   font-size: 0.7rem;
   color: #999999;
 }
 
+/* 실시간 뉴스 p */
 .news-title-p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -182,6 +187,7 @@ export default {
   height: 2.4em;
 }
 
+/* 실시간 뉴스 모달창 */
 .news-modal-wrap {
   overflow: scroll;
   width: 100%;
@@ -198,6 +204,7 @@ export default {
   z-index: 990;
 }
 
+/* 실시간 뉴스 모달 div */
 .news-modal-detail {
   width: 37%;
   background: white;
@@ -207,6 +214,7 @@ export default {
   max-height: 90%;
 }
 
+/* 실시간 뉴스 기자/날짜 */
 .news-modal-journalist {
   color: #999999;
   font-size: 0.9rem;
@@ -215,21 +223,25 @@ export default {
   height: 2rem;
 }
 
+/* 실시간 뉴스 제목 */
 .news-modal-title {
   margin: 0px;
   padding: 0px;
 }
 
+/* 실시간 뉴스 콘텐트 */
 .news-modal-content {
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
 
+/* 실시간 뉴스 닫기 버튼 div */
 .new-modal-Btn {
   text-align: right;
 }
 
+/* 실시간 뉴스 닫기 버튼 */
 .newsModalBtn {
   width: 3rem;
   height: 1.8rem;
@@ -240,6 +252,7 @@ export default {
   margin-top: 6px;
 }
 
+/* 실시간 뉴스 언론사 로고 */
 .news-modal-logo {
   width: auto;
   height: auto;
@@ -278,15 +291,18 @@ export default {
   overflow: hidden;
 } */
 
+/* 실시간 뉴스 for div */
 .news-wrap {
   margin-bottom: 5px;
 }
 
+/* 실시간 뉴스 div */
 .realTimeDiv {
   text-align: center;
   font-family: "Pretendard-Regular";
 }
 
+/* loading 위치 */
 .loading {
   z-index: 2;
   position: fixed;

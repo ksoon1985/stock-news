@@ -80,18 +80,21 @@ export default {
   font-style: normal;
 }
 
+/* 재무정보 라우터 */
 .sub-sub-tab {
   display: flex;
   margin-top: 10px;
   justify-content: space-between;
 }
 
+/* 재무정보 제목 */
 .stock-two-title {
   margin: 15px;
   font-size: 1.3rem;
   font-family: "Pretendard-Regular";
 }
 
+/* 재무정보 라우터 */
 .two-router-tab {
   margin-right: 20px;
   margin-top: 10px;
