@@ -166,6 +166,7 @@ public class NewsService {
 
                 clusteredNews.setScore(cluster.getScore());
                 clusteredNews.setLabel(cluster.getLabel());
+                clusteredNews.setPhrases(cluster.getPhrases());
 
                 // 군집화된 뉴스중에서 첫번째를 토픽뉴스로 선정
                 String documentId = cluster.getDocuments().get(0);

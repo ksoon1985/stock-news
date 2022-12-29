@@ -31,9 +31,7 @@
     </teleport>
 
     <div class="newsSelectBtn">
-      <button class="news-btn" @click="load()" :disabled="btnOn === false">
-        기간별 뉴스 조회
-      </button>
+      <button class="news-btn" @click="searchByDate()">기간별 뉴스 조회</button>
     </div>
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
@@ -128,6 +126,11 @@ export default {
     //   getClusteredNews();
     // });
 
+    const searchByDate = () => {
+      comments.value = [];
+      load();
+    };
+
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
     const load = async ($state) => {
       console.log("Loading... ");
@@ -150,6 +153,7 @@ export default {
       // fromDate = 2020-01-01 , toDate = 현재날짜 로 셋팅
       let reqDto = {
         searchTerm: listCode.value,
+        page: page,
         fromDate: fromDate == "" ? "2020-01-01" : fromDate,
         toDate: toDate == "" ? year + "-" + month + "-" + day : toDate,
       };
@@ -162,7 +166,7 @@ export default {
             response.value = res.data;
             console.log("클러스터뉴스리스트", response);
 
-            if (response.value.length < 50) {
+            if (response.value.length < 1) {
               comments.value.push(...response.value);
               $state.complete();
             } else {
@@ -179,7 +183,7 @@ export default {
             isLoading.value = false;
           });
       } catch (error) {
-        $state.error();
+        //$state.error();
       }
     };
 
@@ -208,6 +212,7 @@ export default {
       load,
       page,
       comments,
+      searchByDate,
     };
   },
 };

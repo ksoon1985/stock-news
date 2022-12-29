@@ -7,6 +7,7 @@ import com.example.demo.stock.dto.*;
 import com.example.demo.stock.model.*;
 import com.example.demo.stock.repository.*;
 import com.example.demo.util.CustomDateUtil;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.json.JsonObject;
@@ -307,7 +308,7 @@ public class StockService {
     }
 
     /**
-     * 종목 성별 통계
+     * 종목 성별 클릭량 통계
      */
     public ArrayList<ArrayList<Object>> getClickCountGender(String stockCode){
 
@@ -345,6 +346,48 @@ public class StockService {
         resultList.add(femaleData);
 
         return resultList;
+    }
+
+    /**
+     * 종목 성별 클릭량 통계
+     */
+    public int [] getClickCountAgeGroup(String stockCode){
+
+        int [] ageGroupList = new int[] {0,0,0,0,0,0,0,0};
+
+        Query query = new Query(
+                Criteria.where("stockCode").is(stockCode)
+                        .andOperator(Criteria.where("birthDay").exists(true)));
+
+        List<StockStatistics> stockStatistics = mongoTemplate.find(query, StockStatistics.class);
+
+        LocalDate now = LocalDate.now();
+        int currYear = now.getYear();
+        int currMonth = now.getMonthValue();
+        int currDay = now.getDayOfMonth();
+
+        for (StockStatistics stockStatistic : stockStatistics) {
+            String birthDate = stockStatistic.getBirthDay();
+            String[] birthDateSplit = birthDate.split("-");
+
+            int birthYear = Integer.parseInt(birthDateSplit[0]);
+            int birthMonth = Integer.parseInt(birthDateSplit[1]);
+            int birthDay = Integer.parseInt(birthDateSplit[2]);
+
+            // 만나이 계산
+            int age = currYear - birthYear;
+            if(birthMonth * 100 + birthDay > currMonth * 100 + currDay) age--;
+
+            // 나이 대
+            int ages = (age/10);
+
+            if(ages > 0 && ages < 9){
+                ageGroupList[ages -1] = ageGroupList[ages -1] + 1;
+            }
+
+        }
+
+        return ageGroupList;
     }
 
 

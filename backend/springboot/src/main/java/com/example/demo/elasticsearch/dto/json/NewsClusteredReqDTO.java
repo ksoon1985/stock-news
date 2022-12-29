@@ -16,14 +16,20 @@ public class NewsClusteredReqDTO {
     private String algorithm;
     @JsonProperty("language")
     private String language;
-    @JsonProperty("labelCount")
-    private int labelcount;
     @JsonProperty("field_mapping")
     private FieldMapping fieldMapping;
+    @JsonProperty("attributes")
+    private Attributes attributes;
     @JsonProperty("query_hint")
     private String queryHint;
     @JsonProperty("search_request")
     private SearchRequest searchRequest;
+
+    @Getter @Setter
+    public static class Attributes{
+        @JsonProperty("clusterCount")
+        private int clusterCount;
+    }
 
     @Getter @Setter
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -38,6 +44,8 @@ public class NewsClusteredReqDTO {
     public static class SearchRequest {
         @JsonProperty("size")
         private int size;
+        @JsonProperty("from")
+        private int from;
         @JsonProperty("query")
         private Query query;
         @JsonProperty("highlight")

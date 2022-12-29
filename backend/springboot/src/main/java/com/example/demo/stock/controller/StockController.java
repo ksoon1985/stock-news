@@ -221,11 +221,17 @@ public class StockController {
         return ResponseEntity.ok().body(stockService.getClickCountProgress(stockCode));
     }
 
-    @Operation(summary = "종목별 성별 통계 데이터")
+    @Operation(summary = "종목별 성별 클릭량 통계 데이터")
     @GetMapping("/getClickCountGender/{stockCode}")
     public ResponseEntity getClickCountGender(@PathVariable String stockCode){
 
         return ResponseEntity.ok().body(stockService.getClickCountGender(stockCode));
     }
 
+    @Operation(summary = "종목별 연령대 별 클릭량 통계 데이터")
+    @GetMapping("/getClickCountAgeGroup/{stockCode}")
+    public ResponseEntity getClickCountAgeGroup(@PathVariable String stockCode){
+
+        return ResponseEntity.ok().body(stockService.getClickCountAgeGroup(stockCode));
+    }
 }

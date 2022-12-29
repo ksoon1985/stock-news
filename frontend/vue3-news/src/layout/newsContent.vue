@@ -59,11 +59,6 @@
       :animateOnUpdate="false"
     ></highcharts>
   </div>
-  <!-- <div class="newsSelectBtn">
-    <button class="news-btn" @click="searchByDate" :disabled="btnOn === false">
-      뉴스조회
-    </button>
-  </div> -->
 </template>
 
 <script>
@@ -270,9 +265,6 @@ export default {
           },
         ],
       },
-
-      // btn on/off
-      btnOn: false,
     };
   },
 
@@ -294,74 +286,48 @@ export default {
 
     chartDraw() {
       console.log("chartDraw");
-      axios
-        .get("/api/stock/stock-price/" + this.listCode)
-        .then((data) => {
-          // split the data set into ohlc and volume
-          data = data.data;
-          let dataLength = data.length;
-          let ohlc = [];
-          let volume = [];
+      axios.get("/api/stock/stock-price/" + this.listCode).then((data) => {
+        // split the data set into ohlc and volume
+        data = data.data;
+        let dataLength = data.length;
+        let ohlc = [];
+        let volume = [];
 
-          // set the allowed units for data grouping
-          let groupingUnits = [
-            [
-              "week", // unit name
-              [1], // allowed multiples
-            ],
-            ["month", [1, 2, 3, 4, 6]],
-          ];
+        // set the allowed units for data grouping
+        let groupingUnits = [
+          [
+            "week", // unit name
+            [1], // allowed multiples
+          ],
+          ["month", [1, 2, 3, 4, 6]],
+        ];
 
-          let i = 0;
+        let i = 0;
 
-          for (i; i < dataLength; i += 1) {
-            ohlc.push([
-              data[i][0], // the date
-              data[i][1], // open
-              data[i][2], // high
-              data[i][3], // low
-              data[i][4], // close
-            ]);
+        for (i; i < dataLength; i += 1) {
+          ohlc.push([
+            data[i][0], // the date
+            data[i][1], // open
+            data[i][2], // high
+            data[i][3], // low
+            data[i][4], // close
+          ]);
 
-            volume.push([
-              data[i][0], // the date
-              data[i][5], // the volume
-            ]);
-          }
+          volume.push([
+            data[i][0], // the date
+            data[i][5], // the volume
+          ]);
+        }
 
-          this.stockOptions.series[0].data = ohlc;
-          this.stockOptions.series[1].data = volume;
+        this.stockOptions.series[0].data = ohlc;
+        this.stockOptions.series[1].data = volume;
 
-          this.stockOptions.series[0].name = this.stockName;
-          this.stockOptions.series[1].name = this.stockName;
+        this.stockOptions.series[0].name = this.stockName;
+        this.stockOptions.series[1].name = this.stockName;
 
-          this.stockOptions.series[0].dataGrouping.units = groupingUnits;
-          this.stockOptions.series[1].dataGrouping.units = groupingUnits;
-        })
-        .finally(() => {
-          this.searchByDate = () => {
-            let dateEls = document.querySelectorAll(
-              ".highcharts-range-input text",
-            );
-            let fromDate = dateEls[0].innerHTML;
-            let toDate = dateEls[1].innerHTML;
-
-            this.searchNewsParams = {
-              searchTerm: this.stockName,
-              fromDate: fromDate,
-              toDate: toDate,
-            };
-
-            console.log(this.searchNewsParams);
-
-            this.$router.push({
-              name: "NewsPast",
-              query: { code: this.listCode },
-            });
-          };
-
-          this.btnOn = true;
-        });
+        this.stockOptions.series[0].dataGrouping.units = groupingUnits;
+        this.stockOptions.series[1].dataGrouping.units = groupingUnits;
+      });
     },
   },
 };

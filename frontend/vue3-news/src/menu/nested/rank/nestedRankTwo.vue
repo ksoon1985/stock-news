@@ -74,6 +74,7 @@ export default {
     onMounted(() => {
       chartOptionsDraw(); // 클릭량 추이
       chartOptionsPieDraw(); // 성별 통계
+      chartOptionsColumnDraw(); // 연령별 통계
     });
 
     const chartOptionsDraw = async () => {
@@ -84,7 +85,6 @@ export default {
       axios
         .get("/api/stock/getClickCountProgress/" + listCode.value)
         .then((res) => {
-          console.log(res);
           chartOptions.value.xAxis.categories = res.data.dateList;
           chartOptions.value.series[0].data = res.data.countList;
         })
@@ -101,8 +101,22 @@ export default {
       axios
         .get("/api/stock/getClickCountGender/" + listCode.value)
         .then((res) => {
-          console.log(res);
           chartOptionsPie.value.series[0].data = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const chartOptionsColumnDraw = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      axios
+        .get("/api/stock/getClickCountAgeGroup/" + listCode.value)
+        .then((res) => {
+          chartOptionsColumn.value.series[0].data = res.data;
         })
         .catch((err) => {
           console.log(err);
@@ -149,7 +163,7 @@ export default {
       series: [
         {
           name: "클릭량 추이",
-          data: [],
+          data: [{}],
         },
       ],
     });
@@ -162,17 +176,26 @@ export default {
         text: "",
       },
       xAxis: {
-        categories: [],
+        categories: [
+          "10대",
+          "20대",
+          "30대",
+          "40대",
+          "50대",
+          "60대",
+          "70대",
+          "80대",
+        ],
       },
       yAxis: {
         title: {
-          text: "Number of stars",
+          text: "",
         },
       },
       series: [
         {
           name: "",
-          data: [],
+          data: [0, 0, 0, 0, 0, 0, 0, 0],
         },
       ],
     });
@@ -224,10 +247,10 @@ export default {
 }
 
 .leftRankPieChart {
-  width: 45%;
+  width: 40%;
 }
 
 .leftRankColumnChart {
-  width: 45%;
+  width: 60%;
 }
 </style>

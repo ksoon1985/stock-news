@@ -65,7 +65,9 @@
         <div class="noLoginDiv">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -92,7 +94,9 @@
         <div class="noLoginDiv">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -119,7 +123,9 @@
         <div class="noLoginDiv">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -147,7 +153,9 @@
         <div class="noLoginDiv">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -174,7 +182,9 @@
         <div class="noLoginDiv">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -201,7 +211,9 @@
         <div class="noLoginDiv">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -231,7 +243,9 @@
         <div class="LoginDiv" v-for="(item, index) in likeList" :key="index">
           <button
             class="noLogBtn"
-            @click="itemTest(), itemStockGet(), contentStockPriceGet()"
+            @click="
+              itemTest(), itemStockGet(), contentStockPriceGet(), addStockLog()
+            "
           >
             <div class="noLoginWrap">
               <div class="noLogLogo">
@@ -306,6 +320,7 @@ export default {
     const searchInput = ref("");
     let resultSearch = ref(false);
     let resultData = ref([]);
+    let routeTest = ref("");
 
     let {
       stockCode,
@@ -473,6 +488,19 @@ export default {
         });
     };
 
+    const addStockLog = async () => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
+      axios
+        .get("/api/stock/set-stock-log/" + listCode.value)
+        .then()
+        .catch(() => {
+          console.log("stock log add error");
+        });
+    };
+
     return {
       stockCode,
       listCode,
@@ -499,6 +527,8 @@ export default {
       itemCodeClick,
       likeList,
       loginBtnClose,
+      addStockLog,
+      routeTest,
     };
   },
 };

@@ -118,7 +118,7 @@ public class SearchUtil {
 
             // paging
             final int page = dto.getPage();
-            final int size = 50;
+            final int size = PagedReqDTO.DEFAULT_SIZE;
             final int from = page <= 0 ? 0 : page * size;
 
             builder = builder.from(from).size(size);
@@ -201,8 +201,21 @@ public class SearchUtil {
         searchRequest.setQuery(query);
 
         // size
-        searchRequest.setSize(1000);
+        searchRequest.setSize(PagedReqDTO.CLUSTER_DEFAULT_SIZE);
+
+        // paging
+        final int page = newsReqDTO.getPage();
+        final int size = PagedReqDTO.CLUSTER_DEFAULT_SIZE;
+        final int from = page <= 0 ? 0 : page * size;
+        // from
+        searchRequest.setFrom(from);
+
         newsDto.setSearchRequest(searchRequest);
+
+        NewsClusteredReqDTO.Attributes attributes = new NewsClusteredReqDTO.Attributes();
+        attributes.setClusterCount(50);
+
+        newsDto.setAttributes(attributes);
 
         // query_hint
         newsDto.setQueryHint("");
