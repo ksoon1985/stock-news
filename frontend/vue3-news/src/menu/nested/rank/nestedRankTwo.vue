@@ -218,38 +218,46 @@ export default {
 </script>
 
 <style>
+/* 랭크 전체 div */
 .rankWrap {
   display: flex;
   margin-left: 25px;
 }
 
+/* 통계 전체 div */
 .leftRankWrap {
   width: 100%;
   height: 100%;
 }
 
+/* 클릭량 차트 */
 .leftRankChart {
   width: 90%;
 }
 
+/* 클릭량 차트 헤더 */
 .leftRankHeader {
   margin-left: 5px;
 }
 
+/* 성별/연령별 차트  */
 .leftRankBottom {
   margin-left: 5px;
   border-bottom: 1px solid #e0e0e0;
 }
 
+/* 성별/연령별 차트 div */
 .leftRankChartWrap {
   width: 90%;
   display: flex;
 }
 
+/* 성별 차트 */
 .leftRankPieChart {
   width: 40%;
 }
 
+/* 연령별 차트 */
 .leftRankColumnChart {
   width: 60%;
 }

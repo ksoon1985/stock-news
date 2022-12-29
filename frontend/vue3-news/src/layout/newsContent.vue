@@ -469,35 +469,28 @@ export default {
 .star-icon {
   display: flex;
   float: right;
+  cursor: pointer;
 }
+
+/* 즐겨찾기 아이콘 이미지 */
 .star-icon svg {
   margin-top: 15px;
   margin-right: 20px;
 }
 
+/* 즐겨찾기 아이콘 호버 */
 .icontwo:hover {
   filter: invert(58%) sepia(96%) saturate(801%) hue-rotate(358deg)
     brightness(100%) contrast(106%);
 }
 
-/* .icon:hover {
-  filter: invert(85%) sepia(92%) saturate(4924%) hue-rotate(321deg)
-    brightness(102%) contrast(109%);
-  cursor: pointer;
-} */
-
+/* 즐겨찾기 아이콘 활성화 */
 .icontwo.active {
   filter: invert(58%) sepia(96%) saturate(801%) hue-rotate(358deg)
     brightness(100%) contrast(106%);
 }
 
-.newsSelectBtn {
-  width: 100%;
-  text-align: center;
-  border-bottom: 1px solid #e0e0e0;
-  height: 5rem;
-}
-
+/* 토픽뉴스 키워드뉴스 기간 조회 버튼 */
 .news-btn {
   width: 80%;
   height: 2rem;
@@ -506,15 +499,19 @@ export default {
   color: #fef6f6;
   border: none;
   margin-top: 1.5rem;
+  margin-left: 4rem;
   font-family: "Pretendard-Regular";
   cursor: pointer;
+  margin-bottom: 1.5rem;
 }
 
+/* 토픽뉴스 키워드뉴스 기간 조회 div */
+.newsSelectBtn {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* 기간 조회 버튼 호버 */
 .news-btn:hover {
   opacity: 0.7;
-}
-
-.star-icon {
-  cursor: pointer;
 }
 </style>

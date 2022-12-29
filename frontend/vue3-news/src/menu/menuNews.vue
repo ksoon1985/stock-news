@@ -114,16 +114,19 @@ export default {
 </script>
 
 <style>
+/* 메뉴 라우터  */
 .router-tab {
   margin-top: 5px;
 }
 
+/* 메뉴 span */
 .sub-title {
   font-size: 1.3rem;
   font-family: "Poppins", sans-serif;
   color: #999999;
 }
 
+/* 라우터 뷰 전체 */
 .router-view {
   overflow-y: auto;
   overflow-x: hidden;

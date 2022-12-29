@@ -384,10 +384,6 @@
       </svg>
     </button>
 
-    <!-- <span :hidden="!isLogin" class="hiddenNickName"
-      >{{ nickName }} &nbsp; &nbsp;</span
-    > -->
-
     <button
       :hidden="isLogin"
       type="button"
@@ -1237,6 +1233,7 @@ input:not(:placeholder-shown) {
   font-family: "Pretendard-Regular";
 }
 
+/* 회원가입 완료 확인 버튼 */
 .complateBtn {
   background: #d01411;
   color: #fef6f6;
@@ -1251,10 +1248,12 @@ input:not(:placeholder-shown) {
   font-family: "Pretendard-Regular";
 }
 
+/* 모달 로고  */
 .modalLogo {
   display: flex;
 }
 
+/* 모달 닫기 버튼  */
 .btn-close-one {
   position: relative;
   top: -10px;
@@ -1265,6 +1264,7 @@ input:not(:placeholder-shown) {
   height: 2rem;
 }
 
+/* 로그인 모달 로그 h5태그  */
 .modal-logo-h5 {
   position: relative;
   left: 22px;
@@ -1272,6 +1272,7 @@ input:not(:placeholder-shown) {
   color: #d01411;
 }
 
+/* 회원가입 모달 닫기 버튼 */
 .btn-close-two {
   position: relative;
   top: -10px;
@@ -1282,6 +1283,7 @@ input:not(:placeholder-shown) {
   height: 2rem;
 }
 
+/* 회원가입 모달 로그 h5 태그 */
 .modal-join-h5 {
   position: relative;
   left: 19px;
@@ -1289,10 +1291,7 @@ input:not(:placeholder-shown) {
   color: #d01411;
 }
 
-.hiddenNickName {
-  font-family: "Pretendard-Regular";
-}
-
+/* 로그인 후 회원 아이콘 */
 .hiddenBtn {
   border: none;
   background-color: #ffffff;
@@ -1302,6 +1301,7 @@ input:not(:placeholder-shown) {
   cursor: pointer;
 }
 
+/* 로그아웃 버튼 */
 .btn-login-two {
   font-size: 1rem;
   border: 1px solid #d01411;
@@ -1313,15 +1313,18 @@ input:not(:placeholder-shown) {
   top: -7px;
 }
 
+/* 로그아웃 버튼 호버 */
 .btn-login-two:hover {
   background-color: #e5e5e5;
 }
 
+/* 회원 아이콘 div */
 .support-menu {
   position: relative;
   left: 1px;
 }
 
+/* 회원 상세보기 모달 */
 .modalUser {
   width: 30%;
   height: 40%;
@@ -1331,44 +1334,53 @@ input:not(:placeholder-shown) {
   font-family: "Pretendard-Regular";
 }
 
+/* 회원 상세보기 프로필 */
 .UserProfill {
   color: #1c1c1c;
 }
 
+/* 회원 상세보기 닉네임 */
 .userNick {
   font-size: 0.9rem;
 }
 
+/* 회원 상세보기 닉네임 */
 .UserNickName {
   color: #1c1c1c;
 }
 
+/* 유저 아이콘 버튼 */
 .userIconBtn {
   border: none;
   background-color: white;
   cursor: pointer;
 }
 
+/* 유저 상세보기 닫기 */
 .userIconClose {
   position: relative;
   top: -3rem;
   margin-left: 33rem;
 }
 
+/* 유저 닉네임 div */
 .userNickNameWrap {
   color: #1c1c1c;
   position: relative;
   top: -2rem;
 }
 
+/* 유저 소개 */
 .userso {
   font-size: 0.9rem;
 }
 
+/* 유저 소개 div */
 .userMy {
   color: #1c1c1c;
 }
 
+/* 유저 소개 텍스트 */
 .userMyTextarea {
   border: 1px solid #e5e5e5;
   border-radius: 4px;
@@ -1378,12 +1390,14 @@ input:not(:placeholder-shown) {
   height: 3rem;
 }
 
+/* 유저 중요 버튼 div */
 .userBtnWrap {
   display: flex;
   justify-content: flex-end;
   margin-top: 3rem;
 }
 
+/* 유저 소개 세이브 버튼 */
 .userBtnSave {
   font-size: 1rem;
   border: 1px solid #d01411;
@@ -1397,6 +1411,7 @@ input:not(:placeholder-shown) {
   font-family: "Pretendard-Regular";
 }
 
+/* 유저 탈퇴 버튼 */
 .userBtnDel {
   font-size: 1rem;
   border: 1px solid #d01411;
@@ -1410,14 +1425,17 @@ input:not(:placeholder-shown) {
   font-family: "Pretendard-Regular";
 }
 
+/* 로그인 실패 span */
 .loginFalseSpan {
   font-size: 0.8rem;
 }
 
+/* 결과 로고 */
 .result-stock-logo {
   display: flex;
 }
 
+/* 결과 로고 이미지 */
 .result-logo-image {
   width: 2rem;
   height: 2rem;
@@ -1426,6 +1444,7 @@ input:not(:placeholder-shown) {
   margin-bottom: 5px;
 }
 
+/* 회원 가입 성별 생년월일 span */
 .genderBirthSpan {
   color: #8aa1a1;
   font-size: 0.8rem;
@@ -1435,6 +1454,7 @@ input:not(:placeholder-shown) {
   left: -5px;
 }
 
+/* 회원가입 생년월일  */
 .genderBirthday {
   margin-right: 8px;
 }

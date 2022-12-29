@@ -37,7 +37,7 @@
           class="newsSubHeaderBtn"
           @click="$router.go(-1), keywordClick()"
         >
-          <div class="svgGoBack">
+          <div>
             <svg
               width="24"
               height="24"
@@ -57,13 +57,6 @@
           <h3>{{ KeyWordName }}</h3>
         </div>
       </div>
-
-      <div v-if="isLoading" class="loading-container">
-        <div class="loading">
-          <pulse-loader :color="color" />
-        </div>
-      </div>
-
       <div class="news-wrap">
         <div class="" v-for="(keywordNews, index) in comments" :key="index">
           <div
@@ -96,11 +89,9 @@ import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import axios from "axios";
 import InfiniteLoading from "v3-infinite-loading";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: {
     InfiniteLoading,
-    PulseLoader,
   },
   setup() {
     const store = useStockStore();
@@ -119,7 +110,6 @@ export default {
     let modalNews = ref({});
     let modalOpen = ref(false);
     let noNews = ref(false);
-    let isLoading = ref(false);
 
     const keywordClick = () => {
       keywordOne.value = true;
@@ -154,27 +144,17 @@ export default {
         page: page,
       };
       const response = [];
-      isLoading.value = true;
       try {
-        axios
-          .post("/api/news/getSearchNews", reqDto)
-          .then((res) => {
-            response.value = res.data;
-            console.log("res 데이터 넘어오나", response);
-            if (response.value.length < 50) $state.complete();
-            else {
-              comments.value.push(...response.value);
-              $state.loaded();
-            }
-            page++;
-          })
-          .catch((err) => {
-            isLoading.value = false;
-            console.log(err);
-          })
-          .finally(() => {
-            isLoading.value = false;
-          });
+        axios.post("/api/news/getSearchNews", reqDto).then((res) => {
+          response.value = res.data;
+          console.log("res 데이터 넘어오나", response);
+          if (response.value.length < 50) $state.complete();
+          else {
+            comments.value.push(...response.value);
+            $state.loaded();
+          }
+          page++;
+        });
       } catch (error) {
         $state.error();
       }
@@ -209,8 +189,6 @@ export default {
       page,
       comments,
       load,
-      isLoading,
-      color: "#d01411",
     };
   },
 };
@@ -225,23 +203,24 @@ export default {
   font-style: normal;
 }
 
+/* 키워드 뉴스 헤더 */
 .newsSubHeaderWrap {
+  margin-left: 0.7rem;
   margin-top: 1rem;
   height: 5rem;
   border-bottom: 1px solid #e5e5e5;
   display: flex;
-  position: sticky;
-  top: 0px;
-  z-index: 5px;
-  background-color: #ffffff;
+  width: 94%;
 }
 
+/* 키워드 뉴스 뒤로 가기 버튼 */
 .newsSubHeaderBtn {
   border: none;
   background-color: #ffffff;
   cursor: pointer;
 }
 
+/* 키워드 뉴스 헤더 종목이름 */
 .newsSubHeaderName {
   position: relative;
   left: 17px;
@@ -249,6 +228,7 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 키워드 뉴스 콘텐트 */
 .keyword-title-p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -260,11 +240,13 @@ export default {
   height: 2.4em;
 }
 
+/* 키워드 뉴스 제목 */
 .keyword-title-span {
   font-size: 0.7rem;
   color: #999999;
 }
 
+/* 키워드 뉴스 div */
 .keyword-news-title {
   width: 95%;
   border-bottom: 1px solid #e0e0e0;
@@ -272,11 +254,13 @@ export default {
   margin-top: 15px;
 }
 
+/* 키워드 뉴스 호버 */
 .keyword-news-title:hover {
   cursor: pointer;
   text-decoration: underline;
 }
 
+/* 키워드 뉴스 전체 모달  */
 .news-modal-wrap {
   overflow: scroll;
   width: 100%;
@@ -293,6 +277,7 @@ export default {
   z-index: 990;
 }
 
+/* 키워드 뉴스 모달 div */
 .news-modal-detail {
   width: 37%;
   background: white;
@@ -302,6 +287,7 @@ export default {
   max-height: 90%;
 }
 
+/* 키워드 뉴스 기자/날짜 */
 .news-modal-journalist {
   color: #999999;
   font-size: 0.9rem;
@@ -310,21 +296,25 @@ export default {
   height: 2rem;
 }
 
+/* 키워드 뉴스 제목 */
 .news-modal-title {
   margin: 0px;
   padding: 0px;
 }
 
+/* 키워드 뉴스 콘텐트 */
 .news-modal-content {
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
 
+/* 키워드 뉴스 닫기 버튼 div */
 .new-modal-Btn {
   text-align: right;
 }
 
+/* 키워드 뉴스 닫기 버튼 */
 .newsModalBtn {
   width: 3rem;
   height: 1.8rem;
@@ -335,19 +325,17 @@ export default {
   margin-top: 6px;
 }
 
+/* 키워드 뉴스 언론사 로고 */
 .news-modal-logo {
   width: auto;
   height: auto;
   border-radius: 0px;
 }
 
+/* 키워드 뉴스 빈 array */
 .noNewsDiv {
   position: relative;
   top: 10px;
   left: 14rem;
-}
-
-.svgGoBack {
-  margin-left: 10px;
 }
 </style>

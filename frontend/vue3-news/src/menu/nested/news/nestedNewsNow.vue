@@ -1,11 +1,7 @@
 <template>
   <div class="sub-view-result">
     <div class="newsSelectBtn">
-      <button
-        class="news-btn"
-        @click="keywordMounted"
-        :disabled="btnOn === false"
-      >
+      <button class="news-btn" @click="keywordMounted">
         기간에 일치하는 키워드 조회
       </button>
     </div>
@@ -203,40 +199,44 @@ export default {
   font-style: normal;
 }
 
+/* 라우터 뷰 전체 div */
 .sub-view-result {
   height: 90%;
   width: 100%;
   -ms-overflow-style: none;
 }
 
+/* 라우터 뷰 none 스크롤 */
 .sub-view-result::-webkit-scrollbar {
   display: none;
 }
 
-.keyWordStockName {
-  display: flex;
-}
-
+/* 키워드 뉴스 전체 div */
 .topic-news {
   margin-left: 15px;
   margin-top: 15px;
 }
 
+/* 키워드 타이틀 div */
 .keyWordStockName {
   font-family: "Pretendard-Regular";
   margin-bottom: 30px;
+  display: flex;
 }
 
+/* 키워드 종목 이름  */
 .keyword-stock-name {
   font-size: 1.2rem;
 }
 
+/* 키워드 키워드  */
 .keyword-keyword {
   margin-left: 5px;
   margin-top: 5px;
   color: #999999;
 }
 
+/* 키워드 for div */
 .forKeyWord {
   display: flex;
   font-family: "Pretendard-Regular";
@@ -245,6 +245,7 @@ export default {
   margin-bottom: 1.5rem;
 }
 
+/* 키워드 순번 */
 .forKeyWordSpan {
   margin-left: 10px;
   font-size: 1.1rem;
@@ -255,6 +256,7 @@ export default {
   width: 22px;
 }
 
+/* 키워드 키워드 이름 */
 .themeKeywords {
   position: relative;
   top: -5px;
@@ -262,22 +264,26 @@ export default {
   width: 50%;
 }
 
+/* 키워드 뉴스조회 */
 .forKeywordBtn {
   position: relative;
   top: 7px;
   left: 100px;
 }
 
+/* 키워드 관심중 버튼 */
 .forBtn {
   position: relative;
   top: 12px;
   left: 80px;
 }
 
+/* 키워드 관심중 호버 */
 .fotBtnOne:hover {
   opacity: 0.5;
 }
 
+/* 키워드 관심등록 */
 .fotBtnOne {
   width: 5rem;
   height: 1.7rem;
@@ -291,6 +297,7 @@ export default {
   cursor: pointer;
 }
 
+/* 키워드 관심중 */
 .forBtnTwo {
   width: 5rem;
   height: 1.7rem;
@@ -304,10 +311,12 @@ export default {
   cursor: pointer;
 }
 
+/* 키워드 관심중 호버 */
 .forBtnTwo:hover {
   opacity: 0.5;
 }
 
+/* 키워드 관심 span */
 .forBtnSpanTwo {
   display: inline-block;
   background-color: #d01411;
@@ -321,6 +330,7 @@ export default {
   display: flex;
 }
 
+/* 키워드 관심중 span */
 .forBtnSpanOne {
   display: inline-block;
   background-color: #999999;

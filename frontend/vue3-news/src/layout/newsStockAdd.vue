@@ -265,9 +265,7 @@
                   <div class="LogcnameWrapSix">
                     <p class="LogName">{{ item.name }}</p>
                   </div>
-                  <div class="LogincstockMark">
-                    <!-- <p class="daqColorTwo">{{ item.market }}</p> -->
-                  </div>
+                  <div class="LogincstockMark"></div>
                 </div>
                 <div class="LogCode">
                   <p>{{ item.code }}</p>
@@ -584,6 +582,7 @@ export default {
   color: #000000;
 }
 
+/* 로그인 한 후 즐겨찾기 이미지 */
 .noLoginImg {
   width: 1.6rem;
   height: 1.6rem;
@@ -592,11 +591,13 @@ export default {
   margin-right: 10px;
 }
 
+/* 즐겨찾기 버튼 */
 .noLogBtn {
   border: none;
   background-color: #ffffff;
 }
 
+/* 즐겨찾기 버튼 div */
 .noLoginWrap {
   width: 100%;
   display: flex;
@@ -611,16 +612,19 @@ export default {
   /* align-items: center; */
 }
 
+/* 즐겨찾기 로고 div */
 .noLogLogo {
   margin: 0px;
   padding: 0px;
 }
 
+/* 비로그인 즐겨찾기 목록 */
 .noLogWrap {
   display: flex;
   justify-content: space-between;
 }
 
+/* 즐겨찾기 삼성전자 */
 .cnameWrap {
   display: flex;
   font-size: 1rem;
@@ -632,6 +636,7 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 즐겨찾기 sk */
 .cnameWrapTwo {
   display: flex;
   font-size: 1rem;
@@ -642,6 +647,7 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 즐겨찾기 솔트룩스 */
 .cnameWrapFour {
   display: flex;
   font-size: 1rem;
@@ -652,6 +658,7 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 즐겨찾기 비트컴퓨터 */
 .cnameWrapFive {
   display: flex;
   font-size: 1rem;
@@ -662,6 +669,7 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 즐겨찾기 코스피 코스닥 */
 .cstockMark {
   display: flex;
   align-items: center;
@@ -670,6 +678,7 @@ export default {
   margin-left: 1rem;
 }
 
+/* 즐겨찾기 종목 코드 */
 .noLogCode {
   margin: 0px;
   padding: 0px;
@@ -679,15 +688,13 @@ export default {
   color: #999999;
 }
 
+/* 즐겨찾기 코스탁 p  */
 .daqColor {
   color: #2679ed;
   font-family: "Pretendard-Regular";
 }
 
-.daqColorTwo {
-  color: #999999;
-}
-
+/* 즐겨찾기 코스피 코스닥 div */
 .koDiv {
   border-bottom: 1px solid #e5e5e5;
   font-size: 0.8rem;
@@ -696,18 +703,22 @@ export default {
   width: 95%;
 }
 
+/* 즐겨찾기 버튼 호버 */
 .noLoginDiv:hover {
   border-left: 4px solid #ed2926;
 }
 
+/* 로그인 후 즐겨찾기 div */
 .LoginDiv {
   height: 3.4rem;
 }
 
+/* 로그인 후 즐겨찾기 div 호버 */
 .LoginDiv:hover {
   border-left: 4px solid #ed2926;
 }
 
+/* 종목추가 input */
 .leftInput {
   position: relative;
   width: 12.6rem;
@@ -715,6 +726,7 @@ export default {
   border-radius: 8px;
 }
 
+/* 종목추가 input 결과창 */
 .leftSearchResults {
   position: absolute;
   top: 148px;
@@ -729,26 +741,31 @@ export default {
   background-color: #ffffff;
 }
 
+/* 종목추가 input 결과창 none 스크롤 */
 .leftSearchResults::-webkit-scrollbar {
   display: none;
 }
 
+/* 종목추가 input 결과창 버튼 */
 .leftResultsBtn {
   border: none;
   background-color: #ffffff;
   cursor: pointer;
 }
 
+/* 종목추가 input li  */
 .resultsListTwo {
   margin-bottom: 7px;
   list-style: none;
   display: flex;
 }
 
+/* 종목추가 input 결과창 버튼 호버 */
 .leftResultsBtn:hover {
   border-left: 4px solid #ed2926;
 }
 
+/* 즐겨찾기 div */
 .LogcnameWrapSix {
   font-size: 1rem;
   position: relative;
@@ -759,10 +776,12 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 비로그인 즐겨찾기 라우터 */
 .noresults-list-router {
   text-decoration: none;
 }
 
+/* 로그인 즐겨찾기 라우터 */
 .Logresults-list-router {
   text-decoration: none;
   width: 12rem;
@@ -772,6 +791,7 @@ export default {
   left: 32px;
 }
 
+/* 즐겨찾기 종목 코드 */
 .LogCode {
   position: relative;
   top: -25px;
@@ -779,27 +799,27 @@ export default {
   color: #999999;
 }
 
+/* 즐겨찾기 중간 div */
 .LogincstockMark {
   position: relative;
   top: -30px;
   left: 40px;
 }
 
+/* 즐겨찾기 삭제 버튼 */
 .loginCloseBtn {
   border: none;
   background-color: #ffffff;
+  cursor: pointer;
 }
-
+/* 즐겨찾기 삭제 버튼 div */
 .loginCloseBtnDiv {
   position: relative;
   left: 170px;
   top: -43px;
 }
 
-.loginCloseBtn {
-  cursor: pointer;
-}
-
+/* 즐겨찾기 삭제 버튼 호버 */
 .loginCloseBtn:hover {
   filter: invert(16%) sepia(89%) saturate(10%) hue-rotate(358deg)
     brightness(97%) contrast(113%);
