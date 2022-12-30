@@ -68,22 +68,6 @@
             <p class="news-title-p">{{ clusteredNews.news.content }}</p>
           </div>
         </div>
-
-        <!-- 
-          헤드라인 뉴스 버전
-          
-          <div class="news-headline">
-           <h1>{{ clusteredNews.label }}</h1>
-          </div>
-          
-          <div
-          class="news-title"
-          v-for="(news, nIndex) in clusteredNews.news"
-          :key="nIndex"
-          @click="modalOpenFunc(news)"
-        >
-          {{ news.title }}
-        </div> -->
       </div>
       <InfiniteLoading @infinite="load" />
     </div>
@@ -119,14 +103,6 @@ export default {
     let page = 0;
     let comments = ref([]);
 
-    // onMounted(() => {
-    //   getClusteredNews();
-    // });
-
-    // watch(searchNewsParams, () => {
-    //   getClusteredNews();
-    // });
-
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
     const load = async ($state) => {
       console.log("Loading... ");
@@ -159,7 +135,6 @@ export default {
           .post("/api/news/getClusteredNews", reqDto)
           .then((res) => {
             response.value = res.data;
-            console.log("클러스터뉴스리스트", response);
 
             if (response.value.length < 1) {
               comments.value.push(...response.value);

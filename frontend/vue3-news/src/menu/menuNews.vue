@@ -23,7 +23,6 @@
         },
       }"
       ><button class="btn-close">
-        <!-- @click="keyWordClickEvent"> -->
         <span class="sub-title" id="sub-title">키워드뉴스</span>
       </button></router-link
     >
@@ -62,46 +61,12 @@ export default {
 
     let { listCode, keyWordList, realTimeData } = storeToRefs(store);
 
-    // const keyWordClickEvent = () => {
-    //   listCode.value = route.query.code;
-    //   axios.get("/api/stock/stock-summary/" + listCode.value).then((res) => {
-    //     stockData.value = res.data;
-    //     keyWordList.value = stockData.value.themeKeywords;
-    //   });
-    // };
-
-    // const realTimeAllEvent = async () => {
-    //   await router.isReady();
-    //   routeTest.value = route.query.code;
-    //   listCode.value = routeTest.value;
-
-    //   let reqDto = {
-    //     searchTerm: listCode.value,
-    //   };
-    //   axios
-    //     .post("/api/news/getRealTimeNews", reqDto)
-    //     .then((res) => {
-    //       realTimeData.value = res.data;
-    //       console.log("res데이터를 알아보자", realTimeData);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // };
-
-    // onMounted(() => {
-    //   //keyWordClickEvent();
-    //   realTimeAllEvent();
-    // });
-
     return {
       listCode,
       useRouter,
-      //keyWordClickEvent,
       keyWordList,
       stockData,
       watch,
-      // realTimeAllEvent,
       axios,
       onMounted,
       route,
