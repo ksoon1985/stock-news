@@ -94,7 +94,6 @@ export default {
           .post("/api/news/getRealTimeNews", reqDto)
           .then((res) => {
             response.value = res.data;
-            console.log("res데이터를 알아보자", response);
             if (response.value.length < 50) {
               comments.value.push(...response.value);
               $state.complete();
@@ -285,13 +284,6 @@ export default {
 .active-page:hover {
   background-color: #2988c8;
 }
-
-/* .sub-view-resultAll {
-  height: 90%;
-  width: 100%;
-  -ms-overflow-style: none;
-  overflow: hidden;
-} */
 
 /* 실시간 뉴스 for div */
 .news-wrap {

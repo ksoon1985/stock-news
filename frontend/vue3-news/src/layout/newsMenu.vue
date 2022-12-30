@@ -58,35 +58,7 @@
         <span class="title" id="title">종목정보</span>
       </button></Router-link
     >
-    <!-- <Router-link
-      class="router-tab"
-      id="router-tab"
-      :to="{
-        name: 'Sns',
-        query: {
-          code: listCode,
-        },
-      }"
-      ><button class="tab">
-        <div class="sns-icon">
-          <svg
-            width="24"
-            height="24"
-            xmlns="http://www.w3.org/2000/svg"
-            style="display: block"
-          >
-            <image
-              id="icon"
-              class="icon"
-              href="@/assets/svg/twitter-svgrepo-com.svg"
-              width="24"
-              height="24"
-            />
-          </svg>
-        </div>
-        <span class="title" id="title">SNS여론</span>
-      </button></Router-link
-    > -->
+
     <Router-link
       class="router-tab"
       id="router-tab"
@@ -181,8 +153,6 @@ export default {
 .main-tab {
   width: 100%;
   display: flex;
-  /* overflow-x: hidden;
-  overflow-y: hidden; */
   height: 3.9rem;
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;

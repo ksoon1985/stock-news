@@ -105,11 +105,6 @@ export default {
         return defaultImage;
       }
     };
-    // const logoChange = () => {
-    //   if (listCode.value !== null) {
-    //     logoOff.value = true;
-    //   }
-    // };
 
     return {
       stockName,
