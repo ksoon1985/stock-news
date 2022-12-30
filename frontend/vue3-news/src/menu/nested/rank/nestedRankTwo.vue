@@ -127,6 +127,7 @@ export default {
       chart: {
         type: "line",
       },
+      credits: { enabled: false },
       title: {
         text: "",
       },
@@ -150,6 +151,7 @@ export default {
       chart: {
         type: "pie",
       },
+      credits: { enabled: false },
       title: {
         text: "",
       },
@@ -158,12 +160,16 @@ export default {
           allowPointSelect: true,
           cursor: "pointer",
           colors: ["#64AAFF", "#FF6EED"],
+          dataLabels: {
+            enabled: false,
+          },
+          showInLegend: true,
         },
       },
       series: [
         {
           name: "클릭량 추이",
-          data: [{}],
+          data: [],
         },
       ],
     });
@@ -172,6 +178,7 @@ export default {
       chart: {
         type: "column",
       },
+      credits: { enabled: false },
       title: {
         text: "",
       },

@@ -73,6 +73,10 @@ public class StockService {
 
         List<SearchResDTO> searchResult = mongoTemplate.find(query,SearchResDTO.class,"stock_price");
 
+        for (SearchResDTO searchResDTO : searchResult) {
+            searchResDTO.setLogoPath(""+searchResDTO.getCode());
+        }
+
         return searchResult;
     }
 

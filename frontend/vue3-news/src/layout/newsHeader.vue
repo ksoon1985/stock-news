@@ -702,8 +702,8 @@ export default {
         .get("/api/member/logout")
         .then((res) => {
           console.log(res);
-          localStorage.removeItem("isLogin");
-          localStorage.removeItem("nickName");
+          localStorage.setItem("isLogin", false);
+          localStorage.setItem("nickName", "");
           isLogin.value = false;
           nickName.value = "";
 

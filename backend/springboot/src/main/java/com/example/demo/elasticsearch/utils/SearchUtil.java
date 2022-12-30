@@ -29,7 +29,7 @@ public class SearchUtil {
         try {
             // query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()))// 삼성 전자
+                    .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()) )// 삼성 전자
                     .must(QueryBuilders.matchQuery("title.wordcloud",dto.getThemeKeyword())) // 반도체
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 

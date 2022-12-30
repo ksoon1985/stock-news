@@ -16,4 +16,7 @@ public class SearchResDTO {
     private String name;
     // 종목 마켓 (코스피,코스닥)
     private String market;
+
+    // logo 이미지 추가
+    private String logoPath;
 }

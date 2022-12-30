@@ -201,6 +201,7 @@ export default {
   data() {
     return {
       stockOptions: {
+        credits: { enabled: false },
         plotOptions: {
           candlestick: {
             color: "#2679ed",

@@ -128,6 +128,7 @@ export default {
     // });
 
     const searchByDate = () => {
+      page = 0;
       comments.value = [];
       load();
     };

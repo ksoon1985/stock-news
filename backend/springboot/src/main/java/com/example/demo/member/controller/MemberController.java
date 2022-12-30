@@ -99,7 +99,7 @@ public class MemberController {
             // JWT 쿠키 생성
             Cookie cookie = new Cookie("token","Bearer "+token);
             cookie.setPath("/");
-            cookie.setHttpOnly(true);
+            //cookie.setHttpOnly(true);
             cookie.setMaxAge((int)JwtTokenUtil.JWT_TOKEN_VALIDITY);
             response.addCookie(cookie);
 

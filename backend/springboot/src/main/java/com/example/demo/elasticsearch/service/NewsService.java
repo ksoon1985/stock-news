@@ -147,6 +147,7 @@ public class NewsService {
         // 엘라스틱 서치 요청 url
         //String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
         String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        //String url = "https://f37c-221-148-195-245.jp.ngrok.io"+"/"+Indices.NEWS_CLUSTERED_INDEX ;
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
 
         // 요청 실행 !!!

@@ -102,7 +102,7 @@ export default {
 
     const route = useRoute();
     const router = useRouter();
-    let page = 1;
+    let page = 0;
     let comments = ref([]);
 
     let KeyWordName = ref("");
@@ -148,8 +148,11 @@ export default {
         axios.post("/api/news/getSearchNews", reqDto).then((res) => {
           response.value = res.data;
           console.log("res 데이터 넘어오나", response);
-          if (response.value.length < 50) $state.complete();
-          else {
+
+          if (response.value.length < 50) {
+            comments.value.push(...response.value);
+            $state.complete();
+          } else {
             comments.value.push(...response.value);
             $state.loaded();
           }

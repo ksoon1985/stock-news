@@ -43,15 +43,12 @@ export const useUserStore = defineStore("storeUser", {
   },
   persist: {
     enabled: true,
-    storage: localStorage,
-    paths: [
-      "tempCode",
-      "isLogin",
-      "nickName",
-      "topicOne",
-      "topicTwo",
-      "keywordOne",
-      "keywordTwo",
+
+    strategies: [
+      {
+        storage: localStorage,
+        paths: ["isLogin", "nickName"],
+      },
     ],
   },
 });
