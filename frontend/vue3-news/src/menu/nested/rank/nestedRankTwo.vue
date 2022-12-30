@@ -3,7 +3,8 @@
     <div class="rankWrap">
       <div class="leftRankWrap">
         <div class="leftRankHeader">
-          <h4>클릭량 추이</h4>
+          <h3 class="rankStockName">{{ stockName }}</h3>
+          <h4 class="leftRankClick">클릭량 추이</h4>
         </div>
         <div class="leftRankChart">
           <vue-highcharts
@@ -29,6 +30,8 @@
                 :animateOnUpdate="true"
                 @rendered="onRender"
               />
+              <p class="manPercent">{{ Math.round(malePer) }}%</p>
+              <p class="womenPercent">{{ Math.round(femalePer) }}%</p>
             </div>
             <div class="leftRankColumnChart">
               <vue-highcharts
@@ -65,11 +68,13 @@ export default {
   setup() {
     const store = useStockStore();
 
-    let { listCode } = storeToRefs(store);
+    let { listCode, stockName } = storeToRefs(store);
 
     const route = useRoute();
     const router = useRouter();
     let routeTest = ref("");
+    let malePer = ref(0);
+    let femalePer = ref(0);
 
     onMounted(() => {
       chartOptionsDraw(); // 클릭량 추이
@@ -101,6 +106,8 @@ export default {
       axios
         .get("/api/stock/getClickCountGender/" + listCode.value)
         .then((res) => {
+          malePer.value = res.data[0][1];
+          femalePer.value = res.data[1][1];
           chartOptionsPie.value.series[0].data = res.data;
         })
         .catch((err) => {
@@ -135,13 +142,14 @@ export default {
       },
       yAxis: {
         title: {
-          text: "Number of Interest",
+          text: "",
         },
       },
       series: [
         {
-          name: "Count",
+          name: "클릭량",
           data: [],
+          color: "#d01411",
         },
       ],
     });
@@ -162,8 +170,10 @@ export default {
       },
       series: [
         {
-          name: "클릭량 추이",
+          name: "",
           data: [{}],
+          innerSize: "75%",
+          size: "40%",
         },
       ],
     });
@@ -196,6 +206,8 @@ export default {
         {
           name: "",
           data: [0, 0, 0, 0, 0, 0, 0, 0],
+          color: "#d01411",
+          size: "40%",
         },
       ],
     });
@@ -212,12 +224,23 @@ export default {
       onRender,
       router,
       routeTest,
+      stockName,
+      malePer,
+      femalePer,
     };
   },
 };
 </script>
 
 <style>
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
 /* 랭크 전체 div */
 .rankWrap {
   display: flex;
@@ -238,6 +261,8 @@ export default {
 /* 클릭량 차트 헤더 */
 .leftRankHeader {
   margin-left: 5px;
+  display: flex;
+  font-family: "Pretendard-Regular";
 }
 
 /* 성별/연령별 차트  */
@@ -259,6 +284,40 @@ export default {
 
 /* 연령별 차트 */
 .leftRankColumnChart {
-  width: 60%;
+  width: 50%;
+  margin-left: 3rem;
+}
+
+/* 클릭량 추이 */
+.leftRankClick {
+  margin-left: 10px;
+  margin-top: 22px;
+}
+
+/* 성별/연령별 비중 */
+.leftRankBottomHeader {
+  font-family: "Pretendard-Regular";
+}
+
+.manPercent {
+  position: relative;
+  font-family: "Pretendard-Regular";
+  top: -13rem;
+  left: 6.8rem;
+  font-size: 0.8rem;
+  color: #64aaff;
+}
+
+.womenPercent {
+  position: relative;
+  font-family: "Pretendard-Regular";
+  top: -16.8rem;
+  left: 5.5rem;
+  font-size: 0.8rem;
+  color: #ff6eed;
+}
+
+.rankStockName {
+  color: #ed2926;
 }
 </style>
