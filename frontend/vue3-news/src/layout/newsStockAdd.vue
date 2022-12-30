@@ -51,8 +51,6 @@
             >
               <button class="leftResultsBtn">
                 <span class="leftItem-1">{{ item.name }}</span>
-                <!-- <span class="leftItem-2">{{ item.code }}</span> -->
-                <!-- <span class="leftItem-2">{{ item.market }}</span> -->
               </button>
             </li>
           </ul>
@@ -379,7 +377,6 @@ export default {
         .get("/api/stock/stocks/" + searchInput.value)
         .then((data) => {
           resultData.value = data.data;
-          console.log(resultData);
         })
         .catch((error) => {
           console.log(error);
@@ -418,13 +415,11 @@ export default {
       } else {
         leftHeader.value = true;
       }
-      console.log("isLogin 바뀜");
     });
 
     const isLoginChange = () => {
       if (isLogin.value == true) {
         leftHeader.value = false;
-        console.log("leftHeader 값 바뀜", leftHeader.value);
       } else {
         leftHeader.value = true;
       }
@@ -459,7 +454,6 @@ export default {
           stockNameMarket.value = itemDataStock.data;
           stockName.value = stockNameMarket.value[0].name;
           stockMarket.value = stockNameMarket.value[0].market;
-          console.log(stockNameMarket);
         })
         .catch((error) => {
           console.log(error);
@@ -479,7 +473,6 @@ export default {
           stockVolume.value =
             contentStockPrice.value[contentStockPrice.value.length - 1][5];
           stockMinus.value = stockPrice.value - stockPriceTwo.value;
-          console.log(stockMinus);
         })
         .catch((error) => {
           console.log(error);
@@ -602,14 +595,11 @@ export default {
   width: 100%;
   display: flex;
   align-content: flex-start;
-  /* justify-content: space-between; */
-  /* text-align: left; */
   cursor: pointer;
   flex-wrap: wrap;
   position: relative;
   top: -5px;
   height: 55px;
-  /* align-items: center; */
 }
 
 /* 즐겨찾기 로고 div */

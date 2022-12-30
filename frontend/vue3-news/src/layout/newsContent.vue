@@ -48,7 +48,6 @@
       </svg>
     </div>
   </div>
-  <!-- <div class="loding-nav"></div> -->
   <div>
     <highcharts
       ref="highcharts"
@@ -171,7 +170,6 @@ export default {
       });
 
       axios.get("/api/stock/" + apiPath + "/" + listCode.value).then((res) => {
-        console.log(isLogin.value);
         likeList.value = res.data;
       });
     };

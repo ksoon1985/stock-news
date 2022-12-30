@@ -68,18 +68,66 @@
         </ul>
       </div>
     </div>
+    <div class="totalPriceChart">
+      <div class="totalPriceHeader">
+        <h2>자산비율</h2>
+      </div>
+      <div class="totalLineChartDiv">
+        <vue-highcharts
+          type="chart"
+          :options="chartOptions"
+          :redrawOnUpdate="true"
+          :oneToOneUpdate="false"
+          :animateOnUpdate="true"
+          @rendered="onRender"
+        />
+        <div class="totalPriceAll">
+          <p class="totalPriceP">자산총계</p>
+          {{ totalAssetsData }}
+        </div>
+        <p class="deptRatioDataP">{{ deptRatioData }}</p>
+        <p class="totalEquityRatioDataP">{{ totalEquityRatioData }}</p>
+      </div>
+    </div>
+    <div class="salesCompositionChart">
+      <div class="salesCompositionHeader">
+        <h2>매출 구성</h2>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import VueHighcharts from "vue3-highcharts";
+import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
+  name: "SimpleChart",
+
+  components: {
+    VueHighcharts,
+  },
   setup() {
     const store = useStockStore();
     const logoOff = ref(false);
+
+    const route = useRoute();
+    const router = useRouter();
+    let totalAssetsData = ref("");
+    let deptRatioData = ref("");
+    let totalEquityRatioData = ref("");
+    let deptRatioDataslice = ref("");
+    let totalEquityRatioDataslice = ref("");
+    let deptRatioDatasliceMath = ref(0);
+    let totalEquityRatioDatasliceMath = ref(0);
+
+    onMounted(() => {
+      chartOptionsLineDraw();
+    });
 
     let {
       stockName,
@@ -105,11 +153,71 @@ export default {
         return defaultImage;
       }
     };
-    // const logoChange = () => {
-    //   if (listCode.value !== null) {
-    //     logoOff.value = true;
-    //   }
-    // };
+
+    const chartOptionsLineDraw = async () => {
+      await router.isReady();
+      listCode.value = route.query.code;
+
+      axios
+        .get("/api/stock/stock-summary/" + listCode.value)
+        .then((res) => {
+          deptRatioData.value = res.data.deptRatio;
+          totalEquityRatioData.value = res.data.totalEquityRatio;
+          totalAssetsData.value = res.data.totalAssets;
+          deptRatioDataslice.value = deptRatioData.value.slice(0, -1);
+          totalEquityRatioDataslice.value = totalEquityRatioData.value.slice(
+            0,
+            -1,
+          );
+          deptRatioDatasliceMath.value = Math.round(deptRatioDataslice.value);
+          totalEquityRatioDatasliceMath.value = Math.round(
+            totalEquityRatioDataslice.value,
+          );
+          chartOptions.value.series[0].data = [
+            ["자본비중", totalEquityRatioDatasliceMath.value],
+            ["부채비중", deptRatioDatasliceMath.value],
+          ];
+
+          let salesComposition = res.data.salesComposition;
+          console.log(salesComposition);
+          console.log(Object.keys(salesComposition));
+          // salesComposition.forEach((item) => {
+          //   console.log(item);
+          // });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    let chartOptions = ref({
+      chart: {
+        type: "pie",
+      },
+      title: {
+        text: "",
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: "pointer",
+          colors: ["#d01411", "#2679ed"],
+          dataLabels: {
+            enabled: false,
+          },
+          showInLegend: true,
+        },
+      },
+      credits: { enabled: false },
+      series: [
+        {
+          name: "",
+          data: [],
+          innerSize: "75%",
+          size: "50%",
+        },
+      ],
+    });
 
     return {
       stockName,
@@ -126,6 +234,17 @@ export default {
       listSummaryInfo,
       logoOff,
       noImage,
+      chartOptions,
+      route,
+      router,
+      chartOptionsLineDraw,
+      totalAssetsData,
+      deptRatioData,
+      totalEquityRatioData,
+      deptRatioDataslice,
+      totalEquityRatioDataslice,
+      deptRatioDatasliceMath,
+      totalEquityRatioDatasliceMath,
     };
   },
 };
@@ -230,5 +349,53 @@ export default {
 /* 부제목 */
 .one-title {
   color: #999999;
+}
+
+.totalPriceHeader {
+  margin-top: 35px;
+  margin-left: 7px;
+  font-family: "Pretendard-Regular";
+}
+
+.totalPriceAll {
+  position: relative;
+  top: -16.5rem;
+  text-align: center;
+  font-family: "Pretendard-Regular";
+}
+
+.totalPriceP {
+  color: #999999;
+  font-size: 0.9rem;
+}
+
+.salesCompositionChart {
+  margin-top: 35px;
+  margin-left: 7px;
+  font-family: "Pretendard-Regular";
+}
+
+.deptRatioDataP {
+  font-family: "Pretendard-Regular";
+  position: relative;
+  color: #2679ed;
+  top: -24rem;
+  left: 12rem;
+}
+
+.totalEquityRatioDataP {
+  font-family: "Pretendard-Regular";
+  position: relative;
+  color: #ed2926;
+  top: -20rem;
+  left: 26rem;
+}
+
+.totalPriceChart {
+  height: 28rem;
+}
+
+.salesCompositionChart {
+  margin-top: 20px;
 }
 </style>

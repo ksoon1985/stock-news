@@ -4,10 +4,8 @@
       <h3>기간별 뉴스 키워드</h3>
       <div class="headerDate">
         <input class="iframeDate" type="date" v-model="fromDate" />
-        <!-- <span class="data-span">{{ fromDate }}</span> -->
         <span class="data-span">~</span>
         <input class="iframeDate" type="date" v-model="toDate" />
-        <!-- <span class="data-span">{{ toDate }}</span> -->
       </div>
     </div>
     <div class="iframeBtnDiv">
@@ -416,18 +414,6 @@ export default {
   margin-top: 10px;
   text-align: center;
 }
-
-/* .dateBtn {
-  width: 6rem;
-  height: 1.8rem;
-  border-radius: 6px;
-  background-color: #d01411;
-  color: #fef6f6;
-  border: none;
-  margin-top: 6px;
-  font-family: "Pretendard-Regular";
-  cursor: pointer;
-} */
 
 /* 종목별 키워드 통계 헤더 */
 .stockKeyWordHeader {

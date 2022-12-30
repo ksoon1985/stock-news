@@ -116,10 +116,6 @@ export default {
       keywordTwo.value = false;
     };
 
-    // onMounted(async () => {
-    //   keywordNewsSearch();
-    // });
-
     const load = async ($state) => {
       console.log("Loading... ");
       await router.isReady();
@@ -147,7 +143,6 @@ export default {
       try {
         axios.post("/api/news/getSearchNews", reqDto).then((res) => {
           response.value = res.data;
-          console.log("res 데이터 넘어오나", response);
 
           if (response.value.length < 50) {
             comments.value.push(...response.value);
@@ -182,7 +177,6 @@ export default {
       keywordClick,
       useRoute,
       route,
-      // keywordNewsSearch,
       KeyWordName,
       keyWordNewsList,
       modalOpenKeyword,
@@ -208,12 +202,13 @@ export default {
 
 /* 키워드 뉴스 헤더 */
 .newsSubHeaderWrap {
-  margin-left: 0.7rem;
   margin-top: 1rem;
   height: 5rem;
   border-bottom: 1px solid #e5e5e5;
   display: flex;
-  width: 94%;
+  position: sticky;
+  top: 0px;
+  background-color: #ffffff;
 }
 
 /* 키워드 뉴스 뒤로 가기 버튼 */
@@ -221,6 +216,7 @@ export default {
   border: none;
   background-color: #ffffff;
   cursor: pointer;
+  margin-left: 1rem;
 }
 
 /* 키워드 뉴스 헤더 종목이름 */

@@ -4,21 +4,6 @@
     <div class="main-search">
       <div class="header-empty">
         <div class="input-wrap">
-          <!-- <div class="search-icon">
-            <svg
-              width="24"
-              height="24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style="display: block"
-            >
-              <image
-                href="@/assets/svg/magnifying-glass-svgrepo-com.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-          </div> -->
           <input
             @change="onClean"
             ref="inputTitle"
@@ -405,7 +390,7 @@
 </template>
 
 <script>
-import { onBeforeMount, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
@@ -417,7 +402,6 @@ export default {
     let resultSearch = ref(false);
     const searchInput = ref("");
     let resultData = ref([]);
-    // let stockData = ref([]);
     const route = useRoute();
     const router = useRouter();
     const store = useStockStore();
@@ -472,18 +456,6 @@ export default {
       modalData,
     } = storeToRefs(store);
 
-    // listCode.value = route.query.code;
-
-    // watch(routeTest, () => {
-    //   listCode.value = routeTest.value;
-    // });
-
-    // watch(listCode, () => {
-    //   itemTest(), itemStockGet(), contentStockPriceGet();
-    // });
-
-    // listCode.value = route.query.code;
-
     const noImage = (code) => {
       let defaultImage = require(`@/assets/stock_logo/000000.png`);
       let path = require(`@/assets/stock_logo/${code}.png`);
@@ -534,12 +506,6 @@ export default {
       listCode.value = routeTest.value;
       itemTest(), itemStockGet(), contentStockPriceGet();
     });
-
-    onBeforeMount(() => {});
-
-    // localStorage.setItem("tempCode", listCode.value);
-    // tempCode.value = localStorage.getItem("tempCode");
-    // console.log("tempCode : ", tempCode.value);
 
     watch(modalJoinPasswordTwo, () => {
       if (modalJoinPasswordTwo.value == "") {
@@ -669,7 +635,6 @@ export default {
         .post(loginUrl, loginData)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
             localStorage.setItem("isLogin", true);
             localStorage.setItem("nickName", res.data.nickName);
             isLogin.value = true;
@@ -720,9 +685,7 @@ export default {
 
     const getKeyWord = () => {
       axios.get("/api/stock/stocks/" + searchInput.value).then((data) => {
-        // console.log(data);
         resultData.value = data.data;
-        console.log(resultData);
       });
     };
 
@@ -760,7 +723,6 @@ export default {
         stockNameMarket.value = itemDataStock.data;
         stockName.value = stockNameMarket.value[0].name;
         stockMarket.value = stockNameMarket.value[0].market;
-        console.log("스토크네임을 알아보자", stockNameMarket);
       });
     };
 
@@ -777,7 +739,6 @@ export default {
           stockVolume.value =
             contentStockPrice.value[contentStockPrice.value.length - 1][5];
           stockMinus.value = stockPrice.value - stockPriceTwo.value;
-          console.log(stockMinus);
         });
     };
 

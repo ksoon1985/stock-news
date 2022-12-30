@@ -78,10 +78,6 @@ export default {
     let page = 0;
     let isLoading = ref(false);
 
-    // onMounted(() => {
-    //   realTimeOneEvent();
-    // });
-
     const load = async ($state) => {
       console.log("Loading... ");
       await router.isReady();
@@ -100,7 +96,6 @@ export default {
           .post("/api/news/getRealTimeNews", reqDto)
           .then((res) => {
             response.value = res.data;
-            console.log("res데이터를 알아보자", response);
             if (response.value.length < 50) $state.complete();
             else {
               comments.value.push(...response.value);
@@ -139,7 +134,6 @@ export default {
       modalOpen,
       modalOpenFunc,
       modalNews,
-      // realTimeOneEvent,
       seq,
       comments,
       page,
