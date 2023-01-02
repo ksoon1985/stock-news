@@ -29,8 +29,8 @@ public class SearchUtil {
         try {
             // query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()) )// 삼성 전자
-                    .must(QueryBuilders.matchQuery("title.wordcloud",dto.getThemeKeyword())) // 반도체
+                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()).operator(Operator.AND))// 삼성 전자
+                    .must(QueryBuilders.matchQuery("title",dto.getThemeKeyword())) // 반도체
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SearchSourceBuilder builder = new SearchSourceBuilder().postFilter(boolQueryBuilder);
@@ -65,11 +65,11 @@ public class SearchUtil {
         try{
             //query
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title.wordcloud",dto.getSearchTerm()))
+                    .must(QueryBuilders.matchQuery("title",dto.getSearchTerm()).operator(Operator.AND) )
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
             SignificantTermsAggregationBuilder significantTermsBuilder = AggregationBuilders.significantTerms("agg_content")
-                    .field("title.wordcloud").size(30);
+                    .field("title").size(30);
 
             SearchSourceBuilder builder = new SearchSourceBuilder()
                     .query(boolQueryBuilder)
@@ -94,7 +94,7 @@ public class SearchUtil {
         try{
 
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.matchQuery("title.wordcloud", dto.getSearchTerm()));// 삼성전자
+                    .must(QueryBuilders.matchQuery("title", dto.getSearchTerm()).operator(Operator.AND) );// 삼성전자
 
             /**
              * category_id
@@ -180,18 +180,18 @@ public class SearchUtil {
 
         NewsClusteredReqDTO.Must must1 = new NewsClusteredReqDTO.Must();
         NewsClusteredReqDTO.Match match = new NewsClusteredReqDTO.Match();
-        NewsClusteredReqDTO.QContent qContent = new NewsClusteredReqDTO.QContent();
-        qContent.setQuery(searchTerm);
-        qContent.setOperator("and");
-        match.setContent(qContent);
+        NewsClusteredReqDTO.QTitle qTitle = new NewsClusteredReqDTO.QTitle();
+        qTitle.setQuery(searchTerm);
+        qTitle.setOperator("and");
+        match.setTitle(qTitle);
         must1.setMatch(match);
 
         NewsClusteredReqDTO.Must must2 = new NewsClusteredReqDTO.Must();
         NewsClusteredReqDTO.Range range = new NewsClusteredReqDTO.Range();
-        NewsClusteredReqDTO.RegDate regDate = new NewsClusteredReqDTO.RegDate();
-        regDate.setGte(fromDate);
-        regDate.setLte(toDate);
-        range.setRegDate(regDate);
+        NewsClusteredReqDTO.QRegDate qRegDate = new NewsClusteredReqDTO.QRegDate();
+        qRegDate.setGte(fromDate);
+        qRegDate.setLte(toDate);
+        range.setRegDate(qRegDate);
         must2.setRange(range);
         ArrayList<NewsClusteredReqDTO.Must> musts = new ArrayList<>();
         musts.add(must1);
@@ -199,6 +199,14 @@ public class SearchUtil {
         bool.setMust(musts);
         query.setBool(bool);
         searchRequest.setQuery(query);
+
+        NewsClusteredReqDTO.Sort sort = new NewsClusteredReqDTO.Sort();
+        ArrayList<NewsClusteredReqDTO.Sort> sortList = new ArrayList<>();
+        NewsClusteredReqDTO.RegDate regDate = new NewsClusteredReqDTO.RegDate();
+        regDate.setOrder("desc");
+        sort.setRegDate(regDate);
+        sortList.add(sort);
+        searchRequest.setSort(sortList);
 
         // size
         searchRequest.setSize(PagedReqDTO.CLUSTER_DEFAULT_SIZE);
@@ -213,7 +221,7 @@ public class SearchUtil {
         newsDto.setSearchRequest(searchRequest);
 
         NewsClusteredReqDTO.Attributes attributes = new NewsClusteredReqDTO.Attributes();
-        attributes.setClusterCount(50);
+        attributes.setClusterCount(25);
 
         newsDto.setAttributes(attributes);
 

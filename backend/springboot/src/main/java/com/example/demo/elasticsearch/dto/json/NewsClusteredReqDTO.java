@@ -12,18 +12,23 @@ import java.util.List;
 @Getter @Setter
 public class NewsClusteredReqDTO {
 
-    @JsonProperty("algorithm")
-    private String algorithm;
-    @JsonProperty("language")
-    private String language;
-    @JsonProperty("field_mapping")
-    private FieldMapping fieldMapping;
-    @JsonProperty("attributes")
-    private Attributes attributes;
-    @JsonProperty("query_hint")
-    private String queryHint;
     @JsonProperty("search_request")
     private SearchRequest searchRequest;
+
+    @JsonProperty("attributes")
+    private Attributes attributes;
+
+    @JsonProperty("query_hint")
+    private String queryHint;
+
+    @JsonProperty("field_mapping")
+    private FieldMapping fieldMapping;
+
+    @JsonProperty("language")
+    private String language;
+
+    @JsonProperty("algorithm")
+    private String algorithm;
 
     @Getter @Setter
     public static class Attributes{
@@ -42,16 +47,31 @@ public class NewsClusteredReqDTO {
 
     @Getter @Setter
     public static class SearchRequest {
+
+        @JsonProperty("_source")
+        private List<String> source;
+        @JsonProperty("highlight")
+        private Highlight highlight;
+        @JsonProperty("query")
+        private Query query;
+        @JsonProperty("sort")
+        private List<Sort> sort;
         @JsonProperty("size")
         private int size;
         @JsonProperty("from")
         private int from;
-        @JsonProperty("query")
-        private Query query;
-        @JsonProperty("highlight")
-        private Highlight highlight;
-        @JsonProperty("_source")
-        private List<String> source;
+    }
+
+    @Getter @Setter
+    public static class Sort{
+        @JsonProperty("registration_date")
+        private RegDate regDate;
+    }
+
+    @Getter @Setter
+    public static class RegDate{
+        @JsonProperty("order")
+        private String order;
     }
 
     @Getter @Setter
@@ -78,12 +98,12 @@ public class NewsClusteredReqDTO {
     @Getter @Setter
     @JsonNaming
     public static class Match {
-        @JsonProperty("content")
-        private QContent content;
+        @JsonProperty("title")
+        private QTitle title;
     }
 
     @Getter @Setter
-    public static class QContent {
+    public static class QTitle {
         @JsonProperty("operator")
         private String operator;
         @JsonProperty("query")
@@ -94,11 +114,11 @@ public class NewsClusteredReqDTO {
     @JsonNaming
     public static class Range{
         @JsonProperty("registration_date")
-        private RegDate regDate;
+        private QRegDate regDate;
     }
 
     @Getter @Setter
-    public static class RegDate{
+    public static class QRegDate{
         @JsonProperty("gte")
         private String gte;
         @JsonProperty("lte")
@@ -139,6 +159,7 @@ public class NewsClusteredReqDTO {
         private int numberOfFragments;
         @JsonProperty("fragment_size")
         private int fragmentSize;
-
     }
+
+
 }
