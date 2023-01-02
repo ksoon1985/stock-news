@@ -30,6 +30,12 @@
       </div>
     </teleport>
 
+    <div v-if="isLoading" class="loading-container">
+      <div class="loading">
+        <pulse-loader :color="color" />
+      </div>
+    </div>
+
     <div class="newsSubRouter">
       <div class="newsSubHeaderWrap">
         <button
@@ -89,8 +95,10 @@ import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import axios from "axios";
 import InfiniteLoading from "v3-infinite-loading";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 export default {
   components: {
+    PulseLoader,
     InfiniteLoading,
   },
   setup() {
@@ -110,6 +118,7 @@ export default {
     let modalNews = ref({});
     let modalOpen = ref(false);
     let noNews = ref(false);
+    let isLoading = ref(false);
 
     const keywordClick = () => {
       keywordOne.value = true;
@@ -140,19 +149,29 @@ export default {
         page: page,
       };
       const response = [];
+      isLoading.value = true;
       try {
-        axios.post("/api/news/getSearchNews", reqDto).then((res) => {
-          response.value = res.data;
+        axios
+          .post("/api/news/getSearchNews", reqDto)
+          .then((res) => {
+            response.value = res.data;
 
-          if (response.value.length < 50) {
-            comments.value.push(...response.value);
-            $state.complete();
-          } else {
-            comments.value.push(...response.value);
-            $state.loaded();
-          }
-          page++;
-        });
+            if (response.value.length < 50) {
+              comments.value.push(...response.value);
+              $state.complete();
+            } else {
+              comments.value.push(...response.value);
+              $state.loaded();
+            }
+            page++;
+          })
+          .catch((err) => {
+            isLoading.value = false;
+            console.log(err);
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       } catch (error) {
         $state.error();
       }
@@ -186,6 +205,8 @@ export default {
       page,
       comments,
       load,
+      isLoading,
+      color: "#d01411",
     };
   },
 };
