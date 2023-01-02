@@ -240,6 +240,7 @@ export default {
 /* 실시간 뉴스 닫기 버튼 div */
 .new-modal-Btn {
   text-align: right;
+  font-family: "Pretendard-Regular";
 }
 
 /* 실시간 뉴스 닫기 버튼 */
