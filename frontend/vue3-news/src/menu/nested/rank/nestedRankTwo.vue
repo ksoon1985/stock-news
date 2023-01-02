@@ -179,7 +179,7 @@ export default {
           name: "",
           data: [{}],
           innerSize: "75%",
-          size: "40%",
+          size: "50%",
         },
       ],
     });
@@ -309,7 +309,7 @@ export default {
 .manPercent {
   position: relative;
   font-family: "Pretendard-Regular";
-  top: -13rem;
+  top: -14rem;
   left: 6.8rem;
   font-size: 0.8rem;
   color: #64aaff;
@@ -318,8 +318,8 @@ export default {
 .womenPercent {
   position: relative;
   font-family: "Pretendard-Regular";
-  top: -16.8rem;
-  left: 5.5rem;
+  top: -17.5rem;
+  left: 5rem;
   font-size: 0.8rem;
   color: #ff6eed;
 }

@@ -93,6 +93,16 @@
       <div class="salesCompositionHeader">
         <h2>매출 구성</h2>
       </div>
+      <div class="salesCompositChart">
+        <vue-highcharts
+          type="chart"
+          :options="chartOptionsPie"
+          :redrawOnUpdate="true"
+          :oneToOneUpdate="false"
+          :animateOnUpdate="true"
+          @rendered="onRender"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -100,7 +110,7 @@
 <script>
 import { useStockStore } from "@/store/Stock.js";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import VueHighcharts from "vue3-highcharts";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
@@ -124,9 +134,24 @@ export default {
     let totalEquityRatioDataslice = ref("");
     let deptRatioDatasliceMath = ref(0);
     let totalEquityRatioDatasliceMath = ref(0);
+    let salesComposition = ref([]);
+    let objectEntriesData = ref([]);
+    let objectKeyData = ref([]);
+    let objectValueData = ref([]);
+    let objectValueDataSlice = ref([]);
+    let objectTest = ref([]);
 
     onMounted(() => {
       chartOptionsLineDraw();
+    });
+
+    onUpdated(() => {
+      chartOptionsLineDraw();
+    });
+
+    watch(deptRatioDatasliceMath, () => {
+      objectTest.value.splice(0);
+      chartOptionsLineDrawTwo();
     });
 
     let {
@@ -177,13 +202,32 @@ export default {
             ["자본비중", totalEquityRatioDatasliceMath.value],
             ["부채비중", deptRatioDatasliceMath.value],
           ];
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
-          let salesComposition = res.data.salesComposition;
-          console.log(salesComposition);
-          console.log(Object.keys(salesComposition));
-          // salesComposition.forEach((item) => {
-          //   console.log(item);
-          // });
+    const chartOptionsLineDrawTwo = async () => {
+      await router.isReady();
+      listCode.value = route.query.code;
+
+      axios
+        .get("/api/stock/stock-summary/" + listCode.value)
+        .then((res) => {
+          salesComposition.value = res.data.salesComposition;
+          for (let item of salesComposition.value) {
+            objectEntriesData.value = Object.entries(item);
+            objectKeyData.value = objectEntriesData.value[0][0];
+            objectValueData.value = objectEntriesData.value[0][1];
+            objectValueDataSlice.value.push([
+              objectKeyData.value + " " + objectValueData.value,
+              Math.round(objectValueData.value.slice(0, -1)),
+            ]);
+          }
+          objectTest.value = objectValueDataSlice.value;
+          console.log("값들을 뽑아와보자", objectTest.value);
+          chartOptionsPie.value.series[0].data = [objectTest.value][0];
         })
         .catch((err) => {
           console.log(err);
@@ -214,7 +258,35 @@ export default {
           name: "",
           data: [],
           innerSize: "75%",
-          size: "50%",
+          size: "60%",
+        },
+      ],
+    });
+
+    let chartOptionsPie = ref({
+      chart: {
+        type: "pie",
+      },
+      title: {
+        text: "",
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: "pointer",
+          dataLabels: {
+            enabled: true,
+          },
+          showInLegend: true,
+        },
+      },
+      credits: { enabled: false },
+      series: [
+        {
+          name: "",
+          data: [],
+          innerSize: "75%",
+          size: "60%",
         },
       ],
     });
@@ -245,6 +317,16 @@ export default {
       totalEquityRatioDataslice,
       deptRatioDatasliceMath,
       totalEquityRatioDatasliceMath,
+      salesComposition,
+      objectValueData,
+      objectEntriesData,
+      objectKeyData,
+      objectValueDataSlice,
+      chartOptionsPie,
+      objectTest,
+      onUpdated,
+      watch,
+      chartOptionsLineDrawTwo,
     };
   },
 };
@@ -380,7 +462,7 @@ export default {
   position: relative;
   color: #2679ed;
   top: -24rem;
-  left: 12rem;
+  left: 11rem;
 }
 
 .totalEquityRatioDataP {
@@ -388,7 +470,7 @@ export default {
   position: relative;
   color: #ed2926;
   top: -20rem;
-  left: 26rem;
+  left: 27rem;
 }
 
 .totalPriceChart {

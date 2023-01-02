@@ -390,7 +390,7 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
@@ -504,6 +504,10 @@ export default {
       await router.isReady();
       routeTest.value = route.query.code;
       listCode.value = routeTest.value;
+      itemTest(), itemStockGet(), contentStockPriceGet();
+    });
+
+    watch(listCode, () => {
       itemTest(), itemStockGet(), contentStockPriceGet();
     });
 
@@ -814,6 +818,7 @@ export default {
       loginFalseSpan,
       addStockLog,
       noImage,
+      onUpdated,
     };
   },
 };
