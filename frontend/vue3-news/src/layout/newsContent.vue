@@ -281,8 +281,6 @@ export default {
   },
 
   methods: {
-    searchByDate() {},
-
     chartDraw() {
       console.log("chartDraw");
       axios.get("/api/stock/stock-price/" + this.listCode).then((data) => {
