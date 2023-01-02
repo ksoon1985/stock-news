@@ -433,12 +433,14 @@ export default {
   color: #999999;
 }
 
+/* 자산비율 */
 .totalPriceHeader {
   margin-top: 35px;
   margin-left: 7px;
   font-family: "Pretendard-Regular";
 }
 
+/* 자산총계 */
 .totalPriceAll {
   position: relative;
   top: -16.5rem;
@@ -446,17 +448,20 @@ export default {
   font-family: "Pretendard-Regular";
 }
 
+/* 자산총계 P태그 */
 .totalPriceP {
   color: #999999;
   font-size: 0.9rem;
 }
 
+/* 매출구성 */
 .salesCompositionChart {
   margin-top: 35px;
   margin-left: 7px;
   font-family: "Pretendard-Regular";
 }
 
+/* 부채비중 */
 .deptRatioDataP {
   font-family: "Pretendard-Regular";
   position: relative;
@@ -465,6 +470,7 @@ export default {
   left: 11rem;
 }
 
+/* 자본비중 */
 .totalEquityRatioDataP {
   font-family: "Pretendard-Regular";
   position: relative;
@@ -473,10 +479,12 @@ export default {
   left: 27rem;
 }
 
+/* 자산총계 div */
 .totalPriceChart {
   height: 28rem;
 }
 
+/* 매출 구성 div */
 .salesCompositionChart {
   margin-top: 20px;
 }

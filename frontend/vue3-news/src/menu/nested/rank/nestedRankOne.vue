@@ -186,10 +186,6 @@
         frameborder="0"
       ></iframe>
     </div>
-    <div class="stockKeyWordHeader">
-      <h3>종목별 키워드 통계</h3>
-      <div></div>
-    </div>
   </div>
 </template>
 

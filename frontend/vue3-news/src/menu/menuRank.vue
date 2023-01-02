@@ -23,7 +23,7 @@
         },
       }"
       ><button class="btn-close">
-        <span class="sub-title" id="sub-title">종목통계</span>
+        <span class="sub-title" id="sub-title">사용자통계</span>
       </button></router-link
     >
   </div>
