@@ -170,7 +170,8 @@ public class StockService {
         ArrayList<StockLikeModel> wishlist = stockLikeRepository.findByEmail(email);
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("code").in(wishlist.stream().map(c->c.getCode()).collect(Collectors.toList()) ));
+        query.addCriteria(Criteria.where("code").in(wishlist.stream().map(c->c.getCode()).collect(Collectors.toList()) ))
+                .with(Sort.by(Sort.Direction.ASC, "name"));
 
         ArrayList<SearchResDTO> result = (ArrayList)mongoTemplate.find(query, SearchResDTO.class, "stock_price");
 
