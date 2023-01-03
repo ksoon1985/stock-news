@@ -517,7 +517,7 @@ export default {
       await router.isReady();
       routeTest.value = route.query.code;
       listCode.value = routeTest.value;
-      itemTest(), itemStockGet(), contentStockPriceGet();
+      itemTest(), itemStockGet(), contentStockPriceGet(), getlikeList();
     });
 
     watch(listCode, () => {
@@ -615,6 +615,16 @@ export default {
         .catch(() => {
           console.log("stock log add error");
         });
+    };
+
+    const getlikeList = () => {
+      if (!isLogin) {
+        return;
+      }
+
+      axios.get("/api/stock/stocks/likes").then((res) => {
+        likeList.value = res.data;
+      });
     };
 
     const modalJoinSubmit = () => {

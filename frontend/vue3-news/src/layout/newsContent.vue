@@ -96,14 +96,128 @@ export default {
 
     let { isLogin, likeList } = storeToRefs(userStore);
 
-    /* star icon 색상 변경 부분  */
-    let isActive = ref(false);
+    let stockOptions = ref({
+      credits: { enabled: false },
+      plotOptions: {
+        candlestick: {
+          color: "#2679ed",
+          upColor: "#ed2926",
+        },
+      },
 
-    onMounted(async () => {
+      rangeSelector: {
+        selected: 5,
+        inputDateFormat: "%Y-%m-%d",
+      },
+
+      title: {},
+
+      yAxis: [
+        {
+          labels: {
+            align: "right",
+            x: -3,
+          },
+          title: {},
+          height: "63%",
+          lineWidth: 2,
+          resize: {
+            enabled: true,
+          },
+        },
+        {
+          labels: {
+            align: "right",
+            x: -3,
+          },
+          title: {},
+          top: "65%",
+          height: "35%",
+          offset: 0,
+          lineWidth: 2,
+        },
+      ],
+
+      tooltip: {
+        split: true,
+      },
+
+      series: [
+        {
+          type: "candlestick",
+          name: "candlestick",
+          data: null,
+          dataGrouping: {
+            units: null,
+          },
+        },
+        {
+          type: "column",
+          name: "Volume",
+          data: null,
+          yAxis: 1,
+          dataGrouping: {
+            units: null,
+          },
+        },
+      ],
+    });
+
+    let chartDraw = async () => {
       await router.isReady();
       routeTest.value = route.query.code;
       listCode.value = routeTest.value;
+
+      axios.get("/api/stock/stock-price/" + listCode.value).then((data) => {
+        // split the data set into ohlc and volume
+        data = data.data;
+        let dataLength = data.length;
+        let ohlc = [];
+        let volume = [];
+
+        // set the allowed units for data grouping
+        let groupingUnits = [
+          [
+            "week", // unit name
+            [1], // allowed multiples
+          ],
+          ["month", [1, 2, 3, 4, 6]],
+        ];
+
+        let i = 0;
+
+        for (i; i < dataLength; i += 1) {
+          ohlc.push([
+            data[i][0], // the date
+            data[i][1], // open
+            data[i][2], // high
+            data[i][3], // low
+            data[i][4], // close
+          ]);
+
+          volume.push([
+            data[i][0], // the date
+            data[i][5], // the volume
+          ]);
+        }
+
+        stockOptions.value.series[0].data = ohlc;
+        stockOptions.value.series[1].data = volume;
+
+        stockOptions.value.series[0].name = this.stockName;
+        stockOptions.value.series[1].name = this.stockName;
+
+        stockOptions.value.series[0].dataGrouping.units = groupingUnits;
+        stockOptions.value.series[1].dataGrouping.units = groupingUnits;
+      });
+    };
+
+    /* star icon 색상 변경 부분  */
+    let isActive = ref(false);
+
+    onMounted(() => {
       changeStarColor(likeList.value);
+      chartDraw();
     });
 
     onUpdated(() => {
@@ -112,6 +226,10 @@ export default {
 
     watch(likeList, () => {
       changeStarColor(likeList.value);
+    });
+
+    watch(listCode, () => {
+      chartDraw();
     });
 
     const noImage = (code) => {
@@ -124,7 +242,11 @@ export default {
       }
     };
 
-    const changeStarColor = (likelist) => {
+    const changeStarColor = async (likelist) => {
+      await router.isReady();
+      routeTest.value = route.query.code;
+      listCode.value = routeTest.value;
+
       let tmp = false;
 
       likelist.forEach((item) => {
@@ -193,139 +315,20 @@ export default {
       changeStarColor,
       searchNewsParams,
       noImage,
-    };
-  },
-
-  data() {
-    return {
-      stockOptions: {
-        credits: { enabled: false },
-        plotOptions: {
-          candlestick: {
-            color: "#2679ed",
-            upColor: "#ed2926",
-          },
-        },
-
-        rangeSelector: {
-          selected: 5,
-          inputDateFormat: "%Y-%m-%d",
-        },
-
-        title: {},
-
-        yAxis: [
-          {
-            labels: {
-              align: "right",
-              x: -3,
-            },
-            title: {},
-            height: "63%",
-            lineWidth: 2,
-            resize: {
-              enabled: true,
-            },
-          },
-          {
-            labels: {
-              align: "right",
-              x: -3,
-            },
-            title: {},
-            top: "65%",
-            height: "35%",
-            offset: 0,
-            lineWidth: 2,
-          },
-        ],
-
-        tooltip: {
-          split: true,
-        },
-
-        series: [
-          {
-            type: "candlestick",
-            name: "candlestick",
-            data: null,
-            dataGrouping: {
-              units: null,
-            },
-          },
-          {
-            type: "column",
-            name: "Volume",
-            data: null,
-            yAxis: 1,
-            dataGrouping: {
-              units: null,
-            },
-          },
-        ],
-      },
+      stockOptions,
     };
   },
 
   // template 이 dom에 부착된 후
   mounted() {
-    console.log("mounted");
-    this.chartDraw();
+    //this.chartDraw();
   },
 
   // 템플릿에 데이터가 변경이 일어난 후
   updated() {
-    console.log("updated");
-    console.log(this.listCode);
-    this.chartDraw();
-  },
-
-  methods: {
-    chartDraw() {
-      console.log("chartDraw");
-      axios.get("/api/stock/stock-price/" + this.listCode).then((data) => {
-        // split the data set into ohlc and volume
-        data = data.data;
-        let dataLength = data.length;
-        let ohlc = [];
-        let volume = [];
-
-        // set the allowed units for data grouping
-        let groupingUnits = [
-          [
-            "week", // unit name
-            [1], // allowed multiples
-          ],
-          ["month", [1, 2, 3, 4, 6]],
-        ];
-
-        let i = 0;
-
-        for (i; i < dataLength; i += 1) {
-          ohlc.push([
-            data[i][0], // the date
-            data[i][1], // open
-            data[i][2], // high
-            data[i][3], // low
-            data[i][4], // close
-          ]);
-
-          volume.push([
-            data[i][0], // the date
-            data[i][5], // the volume
-          ]);
-        }
-
-        this.stockOptions.series[0].data = ohlc;
-        this.stockOptions.series[1].data = volume;
-
-        this.stockOptions.series[0].name = this.stockName;
-        this.stockOptions.series[1].name = this.stockName;
-
-        this.stockOptions.series[0].dataGrouping.units = groupingUnits;
-        this.stockOptions.series[1].dataGrouping.units = groupingUnits;
-      });
-    },
+    // console.log("updated");
+    // console.log(this.listCode);
+    // this.chartDraw();
   },
 };
 </script>
