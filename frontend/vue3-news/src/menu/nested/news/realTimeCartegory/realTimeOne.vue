@@ -2,7 +2,7 @@
   <div class="sub-view-result">
     <teleport to="#teleport-news-detail">
       <div class="news-modal-wrap" v-if="modalOpen">
-        <div class="news-modal-detail">
+        <div class="news-modal-detail" v-click-outside="onClickOutside">
           <div class="news-modal-logo">
             <img
               :src="require(`@/assets/code_media/${modalNews.office}.png`)"
@@ -57,10 +57,15 @@ import axios from "@/utils/axios";
 import { useRoute, useRouter } from "vue-router";
 import InfiniteLoading from "v3-infinite-loading";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import vClickOutside from "click-outside-vue3";
 export default {
   components: {
     PulseLoader,
     InfiniteLoading,
+  },
+
+  directives: {
+    clickOutside: vClickOutside.directive,
   },
 
   setup() {
@@ -77,6 +82,11 @@ export default {
     let page = 0;
     let comments = ref([]);
     let isLoading = ref(false);
+
+    const onClickOutside = (event) => {
+      console.log("클릭 아웃사이더 이벤트", event);
+      modalOpen.value = false;
+    };
 
     const load = async ($state) => {
       console.log("Loading... ");
@@ -140,6 +150,7 @@ export default {
       load,
       isLoading,
       color: "#d01411",
+      onClickOutside,
     };
   },
 };

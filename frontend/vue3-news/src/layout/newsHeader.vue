@@ -75,7 +75,11 @@
   </div>
   <teleport to="#teleport-area"
     ><div class="modal" v-if="modalData">
-      <div class="modalForm" v-if="modalFormData">
+      <div
+        class="modalForm"
+        v-if="modalFormData"
+        v-click-outside="onClickOutside"
+      >
         <div class="modalLogoClose">
           <div class="modalLogo">
             <h5 class="modal-logo-h5">STOCKNEWS</h5>
@@ -396,8 +400,12 @@ import { useRoute, useRouter } from "vue-router";
 import { useStockStore } from "@/store/Stock.js";
 import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
+import vClickOutside from "click-outside-vue3";
 
 export default {
+  directives: {
+    clickOutside: vClickOutside.directive,
+  },
   setup() {
     let resultSearch = ref(false);
     const searchInput = ref("");
@@ -480,6 +488,11 @@ export default {
     const modalChange = () => {
       modalData.value = true;
       joinComChk.value = false;
+    };
+
+    const onClickOutside = (event) => {
+      console.log("클릭 아웃사이더 이벤트", event);
+      modalData.value = false;
     };
 
     const modalChanges = () => {
@@ -819,6 +832,7 @@ export default {
       addStockLog,
       noImage,
       onUpdated,
+      onClickOutside,
     };
   },
 };

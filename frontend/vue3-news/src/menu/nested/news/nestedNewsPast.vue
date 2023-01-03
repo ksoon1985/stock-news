@@ -2,7 +2,7 @@
   <div class="sub-view-result">
     <teleport to="#teleport-news-detail">
       <div class="news-modal-wrap" v-if="modalOpen">
-        <div class="news-modal-detail">
+        <div class="news-modal-detail" v-click-outside="onClickOutside">
           <div class="news-modal-logo">
             <img
               :src="require(`@/assets/code_media/${modalNews.office}.png`)"
@@ -33,6 +33,7 @@
     <div class="newsSelectBtnTwo">
       <button class="news-btn" @click="searchByDate()">기간별 뉴스 조회</button>
     </div>
+
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
@@ -82,11 +83,18 @@ import { ref } from "vue-demi";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useRoute, useRouter } from "vue-router";
 import InfiniteLoading from "v3-infinite-loading";
+import vClickOutside from "click-outside-vue3";
+
 export default {
   components: {
     PulseLoader,
     InfiniteLoading,
   },
+
+  directives: {
+    clickOutside: vClickOutside.directive,
+  },
+
   setup() {
     const store = useStockStore();
 
@@ -107,6 +115,11 @@ export default {
       page = 0;
       comments.value = [];
       load();
+    };
+
+    const onClickOutside = (event) => {
+      console.log("클릭 아웃사이더 이벤트", event);
+      modalOpen.value = false;
     };
 
     // 서버로부터 클러스터링 된 뉴스를 얻어오는 함수
@@ -190,6 +203,7 @@ export default {
       page,
       comments,
       searchByDate,
+      onClickOutside,
     };
   },
 };
@@ -262,6 +276,7 @@ export default {
 /* 토픽 뉴스 모달창 닫기 */
 .new-modal-Btn {
   text-align: right;
+  font-family: "Pretendard-Regular";
 }
 
 /* 토픽 뉴스 모달창 닫기 버튼 */
