@@ -221,7 +221,7 @@ public class SearchUtil {
         newsDto.setSearchRequest(searchRequest);
 
         NewsClusteredReqDTO.Attributes attributes = new NewsClusteredReqDTO.Attributes();
-        attributes.setClusterCount(25);
+        attributes.setClusterCount(30);
 
         newsDto.setAttributes(attributes);
 

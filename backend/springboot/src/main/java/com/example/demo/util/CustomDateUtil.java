@@ -20,7 +20,7 @@ public class CustomDateUtil {
             e.printStackTrace();
         }
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormatter.setTimeZone(TimeZone.getDefault());
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC") );
         utcString = dateFormatter.format(dt);
 
         return utcString;

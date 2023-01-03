@@ -30,7 +30,7 @@
       </div>
     </teleport>
 
-    <div class="newsSelectBtn">
+    <div class="newsSelectBtnTwo">
       <button class="news-btn" @click="searchByDate()">기간별 뉴스 조회</button>
     </div>
     <div v-if="isLoading" class="loading-container">
@@ -340,5 +340,12 @@ export default {
 .news-title-header {
   display: flex;
   justify-content: space-between;
+}
+
+.newsSelectBtnTwo {
+  position: sticky;
+  top: 0px;
+  z-index: 5;
+  background-color: #ffffff;
 }
 </style>

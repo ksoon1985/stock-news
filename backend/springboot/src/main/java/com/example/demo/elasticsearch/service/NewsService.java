@@ -161,8 +161,23 @@ public class NewsService {
             // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
             List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
 
+            int clustersSize = clusters.size();
+            // 첫번째 클러스터는 성능이 안좋아서 제외, 단 size 가 1개일 땐 그냥 출력
+//            boolean isFirst = true;
+//
+//            if(clustersSize > 1){
+//                isFirst = true;
+//            }else{
+//                isFirst = false;
+//            }
+
             // 클러스터링된 뉴스 결과 리스트 - 토픽 뉴스 버전
             for (NewsClusteredResDTO.Clusters cluster : clusters) {
+//                if( isFirst){
+//                    isFirst = false;
+//                    continue;
+//                }
+
                 ClusteredNews clusteredNews = new ClusteredNews();
 
                 clusteredNews.setScore(cluster.getScore());
