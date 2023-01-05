@@ -9,6 +9,7 @@ import NestedCommTopic from "@/menu/nested/community/nestedCommTopic.vue";
 import NestedNewsNow from "@/menu/nested/news/nestedNewsNow.vue";
 import NestedNewsPast from "@/menu/nested/news/nestedNewsPast.vue";
 import NestedNewsRealTime from "@/menu/nested/news/nestedNewsRealTime.vue";
+import NestedNewsAdd from "@/menu/nested/news/nestedNewsAdd.vue";
 import realTimeAll from "@/menu/nested/news/realTimeCartegory/realTimeAll.vue";
 import realTimeOne from "@/menu/nested/news/realTimeCartegory/realTimeOne.vue";
 import realTimeTwo from "@/menu/nested/news/realTimeCartegory/realTimeTwo.vue";
@@ -101,6 +102,11 @@ const routes = [
         path: "past",
         name: "NewsPast",
         component: NestedNewsPast,
+      },
+      {
+        path: "add",
+        name: "NewsAdd",
+        component: NestedNewsAdd,
       },
     ],
   },

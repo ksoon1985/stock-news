@@ -40,9 +40,11 @@
       <div v-for="(item, index) in comments" :key="index">
         <div class="news-title" @click="modalOpenFunc(item)">
           <span class="news-title-span">{{ item.registration_date }}</span>
-          <h3>{{ item.title }}</h3>
-          <div class="news-title-div-p">
-            <p class="news-title-p">{{ item.content }}</p>
+          <div class="item-title-div">
+            <h3>{{ item.title }}</h3>
+            <div class="news-title-div-p">
+              <p class="news-title-p">{{ item.content }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -176,16 +178,15 @@ export default {
   margin-top: 15px;
 }
 
-/* 실시간 뉴스 호버 */
-.news-title:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 /* 실시간 뉴스 span  */
 .news-title-span {
   font-size: 0.7rem;
   color: #999999;
+}
+
+.item-title-div:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 /* 실시간 뉴스 p */

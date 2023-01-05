@@ -39,6 +39,19 @@
         <span class="sub-title" id="sub-title">최신뉴스</span>
       </button></router-link
     >
+    <router-link
+      class="router-tab"
+      exact-active-class="exact-active-link"
+      :to="{
+        name: 'NewsAdd',
+        query: {
+          code: listCode,
+        },
+      }"
+      ><button class="btn-close">
+        <span class="sub-title" id="sub-title">관심뉴스</span>
+      </button></router-link
+    >
   </div>
   <div class="main-view">
     <Router-view class="router-view"></Router-view>
