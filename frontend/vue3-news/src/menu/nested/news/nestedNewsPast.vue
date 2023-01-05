@@ -50,7 +50,7 @@
     <div class="news-wrap">
       <div class="" v-for="(clusteredNews, cIndex) in comments" :key="cIndex">
         <!-- 토픽 뉴스 버전-->
-        <div class="news-title" @click="modalOpenFunc(clusteredNews.news)">
+        <div class="news-title">
           <div class="news-title-header">
             <span class="news-title-span">{{
               clusteredNews.news.registration_date
@@ -60,14 +60,20 @@
               >군집화 키워드 :
               {{ clusteredNews.phrases.slice(0, 6).join(", ") }}</span
             >
-            <span class="news-title-count"
-              >군집화 된 기사 : {{ clusteredNews.count }}건</span
-            >
+            <button class="newsTitleBtnTwo" @click="titleVifEvent(cIndex)">
+              군집화 된 기사 : {{ clusteredNews.count }}건
+            </button>
           </div>
-          <h3>{{ clusteredNews.news.title }}</h3>
-          <div class="news-title-div-p">
-            <p class="news-title-p">{{ clusteredNews.news.content }}</p>
+          <div
+            class="news-title-div-div"
+            @click="modalOpenFunc(clusteredNews.news)"
+          >
+            <h3>{{ clusteredNews.news.title }}</h3>
+            <div class="news-title-div-p">
+              <p class="news-title-p">{{ clusteredNews.news.content }}</p>
+            </div>
           </div>
+          <ClusteringNewsAdd :clusteringNewsList="clusteredNews.newsList" />
         </div>
       </div>
       <InfiniteLoading @infinite="load" />
@@ -84,11 +90,13 @@ import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useRoute, useRouter } from "vue-router";
 import InfiniteLoading from "v3-infinite-loading";
 import vClickOutside from "click-outside-vue3";
+import ClusteringNewsAdd from "@/menu/nested/news/clusteringAdd/clusteringNewsAdd.vue";
 
 export default {
   components: {
     PulseLoader,
     InfiniteLoading,
+    ClusteringNewsAdd,
   },
 
   directives: {
@@ -218,12 +226,6 @@ export default {
   font-style: normal;
 }
 
-/* 토픽 뉴스 호버 */
-.news-title:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 /* 토픽 뉴스 모달 div */
 .news-modal-wrap {
   overflow: scroll;
@@ -346,21 +348,32 @@ export default {
 }
 
 /* 군집화 된 기사 숫자 */
-.news-title-count {
+.newsTitleBtnTwo {
   font-size: 0.7rem;
+  border: none;
+  background-color: #ffffff;
   color: #999999;
+  position: relative;
+  top: -3px;
 }
 
 /* 군집화 헤더 div */
 .news-title-header {
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 
 .newsSelectBtnTwo {
   position: sticky;
   top: 0px;
-  z-index: 5;
+  z-index: 99;
   background-color: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.news-title-div-div:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>

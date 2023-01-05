@@ -343,4 +343,11 @@ export default {
   align-items: center;
   display: flex;
 }
+
+.newsSelectBtn {
+  position: sticky;
+  top: 0px;
+  z-index: 99;
+  background-color: #ffffff;
+}
 </style>
