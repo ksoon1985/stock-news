@@ -13,7 +13,7 @@ public class ClusteredNews {
     private String label;
     private List<String> phrases;
     private News news;
+    private List<News> newsList;
     private int count;
 
-    //private ArrayList<News> news;
 }

@@ -7,13 +7,17 @@ import cookie from "js-cookie";
 // add a request interceptor
 axios.interceptors.request.use(
   (config) => {
+    //console.log("axios interceptors request", cookie.get("token"));
     let nickName = localStorage.getItem("nickName");
 
     // jwt 토큰이 있는데 isLogin 이 false 인 경우
-    if (cookie.get("token") != "undefined") {
+    if (hasToken(cookie.get("token"))) {
+      console.log("토큰 있음");
+
       localStorage.setItem("isLogin", true);
       localStorage.setItem("nickName", nickName);
     } else {
+      console.log("토큰 없음");
       localStorage.setItem("isLogin", false);
       localStorage.setItem("nickName", "");
     }
@@ -34,5 +38,10 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+const hasToken = (token) => {
+  if (typeof token == undefined || token == null || token == "") return false;
+  else return true;
+};
 
 export default axios;

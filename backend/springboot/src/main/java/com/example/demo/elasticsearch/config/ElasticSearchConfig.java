@@ -33,10 +33,10 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     @Bean
     public RestHighLevelClient elasticsearchClient() {
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-            //.connectedTo(host+":" + port)
+            .connectedTo(host+":" + port)
 
-                .connectedTo("f37c-221-148-195-245.jp.ngrok.io:443")
-                .usingSsl()
+                //.connectedTo("f37c-221-148-195-245.jp.ngrok.io:443")
+                //.usingSsl()
                 .withBasicAuth(username,password)
                 .withSocketTimeout(60 * 1000) // es socket timeout 60s
                 .build();

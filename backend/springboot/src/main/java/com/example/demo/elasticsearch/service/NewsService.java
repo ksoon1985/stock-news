@@ -5,6 +5,7 @@ import com.example.demo.elasticsearch.dto.CustomBucket;
 import com.example.demo.elasticsearch.dto.SearchNewsReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredReqDTO;
 import com.example.demo.elasticsearch.dto.json.NewsClusteredResDTO;
+import com.example.demo.elasticsearch.dto.json.NewsClusteredResDTO2;
 import com.example.demo.elasticsearch.model.News;
 import com.example.demo.elasticsearch.repository.NewsSearchRepository;
 import com.example.demo.elasticsearch.utils.Indices;
@@ -67,7 +68,10 @@ public class NewsService {
             }
 
             // json 형태를 객체 형태로 반환
-            return objectMapper.readValue(documentFields.getSourceAsString(), News.class);
+            News news = objectMapper.readValue(documentFields.getSourceAsString(), News.class);
+            // utc date 처리
+            news.setRegistration_date(CustomDateUtil.UTCToCustomDateTime(news.getRegistration_date()));
+            return news;
         } catch (IOException e) {
             log.error(e.getMessage());
             return null;
@@ -125,8 +129,18 @@ public class NewsService {
         }
     }
 
+    // 대표키워드 한달전 데이터와 비교
+    public void topicKeywordsCompare1Month(SearchNewsReqDTO dto){
+
+
+
+        ArrayList<CustomBucket> topicKeywords = getTopicKeywords(dto);
+
+    }
+
+
     // 종목, 기간에 일치하는 클러스터링 된 뉴스 가져오기
-    public  ArrayList<ClusteredNews> getClusteredNews(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
+    public  ArrayList<ClusteredNews> getClusteredNews1(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
 
         String stockName = stockService.getStockNameByStockCode(newsReqDTO.getSearchTerm());
         newsReqDTO.setSearchTerm(stockName);
@@ -146,8 +160,8 @@ public class NewsService {
 
         // 엘라스틱 서치 요청 url
         //String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
-        //String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
-        String url = "https://f37c-221-148-195-245.jp.ngrok.io"+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        //String url = "https://f37c-221-148-195-245.jp.ngrok.io"+"/"+Indices.NEWS_CLUSTERED_INDEX ;
         ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
 
         // 요청 실행 !!!
@@ -161,7 +175,7 @@ public class NewsService {
             // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
             List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
 
-            int clustersSize = clusters.size();
+            //int clustersSize = clusters.size();
             // 첫번째 클러스터는 성능이 안좋아서 제외, 단 size 가 1개일 땐 그냥 출력
 //            boolean isFirst = true;
 //
@@ -191,10 +205,10 @@ public class NewsService {
                 clusteredNews.setCount(cluster.getDocuments().size());
 
                 News news = getNewsById(documentId);
-                news.setRegistration_date(CustomDateUtil.UTCToCustomDateTime(news.getRegistration_date()));
 
                 if(news != null){
                     clusteredNews.setNews(news);
+                    //clusteredNews.setTopicNews(news);
                 }
 
                 clusteredNewsList.add(clusteredNews);
@@ -227,6 +241,189 @@ public class NewsService {
             clusteredNewsList.add(clusteredNews);
         }
          */
+
+        return clusteredNewsList;
+    }
+
+
+    // 종목, 기간에 일치하는 클러스터링 된 뉴스 가져오기2
+    public  ArrayList<ClusteredNews> getClusteredNews2(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
+
+        String stockName = stockService.getStockNameByStockCode(newsReqDTO.getSearchTerm());
+        newsReqDTO.setSearchTerm(stockName);
+
+        // 엘라스틱 서치에 요청할 carrot2 전용 json dto 생성 ====================================================
+        NewsClusteredReqDTO newsDto = SearchUtil.buildRequestJsonQuery(newsReqDTO);
+
+        System.out.println("########################"+objectMapper.writeValueAsString(newsDto).toString());
+
+        // HTTP Header set
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBasicAuth("ZWxhc3RpYzoxMjM0NTY=");
+
+        // HTTP Message set
+        HttpEntity<?> requestMessage = new HttpEntity<>(newsDto, httpHeaders);
+
+        // 엘라스틱 서치 요청 url
+        //String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        //String url = "https://f37c-221-148-195-245.jp.ngrok.io"+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+
+        // 반환할 군집화된 뉴스 리스트
+        ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
+
+        // 요청 실행 !!!
+        try{
+            HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
+
+            // 엘라스틱서치에서 준 응답 데이터
+            // json String -> json dto 로 변환 ===================================================================
+            NewsClusteredResDTO2 resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO2.class);
+
+            NewsClusteredResDTO2.Hits hits = resDto.getHits();
+            List<NewsClusteredResDTO2.InnerHits> innerHits = hits.getInnerHits();
+
+            HashMap<String, NewsClusteredResDTO2.Source> mapNews = new HashMap<>();
+
+            for (NewsClusteredResDTO2.InnerHits innerHit : innerHits) {
+                mapNews.put(innerHit.getId(),innerHit.getSource());
+            }
+
+            // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
+            List<NewsClusteredResDTO2.Clusters> clusters = resDto.getClusters();
+
+            // 클러스터링된 뉴스 결과 리스트
+            for (NewsClusteredResDTO2.Clusters cluster : clusters) {
+
+                ClusteredNews clusteredNews = new ClusteredNews();
+
+                clusteredNews.setScore(cluster.getScore());
+                clusteredNews.setLabel(cluster.getLabel());
+                clusteredNews.setPhrases(cluster.getPhrases());
+
+                // 각 군집화된 뉴스 개수
+                int clusterSize = cluster.getDocuments().size();
+
+                ArrayList<News> newsList = new ArrayList<>();
+
+                String documentId = null;
+                for(int i=0;i<clusterSize;i++){
+
+                    documentId = cluster.getDocuments().get(i);
+
+                    NewsClusteredResDTO2.Source source = mapNews.get(documentId);
+
+                    if(source != null){
+                        News news = new News();
+                        news.setTitle(mapNews.get(documentId).getTitle());
+                        news.setContent(mapNews.get(documentId).getContent());
+                        news.setRegistration_date(mapNews.get(documentId).getRegDate());
+
+                        if(i==0){
+                            clusteredNews.setNews(news);
+                        }
+                        newsList.add(news);
+                    }
+
+                }
+                clusteredNews.setNewsList(newsList);
+
+                // 군집화된 뉴스 갯수 set
+                clusteredNews.setCount(clusterSize);
+
+                clusteredNewsList.add(clusteredNews);
+            }
+
+        }catch (Exception e){
+            System.out.println(e);
+            return clusteredNewsList;
+        }
+
+        return clusteredNewsList;
+    }
+
+
+    // 종목, 기간에 일치하는 클러스터링 된 뉴스 가져오기3
+    public  ArrayList<ClusteredNews> getClusteredNews3(SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
+
+        String stockName = stockService.getStockNameByStockCode(newsReqDTO.getSearchTerm());
+        newsReqDTO.setSearchTerm(stockName);
+
+        // 엘라스틱 서치에 요청할 carrot2 전용 json dto 생성 ====================================================
+        NewsClusteredReqDTO newsDto = SearchUtil.buildRequestJsonQuery(newsReqDTO);
+
+        System.out.println("########################"+objectMapper.writeValueAsString(newsDto).toString());
+
+        // HTTP Header set
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBasicAuth("ZWxhc3RpYzoxMjM0NTY=");
+
+        // HTTP Message set
+        HttpEntity<?> requestMessage = new HttpEntity<>(newsDto, httpHeaders);
+
+        // 엘라스틱 서치 요청 url
+        //String url = "http://"+username+":"+password+"@"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        String url = "http://"+host+":"+port+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+        //String url = "https://f37c-221-148-195-245.jp.ngrok.io"+"/"+Indices.NEWS_CLUSTERED_INDEX ;
+
+        // 반환할 군집화된 뉴스 리스트
+        ArrayList<ClusteredNews> clusteredNewsList = new ArrayList<>();
+
+        // 요청 실행 !!!
+        try{
+            HttpEntity<String> response = restTemplate.postForEntity(url, requestMessage, String.class);
+
+            // 엘라스틱서치에서 준 응답 데이터
+            // json String -> json dto 로 변환 ===================================================================
+            NewsClusteredResDTO resDto = objectMapper.readValue(response.getBody(), NewsClusteredResDTO.class);
+
+            // json dto 를 가지고 프론트에 응답할 뉴스 데이터 작업
+            List<NewsClusteredResDTO.Clusters> clusters = resDto.getClusters();
+
+            // 클러스터링된 뉴스 결과 리스트
+            for (NewsClusteredResDTO.Clusters cluster : clusters) {
+
+                ClusteredNews clusteredNews = new ClusteredNews();
+
+                clusteredNews.setScore(cluster.getScore());
+                clusteredNews.setLabel(cluster.getLabel());
+                clusteredNews.setPhrases(cluster.getPhrases());
+
+                // 각 군집화된 뉴스 개수
+                int clusterSize = cluster.getDocuments().size();
+
+                ArrayList<News> newsList = new ArrayList<>();
+
+                String documentId = null;
+                for(int i=0;i<clusterSize;i++){
+
+                    documentId = cluster.getDocuments().get(i);
+
+                    News news = getNewsById(documentId);
+
+                    if(news != null){
+                        // 첫번째 뉴스는 대표뉴스로 선정
+                        if(i ==0 ){
+                            clusteredNews.setNews(news);
+                        }else{
+                            newsList.add(news);
+                        }
+                    }
+                }
+                clusteredNews.setNewsList(newsList);
+
+                // 군집화된 뉴스 갯수 set
+                clusteredNews.setCount(clusterSize);
+
+                clusteredNewsList.add(clusteredNews);
+            }
+
+        }catch (Exception e){
+            System.out.println(e);
+            return clusteredNewsList;
+        }
 
         return clusteredNewsList;
     }

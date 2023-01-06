@@ -41,17 +41,32 @@ public class NewsController {
     }
 
     // 찾은 문서수가 3개 이하인 경우엔 es에서 집계가 안되므로 대표 키워드가 안나올 수 있음
-    @Operation(summary = "찾은 문서에서 대표 키워드 가져오기 0 ~ 30 개 가져오기 ")
+    @Operation(summary = "찾은 문서에서 대표 키워드 가져오기 0 ~ 50 개 가져오기 ")
     @PostMapping("/getTopicKeywords")
     public ResponseEntity getTopicKeywords(@RequestBody SearchNewsReqDTO reqDTO){
         return ResponseEntity.ok().body(newsService.getTopicKeywords(reqDTO));
     }
 
+    // 대표키워드 한달전 데이터와 비교
+    @PostMapping("/getTopicKeywords2")
+    public ResponseEntity getTopicKeywords2(@RequestBody SearchNewsReqDTO reqDTO){
+        return ResponseEntity.ok().body(newsService.getTopicKeywords(reqDTO));
+    }
+
+
     @Operation(summary = "종목이름, 날짜를 조건으로 엘라스틱 서치에서 클러스터링 된 뉴스 데이터 요청")
     @PostMapping("/getClusteredNews")
     public ResponseEntity getClusteredNews(@RequestBody SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
 
-        ArrayList<ClusteredNews> clusteredNewsList = newsService.getClusteredNews(newsReqDTO);
+        ArrayList<ClusteredNews> clusteredNewsList = newsService.getClusteredNews3(newsReqDTO);
+
+        return ResponseEntity.ok().body(clusteredNewsList);
+    }
+
+    @PostMapping("/getClusteredNews2")
+    public ResponseEntity getClusteredNews2(@RequestBody SearchNewsReqDTO newsReqDTO) throws JsonProcessingException {
+
+        ArrayList<ClusteredNews> clusteredNewsList = newsService.getClusteredNews2(newsReqDTO);
 
         return ResponseEntity.ok().body(clusteredNewsList);
     }

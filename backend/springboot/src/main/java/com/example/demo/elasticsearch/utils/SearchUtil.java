@@ -68,8 +68,11 @@ public class SearchUtil {
                     .must(QueryBuilders.matchQuery("title",dto.getSearchTerm()).operator(Operator.AND) )
                     .must(QueryBuilders.rangeQuery("registration_date").gte(dto.getFromDate()).lte(dto.getToDate()));
 
+            if(dto.getCategoryId() != null)
+                boolQueryBuilder.must(QueryBuilders.matchQuery("category_id",dto.getCategoryId()));
+
             SignificantTermsAggregationBuilder significantTermsBuilder = AggregationBuilders.significantTerms("agg_content")
-                    .field("title").size(30);
+                    .field("title").size(50);
 
             SearchSourceBuilder builder = new SearchSourceBuilder()
                     .query(boolQueryBuilder)
