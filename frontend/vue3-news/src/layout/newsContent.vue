@@ -204,8 +204,8 @@ export default {
         stockOptions.value.series[0].data = ohlc;
         stockOptions.value.series[1].data = volume;
 
-        stockOptions.value.series[0].name = this.stockName;
-        stockOptions.value.series[1].name = this.stockName;
+        stockOptions.value.series[0].name = stockName.value;
+        stockOptions.value.series[1].name = stockName.value;
 
         stockOptions.value.series[0].dataGrouping.units = groupingUnits;
         stockOptions.value.series[1].dataGrouping.units = groupingUnits;

@@ -1,118 +1,45 @@
 <template>
   <div class="sub-view-result">
-    <div class="newsSelectBtn">
-      <button class="news-btn" @click="keywordMounted">
-        기간에 일치하는 키워드 조회
-      </button>
-    </div>
-
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
       </div>
     </div>
 
-    <div class="topic-news" v-if="keywordOne">
-      <div class="keyWordStockName">
-        <span class="keyword-stock-name">{{ stockName }}</span>
-        <span class="keyword-keyword">키워드</span>
+    <div class="for-keyword-news">
+      <div class="forKeyWord" v-for="(item, index) in keyWordList" :key="index">
+        <span class="forKeyWordSpan">{{ index + 1 }}</span>
+        <h3 class="themeKeywords">{{ item.keyword }}</h3>
+        <div class="forBtn">
+          <button class="fotBtnOne" @click="likeKeyword(item.keyword)">
+            <span
+              class="forBtnSpanOne"
+              v-if="likeKeywordList.indexOf(item.keyword) !== -1"
+            >
+              관심중
+            </span>
+            <span class="forBtnSpanTwo" v-else> 관심 </span>
+          </button>
+          <router-link
+            class="forkeywordRouter"
+            :to="{
+              name: 'newsNowkeyword',
+              query: {
+                code: listCode,
+                keyword: item.keyword,
+              },
+            }"
+          >
+            <button class="forBtnTwo" @click="keywordChangeEvent">
+              뉴스조회
+            </button>
+          </router-link>
+        </div>
       </div>
     </div>
-
-    <div class="realTimeBtnDiv">
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordAll',
-          query: {
-            code: listCode,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">전체</span></button>
-      </router-link>
-
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordOne',
-          query: {
-            code: listCode,
-            sd1: 100,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">정치</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordTwo',
-          query: {
-            code: listCode,
-            sd1: 101,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">경제</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordThree',
-          query: {
-            code: listCode,
-            sd1: 102,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">사회</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordFour',
-          query: {
-            code: listCode,
-            sd1: 103,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">문화</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordFive',
-          query: {
-            code: listCode,
-            sd1: 104,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">세계</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordSix',
-          query: {
-            code: listCode,
-            sd1: 105,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">IT/과학</span></button>
-      </router-link>
-    </div>
-
-    <div class="main-view">
-      <router-view class="router-view"></router-view>
-    </div>
-
-    <!-- <div class="" v-if="keywordTwo">
+    <div class="" v-if="keywordTwo">
       <Router-view class=""></Router-view>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -192,7 +119,7 @@ export default {
         keyWordList.value = res.data;
         keywordOne.value = true;
         router
-          .push({ name: "NewsNow", query: { code: listCode.value } })
+          .push({ name: "keywordAll", query: { code: listCode.value } })
           .catch((err) => {
             isLoading.value = false;
             console.log(err);
