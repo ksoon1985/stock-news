@@ -40,9 +40,11 @@
       <div v-for="(item, index) in comments" :key="index">
         <div class="news-title" @click="modalOpenFunc(item)">
           <span class="news-title-span">{{ item.registration_date }}</span>
-          <h3>{{ item.title }}</h3>
-          <div class="news-title-div-p">
-            <p class="news-title-p">{{ item.content }}</p>
+          <div class="item-title-div">
+            <h3>{{ item.title }}</h3>
+            <div class="news-title-div-p">
+              <p class="news-title-p">{{ item.content }}</p>
+            </div>
           </div>
         </div>
       </div>

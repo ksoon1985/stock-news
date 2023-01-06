@@ -9,6 +9,7 @@ import NestedCommTopic from "@/menu/nested/community/nestedCommTopic.vue";
 import NestedNewsNow from "@/menu/nested/news/nestedNewsNow.vue";
 import NestedNewsPast from "@/menu/nested/news/nestedNewsPast.vue";
 import NestedNewsRealTime from "@/menu/nested/news/nestedNewsRealTime.vue";
+import NestedNewsAdd from "@/menu/nested/news/nestedNewsAdd.vue";
 import realTimeAll from "@/menu/nested/news/realTimeCartegory/realTimeAll.vue";
 import realTimeOne from "@/menu/nested/news/realTimeCartegory/realTimeOne.vue";
 import realTimeTwo from "@/menu/nested/news/realTimeCartegory/realTimeTwo.vue";
@@ -24,6 +25,13 @@ import stockTwoYear from "@/menu/nested/stock/stockTwoNested/stockTwoYear.vue";
 import stockTwoQyarter from "@/menu/nested/stock/stockTwoNested/stockTwoQyarter.vue";
 import newsNow from "@/menu/nested/news/nestedNewsnow/newsNow.vue";
 import commTopicChildren from "@/menu/nested/community/nestedCommTopic/commTopic.vue";
+import keywordNewsAll from "@/menu/nested/news/keywordNews/keywordNewsAll.vue";
+import keywordNewsOne from "@/menu/nested/news/keywordNews/keywordNewsOne.vue";
+import keywordNewsTwo from "@/menu/nested/news/keywordNews/keywordNewsTwo.vue";
+import keywordNewsThree from "@/menu/nested/news/keywordNews/keywordNewsThree.vue";
+import keywordNewsFour from "@/menu/nested/news/keywordNews/keywordNewsFour.vue";
+import keywordNewsFive from "@/menu/nested/news/keywordNews/keywordNewsFive.vue";
+import keywordNewsSix from "@/menu/nested/news/keywordNews/keywordNewsSix.vue";
 
 // import MenuSns from "@/menu/menuSns.vue";
 // import NestedSnsNow from "@/menu/nested/sns/nestedSnsNow.vue";
@@ -46,7 +54,43 @@ const routes = [
         path: "now",
         name: "NewsNow",
         component: NestedNewsNow,
+        redirect: "/news/now/keywordAll",
         children: [
+          {
+            path: "keywordAll",
+            name: "keywordAll",
+            component: keywordNewsAll,
+          },
+          {
+            path: "keywordOne",
+            name: "keywordOne",
+            component: keywordNewsOne,
+          },
+          {
+            path: "keywordTwo",
+            name: "keywordTwo",
+            component: keywordNewsTwo,
+          },
+          {
+            path: "keywordThree",
+            name: "keywordThree",
+            component: keywordNewsThree,
+          },
+          {
+            path: "keywordFour",
+            name: "keywordFour",
+            component: keywordNewsFour,
+          },
+          {
+            path: "keywordFive",
+            name: "keywordFive",
+            component: keywordNewsFive,
+          },
+          {
+            path: "keywordSix",
+            name: "keywordSix",
+            component: keywordNewsSix,
+          },
           {
             path: "keyword",
             name: "newsNowkeyword",
@@ -101,6 +145,11 @@ const routes = [
         path: "past",
         name: "NewsPast",
         component: NestedNewsPast,
+      },
+      {
+        path: "add",
+        name: "NewsAdd",
+        component: NestedNewsAdd,
       },
     ],
   },
