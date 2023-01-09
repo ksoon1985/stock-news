@@ -42,15 +42,16 @@ public class NewsController {
 
     // 찾은 문서수가 3개 이하인 경우엔 es에서 집계가 안되므로 대표 키워드가 안나올 수 있음
     @Operation(summary = "찾은 문서에서 대표 키워드 가져오기 0 ~ 50 개 가져오기 ")
-    @PostMapping("/getTopicKeywords")
+    @PostMapping("/getTopicKeywords2")
     public ResponseEntity getTopicKeywords(@RequestBody SearchNewsReqDTO reqDTO){
         return ResponseEntity.ok().body(newsService.getTopicKeywords(reqDTO));
     }
 
     // 대표키워드 한달전 데이터와 비교
-    @PostMapping("/getTopicKeywords2")
+    @PostMapping("/getTopicKeywords")
     public ResponseEntity getTopicKeywords2(@RequestBody SearchNewsReqDTO reqDTO){
-        return ResponseEntity.ok().body(newsService.getTopicKeywords(reqDTO));
+
+        return ResponseEntity.ok().body(newsService.topicKeywordsCompare1Month(reqDTO));
     }
 
 

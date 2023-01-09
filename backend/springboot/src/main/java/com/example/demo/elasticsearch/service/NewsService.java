@@ -130,12 +130,56 @@ public class NewsService {
     }
 
     // 대표키워드 한달전 데이터와 비교
-    public void topicKeywordsCompare1Month(SearchNewsReqDTO dto){
+    public ArrayList<CustomBucket> topicKeywordsCompare1Month(SearchNewsReqDTO dto){
 
+        String stockCode = dto.getSearchTerm();
 
+        Calendar cal = Calendar.getInstance();
 
-        ArrayList<CustomBucket> topicKeywords = getTopicKeywords(dto);
+        // fromDate
+        String fromDateStr = dto.getFromDate();
+        Date fromDate = CustomDateUtil.stringToDate(fromDateStr);
+        cal.setTime(fromDate);
 
+        // fromDate 에서 하루전
+        cal.add(Calendar.DATE,-1);
+        Date fromDateBefore1Day = cal.getTime();
+        // fromDate 에서 하루전에서 한달전
+        cal.add(Calendar.MONTH,-1);
+        Date fromDateBefore1Month = cal.getTime();
+
+        // 사용자가 지정한 기간의 토픽 키워드
+        ArrayList<CustomBucket> nowBucketList = getTopicKeywords(dto);
+
+        dto.setSearchTerm(stockCode);
+        dto.setFromDate(CustomDateUtil.dateToString(fromDateBefore1Month));
+        dto.setToDate(CustomDateUtil.dateToString(fromDateBefore1Day));
+
+        // 사용자가 지정한 기간의 한달전 토픽 키워드
+        ArrayList<CustomBucket> beforeBucketList = getTopicKeywords(dto);
+
+        for(int i=0;i<nowBucketList.size();i++){
+
+            CustomBucket nowBucket = nowBucketList.get(i);
+            nowBucket.setNew(true);
+            String nowKeyword = nowBucket.getKeyword();
+
+            for(int j=0;j<beforeBucketList.size();j++){
+                CustomBucket beforeBucket = beforeBucketList.get(j);
+                String beforeKeyword = beforeBucket.getKeyword();
+
+                // 일치하는 키워드가 있다면
+                if(nowKeyword.equals(beforeKeyword)){
+                    nowBucket.setRank(j-i);
+                    nowBucket.setNew(false);
+                    continue;
+                }
+            }
+
+            nowBucketList.set(i,nowBucket);
+        }
+
+        return nowBucketList;
     }
 
 

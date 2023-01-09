@@ -73,7 +73,6 @@ public class SecurityConfig {
         // url pattern 에 맞게 인증, 권한 필요 여부
         httpSecurity.authorizeRequests()
                         .antMatchers(
-//                                "/**"
 
                                 "/","/index.html", "/favicon.ico" ,"/webjars/**", "/css/**", "/js/**", "/img/**",
                                 "/member/**",

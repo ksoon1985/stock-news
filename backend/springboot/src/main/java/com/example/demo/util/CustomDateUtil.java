@@ -43,6 +43,24 @@ public class CustomDateUtil {
         return utcString;
     }
 
+    public static Date stringToDate(String dateStr){
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date date = null;
+        try{
+            date = formatter.parse(dateStr);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static String dateToString(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
+    }
+
     /**
      * 1주 전 ~ 현재 날짜 문자열 리스트
      */
