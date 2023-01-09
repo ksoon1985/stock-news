@@ -1,109 +1,105 @@
 <template>
-  <div class="sub-view-result">
-    <div class="newsSelectBtn">
-      <button class="news-btn" @click="keywordMounted">
-        기간에 일치하는 키워드 조회
-      </button>
-    </div>
-
+  <div class="sub-view-resultTwo">
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
       </div>
     </div>
 
-    <div class="topic-news" v-if="keywordOne">
-      <div class="keyWordStockName">
-        <span class="keyword-stock-name">{{ stockName }}</span>
-        <span class="keyword-keyword">키워드</span>
+    <div class="topicTitleAndKeyword">
+      <div class="topic-news" v-if="keywordOne">
+        <div class="keyWordStockName">
+          <span class="keyword-stock-name">{{ stockName }}</span>
+          <span class="keyword-keyword">키워드</span>
+        </div>
       </div>
-    </div>
 
-    <div class="realTimeBtnDiv">
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordAll',
-          query: {
-            code: listCode,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">전체</span></button>
-      </router-link>
+      <div class="realTimeBtnDiv">
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordAll',
+            query: {
+              code: listCode,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">전체</span></button>
+        </router-link>
 
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordOne',
-          query: {
-            code: listCode,
-            sd1: 100,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">정치</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordTwo',
-          query: {
-            code: listCode,
-            sd1: 101,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">경제</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordThree',
-          query: {
-            code: listCode,
-            sd1: 102,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">사회</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordFour',
-          query: {
-            code: listCode,
-            sd1: 103,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">문화</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordFive',
-          query: {
-            code: listCode,
-            sd1: 104,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">세계</span></button>
-      </router-link>
-      <router-link
-        class="router-tab"
-        :to="{
-          name: 'keywordSix',
-          query: {
-            code: listCode,
-            sd1: 105,
-          },
-        }"
-      >
-        <button class="realTimeBtn"><span id="title">IT/과학</span></button>
-      </router-link>
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordOne',
+            query: {
+              code: listCode,
+              sd1: 100,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">정치</span></button>
+        </router-link>
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordTwo',
+            query: {
+              code: listCode,
+              sd1: 101,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">경제</span></button>
+        </router-link>
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordThree',
+            query: {
+              code: listCode,
+              sd1: 102,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">사회</span></button>
+        </router-link>
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordFour',
+            query: {
+              code: listCode,
+              sd1: 103,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">문화</span></button>
+        </router-link>
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordFive',
+            query: {
+              code: listCode,
+              sd1: 104,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">세계</span></button>
+        </router-link>
+        <router-link
+          class="router-tab"
+          :to="{
+            name: 'keywordSix',
+            query: {
+              code: listCode,
+              sd1: 105,
+            },
+          }"
+        >
+          <button class="realTimeBtn"><span id="title">IT/과학</span></button>
+        </router-link>
+      </div>
     </div>
 
     <div class="main-view">
@@ -192,7 +188,7 @@ export default {
         keyWordList.value = res.data;
         keywordOne.value = true;
         router
-          .push({ name: "NewsNow", query: { code: listCode.value } })
+          .push({ query: { code: listCode.value } })
           .catch((err) => {
             isLoading.value = false;
             console.log(err);
@@ -316,7 +312,6 @@ export default {
 /* 키워드 키워드 이름 */
 .themeKeywords {
   position: relative;
-  top: -5px;
   left: 37px;
   width: 50%;
 }
@@ -401,10 +396,26 @@ export default {
   display: flex;
 }
 
+/* 조회 버튼 DIV */
 .newsSelectBtn {
+  position: sticky;
+  bottom: 100px;
+  z-index: 99;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+/* 종목이름 & 키워드 */
+.topicTitleAndKeyword {
   position: sticky;
   top: 0px;
   z-index: 99;
   background-color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+/* 키워드 뉴스 라우터 화면  */
+.sub-view-resultTwo {
+  overflow-y: hidden;
 }
 </style>

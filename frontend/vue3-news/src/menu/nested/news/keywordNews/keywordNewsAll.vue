@@ -35,8 +35,109 @@
             </button>
           </router-link>
         </div>
+
+        <div class="keywordRankDiv" v-if="item.new"><span>NEW</span></div>
+        <div v-else>
+          <div class="keywordRank" v-if="item.rank == 0">-</div>
+          <div class="keywordRankOne" v-else-if="item.rank > 0">
+            <div class="keywordFlex">
+              <div class="keywordIconOne">
+                <svg
+                  width="30"
+                  height="30"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style="display: block"
+                >
+                  <image
+                    id="icontwo"
+                    class="keywordOne"
+                    href="@/assets/svg/arrow-drop-up-1-svgrepo-com.svg"
+                    width="30"
+                    height="30"
+                  ></image>
+                </svg>
+              </div>
+              <span>{{ item.rank }}</span>
+            </div>
+          </div>
+          <div class="keywordRankTwo" v-else-if="item.rank < 0">
+            <div class="keywordFlex">
+              <div class="keywordIconTwo">
+                <svg
+                  width="30"
+                  height="30"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style="display: block"
+                >
+                  <image
+                    id="icontwo"
+                    class="keywordTwo"
+                    href="@/assets/svg/arrow-drop-down-svgrepo-com.svg"
+                    width="30"
+                    height="30"
+                  ></image>
+                </svg>
+              </div>
+              <span>{{ Math.abs(item.rank) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="keywordRank" v-if="item.rank === 0">-</div>
+        <div class="keywordRankOne" v-else-if="item.rank >= 0">
+          <div class="keywordFlex">
+            <div class="keywordIconOne">
+              <svg
+                width="30"
+                height="30"
+                xmlns="http://www.w3.org/2000/svg"
+                style="display: block"
+              >
+                <image
+                  id="icontwo"
+                  class="keywordOne"
+                  href="@/assets/svg/arrow-drop-up-1-svgrepo-com.svg"
+                  width="30"
+                  height="30"
+                ></image>
+              </svg>
+            </div>
+            <span>{{ item.rank }}</span>
+          </div>
+        </div>
+        <div class="keywordRankTwo" v-else-if="item.rank <= 0">
+          <div class="keywordFlex">
+            <div class="keywordIconTwo">
+              <svg
+                width="30"
+                height="30"
+                xmlns="http://www.w3.org/2000/svg"
+                style="display: block"
+              >
+                <image
+                  id="icontwo"
+                  class="keywordTwo"
+                  href="@/assets/svg/arrow-drop-down-svgrepo-com.svg"
+                  width="30"
+                  height="30"
+                ></image>
+              </svg>
+            </div>
+            <span>{{ Math.abs(item.rank) }}</span>
+          </div>
+        </div> -->
+        <!-- <div class="keywordRank" v-if="item.new == true && item.rank == 0">
+          new
+        </div> -->
       </div>
     </div>
+
+    <div class="newsSelectBtn">
+      <button class="news-btn" @click="keywordMounted">
+        기간에 일치하는 키워드 조회
+      </button>
+    </div>
+
     <div class="" v-if="keywordTwo">
       <Router-view class=""></Router-view>
     </div>
@@ -49,7 +150,7 @@ import { useUserStore } from "@/store/user.js";
 import { storeToRefs } from "pinia";
 import axios from "@/utils/axios";
 import { useRoute, useRouter } from "vue-router";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 
 export default {
@@ -71,6 +172,10 @@ export default {
 
     let likeStatus = ref(true);
     let isLoading = ref(false);
+
+    // watch(keyWordList, () => {
+    //   keywordMounted();
+    // });
 
     const interestClickEvent = () => {
       if (isLogin.value == false) {
@@ -118,6 +223,7 @@ export default {
       axios.post("/api/news/getTopicKeywords", reqDto).then((res) => {
         keyWordList.value = res.data;
         keywordOne.value = true;
+
         router
           .push({ name: "keywordAll", query: { code: listCode.value } })
           .catch((err) => {
@@ -169,6 +275,7 @@ export default {
       keywordMounted,
       isLoading,
       color: "#d01411",
+      watch,
     };
   },
 };
@@ -328,10 +435,62 @@ export default {
   display: flex;
 }
 
-.newsSelectBtn {
-  position: sticky;
-  top: 0px;
-  z-index: 99;
-  background-color: #ffffff;
+/* 랭킹 값이 0일때  */
+.keywordRank {
+  position: relative;
+  left: -130px;
+  top: 17px;
+}
+
+/* 화살표 & 랭킹 값 */
+.keywordFlex {
+  display: flex;
+}
+
+/* 랭킹 값이 0보다 클 때   */
+.keywordRankOne {
+  position: relative;
+  left: -155px;
+  top: 17px;
+}
+
+/* 랭킹 값이 0보다 작을 때 */
+.keywordRankTwo {
+  position: relative;
+  left: -155px;
+  top: 17px;
+}
+
+/* 위쪽 화살표 */
+.keywordOne {
+  filter: invert(34%) sepia(63%) saturate(6608%) hue-rotate(350deg)
+    brightness(98%) contrast(89%);
+}
+
+/* 아래쪽 화살표 */
+.keywordTwo {
+  filter: invert(39%) sepia(65%) saturate(2399%) hue-rotate(201deg)
+    brightness(94%) contrast(98%);
+}
+
+/* 위쪽 화살표 svg */
+.keywordIconOne {
+  position: relative;
+  top: -5px;
+}
+
+/* 아래쪽 화살표 svg */
+.keywordIconTwo {
+  position: relative;
+  top: -5px;
+}
+
+/* New Div  */
+.keywordRankDiv {
+  position: relative;
+  left: -145px;
+  top: 17px;
+  font-family: "Pretendard-Regular";
+  font-size: 0.8rem;
 }
 </style>

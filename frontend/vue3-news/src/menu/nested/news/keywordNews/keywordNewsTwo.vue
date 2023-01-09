@@ -37,9 +37,16 @@
         </div>
       </div>
     </div>
-    <!-- <div class="" v-if="keywordTwo">
-        <Router-view class=""></Router-view>
-      </div> -->
+
+    <div class="newsSelectBtn">
+      <button class="news-btn" @click="keywordMounted">
+        기간에 일치하는 키워드 조회
+      </button>
+    </div>
+
+    <div class="" v-if="keywordTwo">
+      <Router-view class=""></Router-view>
+    </div>
   </div>
 </template>
 
@@ -333,12 +340,5 @@ export default {
   justify-content: center;
   align-items: center;
   display: flex;
-}
-
-.newsSelectBtn {
-  position: sticky;
-  top: 0px;
-  z-index: 99;
-  background-color: #ffffff;
 }
 </style>
