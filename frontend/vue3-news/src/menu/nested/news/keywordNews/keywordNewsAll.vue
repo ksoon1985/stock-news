@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-view-result">
+  <div class="sub-view-resultTwo">
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
@@ -291,14 +291,14 @@ export default {
 }
 
 /* 라우터 뷰 전체 div */
-.sub-view-result {
-  height: 90%;
+.sub-view-resultTwo {
+  height: 68vh;
   width: 100%;
   -ms-overflow-style: none;
 }
 
 /* 라우터 뷰 none 스크롤 */
-.sub-view-result::-webkit-scrollbar {
+.sub-view-resultTwo::-webkit-scrollbar {
   display: none;
 }
 
