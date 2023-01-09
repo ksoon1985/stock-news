@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-view-resultTwo">
+  <div class="sub-view-result">
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
@@ -399,7 +399,7 @@ export default {
 /* 조회 버튼 DIV */
 .newsSelectBtn {
   position: sticky;
-  bottom: 100px;
+  bottom: 0px;
   z-index: 99;
   background-color: #ffffff;
   border: 1px solid #ffffff;
@@ -412,10 +412,5 @@ export default {
   z-index: 99;
   background-color: #ffffff;
   border: 1px solid #ffffff;
-}
-
-/* 키워드 뉴스 라우터 화면  */
-.sub-view-resultTwo {
-  overflow-y: hidden;
 }
 </style>

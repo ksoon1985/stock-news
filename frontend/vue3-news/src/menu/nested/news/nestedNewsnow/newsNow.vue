@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-view-result">
+  <div class="sub-view-resultThree">
     <teleport to="#teleport-news-detail">
       <div class="news-modal-wrap" v-if="modalOpen">
         <div class="news-modal-detail" v-click-outside="onClickOutside">
@@ -65,18 +65,20 @@
       </div>
       <div class="news-wrap">
         <div class="" v-for="(keywordNews, index) in comments" :key="index">
-          <div
-            class="keyword-news-title"
-            @click="modalOpenKeyword(keywordNews)"
-          >
-            <span class="keyword-title-span">
-              {{ keywordNews.registration_date }}
-            </span>
-            <h3>{{ keywordNews.title }}</h3>
-            <div class="keyword-title-div-p">
-              <p class="keyword-title-p">
-                {{ keywordNews.content }}
-              </p>
+          <div class="news-title">
+            <div
+              class="keyword-news-title"
+              @click="modalOpenKeyword(keywordNews)"
+            >
+              <span class="keyword-title-span">
+                {{ keywordNews.registration_date }}
+              </span>
+              <h3>{{ keywordNews.title }}</h3>
+              <div class="keyword-title-div-p">
+                <p class="keyword-title-p">
+                  {{ keywordNews.content }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -369,5 +371,21 @@ export default {
   position: relative;
   top: 10px;
   left: 14rem;
+}
+
+.news-title {
+  width: 95%;
+  border-bottom: 1px solid #e0e0e0;
+  margin-left: 7px;
+  margin-top: 15px;
+}
+
+.sub-view-resultThree {
+  height: 75vh;
+  -ms-overflow-style: none;
+}
+
+.sub-view-resultThree::-webkit-scrollbar {
+  display: none;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-view-result">
+  <div class="sub-view-resultTwo">
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
