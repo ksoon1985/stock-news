@@ -37,7 +37,6 @@
         </div>
 
         <div class="keywordRankDiv" v-if="item.new"><span>NEW</span></div>
-
         <div v-else>
           <div class="keywordRank" v-if="item.rank == 0">-</div>
           <div class="keywordRankOne" v-else-if="item.rank > 0">
@@ -492,5 +491,6 @@ export default {
   left: -145px;
   top: 17px;
   font-family: "Pretendard-Regular";
+  font-size: 0.8rem;
 }
 </style>
