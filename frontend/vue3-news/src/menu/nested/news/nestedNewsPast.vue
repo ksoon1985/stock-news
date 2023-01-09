@@ -30,10 +30,6 @@
       </div>
     </teleport>
 
-    <div class="newsSelectBtnTwo">
-      <button class="news-btn" @click="searchByDate()">기간별 뉴스 조회</button>
-    </div>
-
     <div v-if="isLoading" class="loading-container">
       <div class="loading">
         <pulse-loader :color="color" />
@@ -77,6 +73,10 @@
         </div>
       </div>
       <InfiniteLoading @infinite="load" />
+    </div>
+
+    <div class="newsSelectBtnTwo">
+      <button class="news-btn" @click="searchByDate()">기간별 뉴스 조회</button>
     </div>
   </div>
 </template>
@@ -364,14 +364,16 @@ export default {
   width: 100%;
 }
 
+/* 토픽뉴스 기간 조회 버튼 DIV */
 .newsSelectBtnTwo {
   position: sticky;
-  top: 0px;
+  bottom: 0px;
   z-index: 99;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e5e5;
 }
 
+/* 뉴스 기사 DIV 호버 */
 .news-title-div-div:hover {
   cursor: pointer;
   text-decoration: underline;
